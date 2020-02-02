@@ -2,8 +2,8 @@
   "name": "svelte-app",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
+    "build": "rollup -c ./rollup.newtab.config.js && rollup -c ./rollup.popup.config.js && rollup -c ./rollup.options.config.js",
+    "dev": "rollup -c ./rollup.newtab.config.js",
     "start": "sirv public"
   },
   "devDependencies": {
