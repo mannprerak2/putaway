@@ -1,19 +1,56 @@
 <script>
-  export let name;
+  import TopBar from "./components/TopBar.svelte";
+  import MainArea from "./components/MainArea.svelte";
+  import OpenTabsBar from "./components/OpenTabsBar.svelte";
 </script>
 
 <style>
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
+  .container-table {
+    display: table;
+    width: 100%;
+    height: 100%;
   }
-  #opentabsbar {
-    float: right;
+
+  #right-fixed-bar {
+    width: 6cm;
+    display: table-cell;
+    overflow: hidden;
+    height: 100%;
+    border-left: 1px solid black;
+    padding: 10px;
+  }
+
+  #left-free-area {
+    display: table-cell;
+    width: auto;
+    height: 100%;
+  }
+
+  #top-bar {
+    width: 100%;
+    height: 2cm;
+    border-bottom: 1px solid black;
+  }
+
+  #main-free-area {
+    width: 100%;
+    height: 100%;
   }
 </style>
 
-<div>hello</div>
+<div class="container-table">
 
-<div id="opentabsbar">sidebar</div>
+  <div id="left-free-area">
+    <div id="top-bar">
+      <TopBar />
+    </div>
+    <div id="main-free-area">
+      <MainArea />
+    </div>
+  </div>
+
+  <div id="right-fixed-bar">
+    <OpenTabsBar />
+  </div>
+
+</div>
