@@ -31,10 +31,16 @@
     height: 2cm;
     border-bottom: 1px solid black;
   }
+  #top-bar-container {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+  }
 
   #main-free-area {
     width: 100%;
     height: 100%;
+    padding: 10px;
   }
 </style>
 
@@ -42,7 +48,9 @@
 
   <div id="left-free-area">
     <div id="top-bar">
-      <TopBar />
+      <div id="top-bar-container">
+        <TopBar />
+      </div>
     </div>
     <div id="main-free-area">
       <MainArea />

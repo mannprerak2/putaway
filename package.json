@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c ./rollup.newtab.config.js && rollup -c ./rollup.popup.config.js && rollup -c ./rollup.options.config.js",
-    "dev": "rollup -c ./rollup.newtab.config.js -w",
-    "start": "sirv public"
+    "dev-newtab": "tput setaf 3; echo 'Goto chrome://extensions -> load Unpacked -> ./Public -> hit refresh to reload extension after any changes \n'; tput sgr 0; rollup -c ./rollup.newtab.config.js -w",
+    "dev-popup": "tput setaf 3; echo 'Goto chrome://extensions -> load Unpacked -> ./Public -> hit refresh to reload extension after any changes \n'; tput sgr 0; rollup -c ./rollup.popup.config.js -w",
+    "dev-options": "tput setaf 3; echo 'Goto chrome://extensions -> load Unpacked -> ./Public -> hit refresh to reload extension after any changes \n'; tput sgr 0; rollup -c ./rollup.options.config.js -w",
+    "dev-all": "tput setaf 3; echo 'This might be slow and changes take 4-5 seconds to propagate \nGoto chrome://extensions -> load Unpacked -> ./Public -> hit refresh to reload extension after any changes \n'; tput sgr 0; watch 'npm run build'"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.0",

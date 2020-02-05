@@ -467,13 +467,14 @@ var app = (function () {
     const file$3 = "src/NewTab.svelte";
 
     function create_fragment$3(ctx) {
-    	let div4;
-    	let div2;
+    	let div5;
+    	let div3;
+    	let div1;
     	let div0;
     	let t0;
-    	let div1;
+    	let div2;
     	let t1;
-    	let div3;
+    	let div4;
     	let current;
     	const topbar = new TopBar({ $$inline: true });
     	const mainarea = new MainArea({ $$inline: true });
@@ -481,45 +482,50 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div4 = element("div");
-    			div2 = element("div");
+    			div5 = element("div");
+    			div3 = element("div");
+    			div1 = element("div");
     			div0 = element("div");
     			create_component(topbar.$$.fragment);
     			t0 = space();
-    			div1 = element("div");
+    			div2 = element("div");
     			create_component(mainarea.$$.fragment);
     			t1 = space();
-    			div3 = element("div");
+    			div4 = element("div");
     			create_component(opentabsbar.$$.fragment);
-    			attr_dev(div0, "id", "top-bar");
-    			attr_dev(div0, "class", "svelte-1nkjyys");
-    			add_location(div0, file$3, 43, 4, 741);
-    			attr_dev(div1, "id", "main-free-area");
-    			attr_dev(div1, "class", "svelte-1nkjyys");
-    			add_location(div1, file$3, 46, 4, 792);
-    			attr_dev(div2, "id", "left-free-area");
-    			attr_dev(div2, "class", "svelte-1nkjyys");
-    			add_location(div2, file$3, 42, 2, 711);
-    			attr_dev(div3, "id", "right-fixed-bar");
-    			attr_dev(div3, "class", "svelte-1nkjyys");
-    			add_location(div3, file$3, 51, 2, 860);
-    			attr_dev(div4, "class", "container-table svelte-1nkjyys");
-    			add_location(div4, file$3, 40, 0, 678);
+    			attr_dev(div0, "id", "top-bar-container");
+    			attr_dev(div0, "class", "svelte-1h68bxz");
+    			add_location(div0, file$3, 50, 6, 866);
+    			attr_dev(div1, "id", "top-bar");
+    			attr_dev(div1, "class", "svelte-1h68bxz");
+    			add_location(div1, file$3, 49, 4, 841);
+    			attr_dev(div2, "id", "main-free-area");
+    			attr_dev(div2, "class", "svelte-1h68bxz");
+    			add_location(div2, file$3, 54, 4, 942);
+    			attr_dev(div3, "id", "left-free-area");
+    			attr_dev(div3, "class", "svelte-1h68bxz");
+    			add_location(div3, file$3, 48, 2, 811);
+    			attr_dev(div4, "id", "right-fixed-bar");
+    			attr_dev(div4, "class", "svelte-1h68bxz");
+    			add_location(div4, file$3, 59, 2, 1010);
+    			attr_dev(div5, "class", "container-table svelte-1h68bxz");
+    			add_location(div5, file$3, 46, 0, 778);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div4, anchor);
-    			append_dev(div4, div2);
-    			append_dev(div2, div0);
+    			insert_dev(target, div5, anchor);
+    			append_dev(div5, div3);
+    			append_dev(div3, div1);
+    			append_dev(div1, div0);
     			mount_component(topbar, div0, null);
-    			append_dev(div2, t0);
-    			append_dev(div2, div1);
-    			mount_component(mainarea, div1, null);
-    			append_dev(div4, t1);
-    			append_dev(div4, div3);
-    			mount_component(opentabsbar, div3, null);
+    			append_dev(div3, t0);
+    			append_dev(div3, div2);
+    			mount_component(mainarea, div2, null);
+    			append_dev(div5, t1);
+    			append_dev(div5, div4);
+    			mount_component(opentabsbar, div4, null);
     			current = true;
     		},
     		p: noop,
@@ -537,7 +543,7 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div4);
+    			if (detaching) detach_dev(div5);
     			destroy_component(topbar);
     			destroy_component(mainarea);
     			destroy_component(opentabsbar);
