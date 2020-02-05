@@ -4,7 +4,8 @@
     "description": "Manage your tabs easily",
     "manifest_version": 2,
     "permissions": [
-        "bookmarks"
+        "bookmarks",
+        "tabs"
     ],
     "background": {
         "scripts": [

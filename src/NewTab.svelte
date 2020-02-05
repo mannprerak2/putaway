@@ -16,7 +16,7 @@
     display: table-cell;
     overflow: hidden;
     height: 100%;
-    border-left: 1px solid black;
+    border-left: 1px solid gray;
     padding: 10px;
   }
 
@@ -29,7 +29,7 @@
   #top-bar {
     width: 100%;
     height: 2cm;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid gray;
   }
   #top-bar-container {
     width: 100%;
