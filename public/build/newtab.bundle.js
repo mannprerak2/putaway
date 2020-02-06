@@ -96,6 +96,13 @@ var app = (function () {
             return fn.call(this, event);
         };
     }
+    function stop_propagation(fn) {
+        return function (event) {
+            event.stopPropagation();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -104,6 +111,9 @@ var app = (function () {
     }
     function children(element) {
         return Array.from(element.childNodes);
+    }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
     }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
@@ -724,65 +734,106 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[3] = list[i];
+    	child_ctx[5] = list[i];
+    	child_ctx[7] = i;
     	return child_ctx;
     }
 
-    // (39:4) {#each allTabs as tab}
+    // (93:8) {#each allTabs as tab,i}
     function create_each_block(ctx) {
-    	let div;
-    	let t0_value = /*tab*/ ctx[3].title + "";
+    	let div2;
+    	let button;
     	let t0;
+    	let div1;
+    	let img;
+    	let img_src_value;
     	let t1;
-    	let div_intro;
-    	let div_outro;
+    	let div0;
+    	let t2_value = /*tab*/ ctx[5].title + "";
+    	let t2;
+    	let div2_intro;
+    	let div2_outro;
     	let current;
     	let dispose;
 
     	function click_handler(...args) {
-    		return /*click_handler*/ ctx[2](/*tab*/ ctx[3], ...args);
+    		return /*click_handler*/ ctx[3](/*tab*/ ctx[5], /*i*/ ctx[7], ...args);
+    	}
+
+    	function click_handler_1(...args) {
+    		return /*click_handler_1*/ ctx[4](/*tab*/ ctx[5], ...args);
     	}
 
     	const block = {
     		c: function create() {
-    			div = element("div");
-    			t0 = text(t0_value);
+    			div2 = element("div");
+    			button = element("button");
+    			t0 = space();
+    			div1 = element("div");
+    			img = element("img");
     			t1 = space();
-    			attr_dev(div, "class", "card svelte-1h8q7vr");
-    			attr_dev(div, "draggable", "true");
-    			add_location(div, file$2, 39, 8, 829);
+    			div0 = element("div");
+    			t2 = text(t2_value);
+    			attr_dev(button, "class", "close-icon svelte-cq41su");
+    			add_location(button, file$2, 94, 12, 2432);
+    			attr_dev(img, "alt", "tab");
+    			if (img.src !== (img_src_value = /*tab*/ ctx[5].favIconUrl)) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "height", "20px");
+    			set_style(img, "margin-right", "10px");
+    			add_location(img, file$2, 97, 16, 2612);
+    			attr_dev(div0, "class", "text-concat svelte-cq41su");
+    			add_location(div0, file$2, 99, 16, 2726);
+    			attr_dev(div1, "class", "flex-row-container");
+    			add_location(div1, file$2, 96, 12, 2563);
+    			attr_dev(div2, "class", "card svelte-cq41su");
+    			attr_dev(div2, "draggable", "true");
+    			add_location(div2, file$2, 93, 12, 2287);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, t0);
-    			append_dev(div, t1);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, button);
+    			append_dev(div2, t0);
+    			append_dev(div2, div1);
+    			append_dev(div1, img);
+    			append_dev(div1, t1);
+    			append_dev(div1, div0);
+    			append_dev(div0, t2);
     			current = true;
-    			dispose = listen_dev(div, "click", prevent_default(click_handler), false, true, false);
+
+    			dispose = [
+    				listen_dev(button, "click", stop_propagation(prevent_default(click_handler)), false, true, true),
+    				listen_dev(div2, "click", prevent_default(click_handler_1), false, true, false)
+    			];
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if ((!current || dirty & /*allTabs*/ 1) && t0_value !== (t0_value = /*tab*/ ctx[3].title + "")) set_data_dev(t0, t0_value);
+
+    			if (!current || dirty & /*allTabs*/ 1 && img.src !== (img_src_value = /*tab*/ ctx[5].favIconUrl)) {
+    				attr_dev(img, "src", img_src_value);
+    			}
+
+    			if ((!current || dirty & /*allTabs*/ 1) && t2_value !== (t2_value = /*tab*/ ctx[5].title + "")) set_data_dev(t2, t2_value);
     		},
     		i: function intro(local) {
     			if (current) return;
 
     			add_render_callback(() => {
-    				if (div_outro) div_outro.end(1);
-    				if (!div_intro) div_intro = create_in_transition(div, fly, { x: 500, duration: 400 });
-    				div_intro.start();
+    				if (div2_outro) div2_outro.end(1);
+    				if (!div2_intro) div2_intro = create_in_transition(div2, fly, { x: 500, duration: 400 });
+    				div2_intro.start();
     			});
 
     			current = true;
     		},
     		o: function outro(local) {
-    			if (div_intro) div_intro.invalidate();
-    			div_outro = create_out_transition(div, fade, {});
+    			if (div2_intro) div2_intro.invalidate();
+    			div2_outro = create_out_transition(div2, fade, {});
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			if (detaching && div_outro) div_outro.end();
-    			dispose();
+    			if (detaching) detach_dev(div2);
+    			if (detaching && div2_outro) div2_outro.end();
+    			run_all(dispose);
     		}
     	};
 
@@ -790,7 +841,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(39:4) {#each allTabs as tab}",
+    		source: "(93:8) {#each allTabs as tab,i}",
     		ctx
     	});
 
@@ -804,6 +855,9 @@ var app = (function () {
     	let t1_value = /*allTabs*/ ctx[0].length + "";
     	let t1;
     	let t2;
+    	let div1;
+    	let t3;
+    	let div0;
     	let current;
     	let each_value = /*allTabs*/ ctx[0];
     	let each_blocks = [];
@@ -820,16 +874,24 @@ var app = (function () {
     		c: function create() {
     			main = element("main");
     			h2 = element("h2");
-    			t0 = text("Tabs Open - ");
+    			t0 = text("Open Tabs - ");
     			t1 = text(t1_value);
     			t2 = space();
+    			div1 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			add_location(h2, file$2, 36, 4, 755);
-    			add_location(main, file$2, 35, 0, 744);
+    			t3 = space();
+    			div0 = element("div");
+    			add_location(h2, file$2, 89, 4, 2178);
+    			set_style(div0, "height", "200px");
+    			add_location(div0, file$2, 105, 8, 2865);
+    			attr_dev(div1, "class", "scroll svelte-cq41su");
+    			add_location(div1, file$2, 91, 4, 2221);
+    			set_style(main, "height", "100%");
+    			add_location(main, file$2, 88, 0, 2145);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -840,17 +902,20 @@ var app = (function () {
     			append_dev(h2, t0);
     			append_dev(h2, t1);
     			append_dev(main, t2);
+    			append_dev(main, div1);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(main, null);
+    				each_blocks[i].m(div1, null);
     			}
 
+    			append_dev(div1, t3);
+    			append_dev(div1, div0);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
     			if ((!current || dirty & /*allTabs*/ 1) && t1_value !== (t1_value = /*allTabs*/ ctx[0].length + "")) set_data_dev(t1, t1_value);
 
-    			if (dirty & /*onClickTabCard, allTabs*/ 3) {
+    			if (dirty & /*onClickTabCard, allTabs, onTabTileClose*/ 7) {
     				each_value = /*allTabs*/ ctx[0];
     				let i;
 
@@ -864,7 +929,7 @@ var app = (function () {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(main, null);
+    						each_blocks[i].m(div1, t3);
     					}
     				}
 
@@ -917,7 +982,9 @@ var app = (function () {
 
     	onMount(() => {
     		chrome.tabs.query({ currentWindow: true }, tabs => {
-    			$$invalidate(0, allTabs = tabs);
+    			$$invalidate(0, allTabs = tabs.filter(function (tab) {
+    				return tab.url != "chrome://newtab/";
+    			}));
     		});
     	});
 
@@ -925,7 +992,14 @@ var app = (function () {
     		chrome.tabs.update(tab.id, { active: true });
     	};
 
-    	const click_handler = tab => onClickTabCard(tab);
+    	var onTabTileClose = (tab, i) => {
+    		allTabs.splice(i, 1);
+    		$$invalidate(0, allTabs);
+    		chrome.tabs.remove(tab.id);
+    	};
+
+    	const click_handler = (tab, i) => onTabTileClose(tab, i);
+    	const click_handler_1 = tab => onClickTabCard(tab);
 
     	$$self.$capture_state = () => {
     		return {};
@@ -934,9 +1008,10 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ("allTabs" in $$props) $$invalidate(0, allTabs = $$props.allTabs);
     		if ("onClickTabCard" in $$props) $$invalidate(1, onClickTabCard = $$props.onClickTabCard);
+    		if ("onTabTileClose" in $$props) $$invalidate(2, onTabTileClose = $$props.onTabTileClose);
     	};
 
-    	return [allTabs, onClickTabCard, click_handler];
+    	return [allTabs, onClickTabCard, onTabTileClose, click_handler, click_handler_1];
     }
 
     class OpenTabsBar extends SvelteComponentDev {

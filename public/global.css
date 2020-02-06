@@ -64,3 +64,9 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+.flex-row-container{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
