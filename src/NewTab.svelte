@@ -2,6 +2,7 @@
   import TopBar from "./components/TopBar.svelte";
   import MainArea from "./components/MainArea.svelte";
   import OpenTabsBar from "./components/OpenTabsBar.svelte";
+  import Modal from 'svelte-simple-modal';
 </script>
 
 <style>
@@ -31,6 +32,7 @@
     height: 2cm;
     border-bottom: 1px solid gray;
   }
+
   #top-bar-container {
     width: 100%;
     height: 100%;
@@ -42,22 +44,23 @@
     height: 100%;
   }
 </style>
+<Modal closeButton={false}>
+  <div class="container-table">
 
-<div class="container-table">
-
-  <div id="left-free-area">
-    <div id="top-bar">
-      <div id="top-bar-container">
-        <TopBar />
+    <div id="left-free-area">
+      <div id="top-bar">
+        <div id="top-bar-container">
+          <TopBar />
+        </div>
+      </div>
+      <div id="main-free-area">
+        <MainArea />
       </div>
     </div>
-    <div id="main-free-area">
-      <MainArea />
+
+    <div id="right-fixed-bar">
+      <OpenTabsBar />
     </div>
-  </div>
 
-  <div id="right-fixed-bar">
-    <OpenTabsBar />
   </div>
-
-</div>
+</Modal>
