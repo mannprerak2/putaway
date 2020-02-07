@@ -70,3 +70,13 @@ button:focus {
 	flex-direction: row;
 	align-items: center;
 }
+
+.scroll {
+	height: 100vh;
+	overflow-x: auto;
+	scrollbar-width: 0;
+}
+
+.scroll::-webkit-scrollbar {
+	display: none;
+}

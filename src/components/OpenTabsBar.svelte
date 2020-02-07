@@ -72,23 +72,13 @@
         line-height: 1em;
     }
 
-    .scroll {
-        margin: 4px, 4px;
-        padding: 4px;
-        height: 100vh;
-        overflow-x: hidden;
-        overflow-x: auto;
-        scrollbar-width: 0;
-    }
-
-    .scroll::-webkit-scrollbar {
-        display: none;
-    }
 </style>
 
 <main style="height: 100%;">
     <h2>Open Tabs - {allTabs.length}</h2>
-
+    {#if allTabs.length==0}
+        <h3>No open tabs</h3>
+    {/if}
     <div class="scroll">
         {#each allTabs as tab,i}
             <div class="card" draggable="true" in:fly="{{ x: 500, duration: 400 }}" out:fade on:click|preventDefault={()=> onClickTabCard(tab)}>
