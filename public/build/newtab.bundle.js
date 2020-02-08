@@ -144,6 +144,11 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
+    function set_input_value(input, value) {
+        if (value != null || input.value) {
+            input.value = value;
+        }
+    }
     function set_style(node, key, value, important) {
         node.style.setProperty(key, value, important ? 'important' : '');
     }
@@ -561,6 +566,96 @@ var app = (function () {
     }
 
     const globals = (typeof window !== 'undefined' ? window : global);
+    function outro_and_destroy_block(block, lookup) {
+        transition_out(block, 1, 1, () => {
+            lookup.delete(block.key);
+        });
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                block.p(child_ctx, dirty);
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        return new_blocks;
+    }
+    function validate_each_keys(ctx, list, get_context, get_key) {
+        const keys = new Set();
+        for (let i = 0; i < list.length; i++) {
+            const key = get_key(get_context(ctx, list, i));
+            if (keys.has(key)) {
+                throw new Error(`Cannot have duplicate keys in a keyed each`);
+            }
+            keys.add(key);
+        }
+    }
 
     function get_spread_update(levels, updates) {
         const update = {};
@@ -861,23 +956,81 @@ var app = (function () {
 
     function create_fragment$1(ctx) {
     	let main;
+    	let h1;
+    	let t1;
+    	let input;
+    	let t2;
+    	let div1;
+    	let div0;
+    	let t3;
+    	let t4;
+    	let button;
+    	let dispose;
 
     	const block = {
     		c: function create() {
     			main = element("main");
-    			add_location(main, file$1, 5, 0, 37);
+    			h1 = element("h1");
+    			h1.textContent = "Collection Name -";
+    			t1 = space();
+    			input = element("input");
+    			t2 = space();
+    			div1 = element("div");
+    			div0 = element("div");
+    			t3 = text(/*errorString*/ ctx[1]);
+    			t4 = space();
+    			button = element("button");
+    			button.textContent = "Create Collection";
+    			add_location(h1, file$1, 58, 4, 1157);
+    			attr_dev(input, "type", "text");
+    			attr_dev(input, "onchange", /*keepTrimed*/ ctx[4]);
+    			input.autofocus = true;
+    			attr_dev(input, "class", "svelte-shfknq");
+    			add_location(input, file$1, 61, 4, 1231);
+    			set_style(div0, "padding", "10px");
+    			set_style(div0, "color", "red");
+    			add_location(div0, file$1, 64, 8, 1355);
+    			attr_dev(button, "class", "svelte-shfknq");
+    			add_location(button, file$1, 65, 8, 1423);
+    			attr_dev(div1, "class", "modal-bottom-bar svelte-shfknq");
+    			add_location(div1, file$1, 63, 4, 1316);
+    			add_location(main, file$1, 57, 0, 1146);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
+    			append_dev(main, h1);
+    			append_dev(main, t1);
+    			append_dev(main, input);
+    			set_input_value(input, /*collectionName*/ ctx[0]);
+    			append_dev(main, t2);
+    			append_dev(main, div1);
+    			append_dev(div1, div0);
+    			append_dev(div0, t3);
+    			append_dev(div1, t4);
+    			append_dev(div1, button);
+    			input.focus();
+
+    			dispose = [
+    				listen_dev(window, "keydown", /*handleKeydown*/ ctx[3], false, false, false),
+    				listen_dev(input, "input", /*input_input_handler*/ ctx[5]),
+    				listen_dev(button, "click", /*onClickCreate*/ ctx[2], false, false, false)
+    			];
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*collectionName*/ 1 && input.value !== /*collectionName*/ ctx[0]) {
+    				set_input_value(input, /*collectionName*/ ctx[0]);
+    			}
+
+    			if (dirty & /*errorString*/ 2) set_data_dev(t3, /*errorString*/ ctx[1]);
+    		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
+    			run_all(dispose);
     		}
     	};
 
@@ -892,10 +1045,58 @@ var app = (function () {
     	return block;
     }
 
+    function instance($$self, $$props, $$invalidate) {
+    	let collectionName = "";
+    	let errorString = "";
+
+    	var onClickCreate = () => {
+    		if (collectionName.length > 0) {
+    			$$invalidate(1, errorString = "");
+    		} else {
+    			$$invalidate(1, errorString = "Enter a collection Name");
+    		}
+    	};
+
+    	function handleKeydown(event) {
+    		// on press enter
+    		if (event.keyCode == 13) {
+    			onClickCreate();
+    		}
+    	}
+
+    	function keepTrimed() {
+    		$$invalidate(0, collectionName = collectionName.trim());
+    	}
+
+    	function input_input_handler() {
+    		collectionName = this.value;
+    		$$invalidate(0, collectionName);
+    	}
+
+    	$$self.$capture_state = () => {
+    		return {};
+    	};
+
+    	$$self.$inject_state = $$props => {
+    		if ("collectionName" in $$props) $$invalidate(0, collectionName = $$props.collectionName);
+    		if ("errorString" in $$props) $$invalidate(1, errorString = $$props.errorString);
+    		if ("onClickCreate" in $$props) $$invalidate(2, onClickCreate = $$props.onClickCreate);
+    	};
+
+    	return [
+    		collectionName,
+    		errorString,
+    		onClickCreate,
+    		handleKeydown,
+    		keepTrimed,
+    		input_input_handler
+    	];
+    }
+
     class CreateCollectionModal extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$1, safe_not_equal, {});
+    		init(this, options, instance, create_fragment$1, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1097,7 +1298,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance($$self, $$props, $$invalidate) {
+    function instance$1($$self, $$props, $$invalidate) {
     	const { open } = getContext("simple-modal");
     	let allCollections = [];
 
@@ -1128,7 +1329,7 @@ var app = (function () {
     class MainArea extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment$2, safe_not_equal, {});
+    		init(this, options, instance$1, create_fragment$2, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1149,37 +1350,8 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (79:4) {#if allTabs.length==0}
-    function create_if_block$1(ctx) {
-    	let h3;
-
-    	const block = {
-    		c: function create() {
-    			h3 = element("h3");
-    			h3.textContent = "No open tabs";
-    			add_location(h3, file$3, 79, 8, 2016);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, h3, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(h3);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$1.name,
-    		type: "if",
-    		source: "(79:4) {#if allTabs.length==0}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (83:8) {#each allTabs as tab,i}
-    function create_each_block$1(ctx) {
+    // (81:8) {#each allTabs as tab,i (tab.id)}
+    function create_each_block$1(key_1, ctx) {
     	let div2;
     	let button;
     	let t0;
@@ -1204,6 +1376,8 @@ var app = (function () {
     	}
 
     	const block = {
+    		key: key_1,
+    		first: null,
     		c: function create() {
     			div2 = element("div");
     			button = element("button");
@@ -1214,19 +1388,20 @@ var app = (function () {
     			div0 = element("div");
     			t2 = text(t2_value);
     			attr_dev(button, "class", "close-icon svelte-1rm5iiq");
-    			add_location(button, file$3, 84, 12, 2263);
+    			add_location(button, file$3, 82, 12, 2209);
     			attr_dev(img, "alt", "tab");
     			if (img.src !== (img_src_value = /*tab*/ ctx[5].favIconUrl)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "height", "20px");
     			set_style(img, "margin-right", "10px");
-    			add_location(img, file$3, 87, 16, 2443);
+    			add_location(img, file$3, 85, 16, 2389);
     			attr_dev(div0, "class", "text-concat svelte-1rm5iiq");
-    			add_location(div0, file$3, 89, 16, 2557);
+    			add_location(div0, file$3, 87, 16, 2503);
     			attr_dev(div1, "class", "flex-row-container");
-    			add_location(div1, file$3, 86, 12, 2394);
+    			add_location(div1, file$3, 84, 12, 2340);
     			attr_dev(div2, "class", "card svelte-1rm5iiq");
     			attr_dev(div2, "draggable", "true");
-    			add_location(div2, file$3, 83, 12, 2118);
+    			add_location(div2, file$3, 81, 12, 2064);
+    			this.first = div2;
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -1280,7 +1455,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(83:8) {#each allTabs as tab,i}",
+    		source: "(81:8) {#each allTabs as tab,i (tab.id)}",
     		ctx
     	});
 
@@ -1294,22 +1469,21 @@ var app = (function () {
     	let t1_value = /*allTabs*/ ctx[0].length + "";
     	let t1;
     	let t2;
-    	let t3;
     	let div1;
-    	let t4;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let t3;
     	let div0;
     	let current;
-    	let if_block = /*allTabs*/ ctx[0].length == 0 && create_if_block$1(ctx);
     	let each_value = /*allTabs*/ ctx[0];
-    	let each_blocks = [];
+    	const get_key = ctx => /*tab*/ ctx[5].id;
+    	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    		let child_ctx = get_each_context$1(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
     	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
 
     	const block = {
     		c: function create() {
@@ -1318,21 +1492,19 @@ var app = (function () {
     			t0 = text("Open Tabs - ");
     			t1 = text(t1_value);
     			t2 = space();
-    			if (if_block) if_block.c();
-    			t3 = space();
     			div1 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t4 = space();
+    			t3 = space();
     			div0 = element("div");
     			add_location(h2, file$3, 77, 4, 1942);
     			set_style(div0, "height", "200px");
-    			add_location(div0, file$3, 95, 8, 2696);
+    			add_location(div0, file$3, 93, 8, 2642);
     			attr_dev(div1, "class", "scroll");
-    			add_location(div1, file$3, 81, 4, 2052);
+    			add_location(div1, file$3, 79, 4, 1989);
     			set_style(main, "height", "100%");
     			add_location(main, file$3, 76, 0, 1909);
     		},
@@ -1345,58 +1517,23 @@ var app = (function () {
     			append_dev(h2, t0);
     			append_dev(h2, t1);
     			append_dev(main, t2);
-    			if (if_block) if_block.m(main, null);
-    			append_dev(main, t3);
     			append_dev(main, div1);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div1, null);
     			}
 
-    			append_dev(div1, t4);
+    			append_dev(div1, t3);
     			append_dev(div1, div0);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
     			if ((!current || dirty & /*allTabs*/ 1) && t1_value !== (t1_value = /*allTabs*/ ctx[0].length + "")) set_data_dev(t1, t1_value);
-
-    			if (/*allTabs*/ ctx[0].length == 0) {
-    				if (!if_block) {
-    					if_block = create_if_block$1(ctx);
-    					if_block.c();
-    					if_block.m(main, t3);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-
-    			if (dirty & /*onClickTabCard, allTabs, onTabTileClose*/ 7) {
-    				each_value = /*allTabs*/ ctx[0];
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
-    					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
-    						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(div1, t4);
-    					}
-    				}
-
-    				group_outros();
-
-    				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out(i);
-    				}
-
-    				check_outros();
-    			}
+    			const each_value = /*allTabs*/ ctx[0];
+    			group_outros();
+    			validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div1, outro_and_destroy_block, create_each_block$1, t3, get_each_context$1);
+    			check_outros();
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -1408,8 +1545,6 @@ var app = (function () {
     			current = true;
     		},
     		o: function outro(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				transition_out(each_blocks[i]);
     			}
@@ -1418,8 +1553,10 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
-    			if (if_block) if_block.d();
-    			destroy_each(each_blocks, detaching);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
     		}
     	};
 
@@ -1434,7 +1571,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance$2($$self, $$props, $$invalidate) {
     	let allTabs = [];
 
     	onMount(() => {
@@ -1474,7 +1611,7 @@ var app = (function () {
     class OpenTabsBar extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$3, safe_not_equal, {});
+    		init(this, options, instance$2, create_fragment$3, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1491,7 +1628,7 @@ var app = (function () {
     const file$4 = "node_modules/svelte-simple-modal/src/Modal.svelte";
 
     // (189:2) {#if Component}
-    function create_if_block$2(ctx) {
+    function create_if_block$1(ctx) {
     	let div3;
     	let div2;
     	let div1;
@@ -1615,7 +1752,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$2.name,
+    		id: create_if_block$1.name,
     		type: "if",
     		source: "(189:2) {#if Component}",
     		ctx
@@ -1662,7 +1799,7 @@ var app = (function () {
     	let t;
     	let current;
     	let dispose;
-    	let if_block = /*Component*/ ctx[5] && create_if_block$2(ctx);
+    	let if_block = /*Component*/ ctx[5] && create_if_block$1(ctx);
     	const default_slot_template = /*$$slots*/ ctx[29].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[28], null);
 
@@ -1696,7 +1833,7 @@ var app = (function () {
     					if_block.p(ctx, dirty);
     					transition_in(if_block, 1);
     				} else {
-    					if_block = create_if_block$2(ctx);
+    					if_block = create_if_block$1(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div, t);
@@ -1745,7 +1882,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$3($$self, $$props, $$invalidate) {
     	let { key = "simple-modal" } = $$props;
     	let { closeButton = true } = $$props;
     	let { closeOnEsc = true } = $$props;
@@ -1962,7 +2099,7 @@ var app = (function () {
     		init(
     			this,
     			options,
-    			instance$2,
+    			instance$3,
     			create_fragment$4,
     			safe_not_equal,
     			{

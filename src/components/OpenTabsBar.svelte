@@ -76,11 +76,9 @@
 
 <main style="height: 100%;">
     <h2>Open Tabs - {allTabs.length}</h2>
-    {#if allTabs.length==0}
-        <h3>No open tabs</h3>
-    {/if}
+    
     <div class="scroll">
-        {#each allTabs as tab,i}
+        {#each allTabs as tab,i (tab.id)}
             <div class="card" draggable="true" in:fly="{{ x: 500, duration: 400 }}" out:fade on:click|preventDefault={()=> onClickTabCard(tab)}>
             <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onTabTileClose(tab,i)}></button>
             
