@@ -959,6 +959,7 @@ var app = (function () {
     	let h1;
     	let t1;
     	let input;
+    	let input_onchange_value;
     	let t2;
     	let div1;
     	let div0;
@@ -981,20 +982,20 @@ var app = (function () {
     			t4 = space();
     			button = element("button");
     			button.textContent = "Create Collection";
-    			add_location(h1, file$1, 58, 4, 1157);
+    			add_location(h1, file$1, 73, 4, 1586);
     			attr_dev(input, "type", "text");
-    			attr_dev(input, "onchange", /*keepTrimed*/ ctx[4]);
+    			attr_dev(input, "onchange", input_onchange_value = /*inputFormatter*/ ctx[4](/*collectionName*/ ctx[0]));
     			input.autofocus = true;
     			attr_dev(input, "class", "svelte-shfknq");
-    			add_location(input, file$1, 61, 4, 1231);
+    			add_location(input, file$1, 76, 4, 1660);
     			set_style(div0, "padding", "10px");
     			set_style(div0, "color", "red");
-    			add_location(div0, file$1, 64, 8, 1355);
+    			add_location(div0, file$1, 79, 8, 1804);
     			attr_dev(button, "class", "svelte-shfknq");
-    			add_location(button, file$1, 65, 8, 1423);
+    			add_location(button, file$1, 80, 8, 1872);
     			attr_dev(div1, "class", "modal-bottom-bar svelte-shfknq");
-    			add_location(div1, file$1, 63, 4, 1316);
-    			add_location(main, file$1, 57, 0, 1146);
+    			add_location(div1, file$1, 78, 4, 1765);
+    			add_location(main, file$1, 72, 0, 1575);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1014,12 +1015,16 @@ var app = (function () {
     			input.focus();
 
     			dispose = [
-    				listen_dev(window, "keydown", /*handleKeydown*/ ctx[3], false, false, false),
+    				listen_dev(window, "keyup", /*handleKeyUp*/ ctx[3], false, false, false),
     				listen_dev(input, "input", /*input_input_handler*/ ctx[5]),
     				listen_dev(button, "click", /*onClickCreate*/ ctx[2], false, false, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
+    			if (dirty & /*collectionName*/ 1 && input_onchange_value !== (input_onchange_value = /*inputFormatter*/ ctx[4](/*collectionName*/ ctx[0]))) {
+    				attr_dev(input, "onchange", input_onchange_value);
+    			}
+
     			if (dirty & /*collectionName*/ 1 && input.value !== /*collectionName*/ ctx[0]) {
     				set_input_value(input, /*collectionName*/ ctx[0]);
     			}
@@ -1044,12 +1049,21 @@ var app = (function () {
 
     	return block;
     }
+    //     chrome.bookmarks.create({
 
     function instance($$self, $$props, $$invalidate) {
     	let collectionName = "";
     	let errorString = "";
 
+    	//         'parentId': map.pid,
+    	//         'title': collectionName,
+    	//         'index': 0
+    	//     }, function (createdFolder) {
+    	//     });
+    	// });
     	var onClickCreate = () => {
+    		$$invalidate(0, collectionName = collectionName.trim());
+
     		if (collectionName.length > 0) {
     			$$invalidate(1, errorString = "");
     		} else {
@@ -1057,15 +1071,15 @@ var app = (function () {
     		}
     	};
 
-    	function handleKeydown(event) {
+    	function handleKeyUp(event) {
     		// on press enter
     		if (event.keyCode == 13) {
     			onClickCreate();
     		}
     	}
 
-    	function keepTrimed() {
-    		$$invalidate(0, collectionName = collectionName.trim());
+    	function inputFormatter(str) {
+    		$$invalidate(0, collectionName = str.replace(/\s+/g, " "));
     	}
 
     	function input_input_handler() {
@@ -1087,8 +1101,8 @@ var app = (function () {
     		collectionName,
     		errorString,
     		onClickCreate,
-    		handleKeydown,
-    		keepTrimed,
+    		handleKeyUp,
+    		inputFormatter,
     		input_input_handler
     	];
     }
@@ -1117,7 +1131,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (60:4) {#if allCollections.length==0}
+    // (63:4) {#if allCollections.length==0 }
     function create_if_block(ctx) {
     	let h3;
 
@@ -1125,7 +1139,8 @@ var app = (function () {
     		c: function create() {
     			h3 = element("h3");
     			h3.textContent = "No Collections";
-    			add_location(h3, file$2, 60, 8, 1587);
+    			set_style(h3, "padding", "10px");
+    			add_location(h3, file$2, 63, 8, 1655);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h3, anchor);
@@ -1139,14 +1154,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(60:4) {#if allCollections.length==0}",
+    		source: "(63:4) {#if allCollections.length==0 }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:8) {#each allCollections as collection,i}
+    // (70:8) {#each allCollections as collection,i}
     function create_each_block(ctx) {
     	let div;
     	let t_value = /*collection*/ ctx[3].title + "";
@@ -1156,8 +1171,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			t = text(t_value);
-    			attr_dev(div, "class", "collection svelte-2pie9p");
-    			add_location(div, file$2, 67, 12, 1806);
+    			attr_dev(div, "class", "collection svelte-xmbn07");
+    			add_location(div, file$2, 70, 12, 1899);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1175,7 +1190,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(67:8) {#each allCollections as collection,i}",
+    		source: "(70:8) {#each allCollections as collection,i}",
     		ctx
     	});
 
@@ -1214,14 +1229,14 @@ var app = (function () {
 
     			t2 = space();
     			div0 = element("div");
-    			attr_dev(button, "class", "plus-icon svelte-2pie9p");
-    			add_location(button, file$2, 63, 4, 1626);
+    			attr_dev(button, "class", "plus-icon svelte-xmbn07");
+    			add_location(button, file$2, 66, 4, 1717);
     			set_style(div0, "height", "200px");
-    			add_location(div0, file$2, 71, 8, 1909);
+    			add_location(div0, file$2, 74, 8, 2002);
     			attr_dev(div1, "class", "scroll");
-    			add_location(div1, file$2, 65, 4, 1726);
+    			add_location(div1, file$2, 68, 4, 1819);
     			set_style(main, "position", "relative");
-    			add_location(main, file$2, 58, 0, 1509);
+    			add_location(main, file$2, 60, 0, 1575);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1240,7 +1255,7 @@ var app = (function () {
 
     			append_dev(div1, t2);
     			append_dev(div1, div0);
-    			dispose = listen_dev(button, "click", stop_propagation(prevent_default(/*createCollection*/ ctx[1])), false, true, true);
+    			dispose = listen_dev(button, "click", stop_propagation(prevent_default(/*clickAddCollection*/ ctx[1])), false, true, true);
     		},
     		p: function update(ctx, [dirty]) {
     			if (/*allCollections*/ ctx[0].length == 0) {
@@ -1300,7 +1315,11 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	const { open } = getContext("simple-modal");
+
+    	// array of BookmarkTreeNode
     	let allCollections = [];
+
+    	setContext("collections", allCollections);
 
     	onMount(() => {
     		chrome.storage.local.get("pid", function (res) {
@@ -1310,7 +1329,7 @@ var app = (function () {
     		});
     	});
 
-    	var createCollection = () => {
+    	var clickAddCollection = () => {
     		open(CreateCollectionModal, {});
     	};
 
@@ -1320,10 +1339,10 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("allCollections" in $$props) $$invalidate(0, allCollections = $$props.allCollections);
-    		if ("createCollection" in $$props) $$invalidate(1, createCollection = $$props.createCollection);
+    		if ("clickAddCollection" in $$props) $$invalidate(1, clickAddCollection = $$props.clickAddCollection);
     	};
 
-    	return [allCollections, createCollection];
+    	return [allCollections, clickAddCollection];
     }
 
     class MainArea extends SvelteComponentDev {
@@ -1389,13 +1408,13 @@ var app = (function () {
     			t2 = text(t2_value);
     			attr_dev(button, "class", "close-icon svelte-1rm5iiq");
     			add_location(button, file$3, 82, 12, 2209);
-    			attr_dev(img, "alt", "tab");
+    			attr_dev(img, "alt", " ");
     			if (img.src !== (img_src_value = /*tab*/ ctx[5].favIconUrl)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "height", "20px");
     			set_style(img, "margin-right", "10px");
     			add_location(img, file$3, 85, 16, 2389);
     			attr_dev(div0, "class", "text-concat svelte-1rm5iiq");
-    			add_location(div0, file$3, 87, 16, 2503);
+    			add_location(div0, file$3, 87, 16, 2501);
     			attr_dev(div1, "class", "flex-row-container");
     			add_location(div1, file$3, 84, 12, 2340);
     			attr_dev(div2, "class", "card svelte-1rm5iiq");
@@ -1502,7 +1521,7 @@ var app = (function () {
     			div0 = element("div");
     			add_location(h2, file$3, 77, 4, 1942);
     			set_style(div0, "height", "200px");
-    			add_location(div0, file$3, 93, 8, 2642);
+    			add_location(div0, file$3, 93, 8, 2640);
     			attr_dev(div1, "class", "scroll");
     			add_location(div1, file$3, 79, 4, 1989);
     			set_style(main, "height", "100%");

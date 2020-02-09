@@ -83,7 +83,7 @@
             <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onTabTileClose(tab,i)}></button>
             
             <div class="flex-row-container">
-                <img alt='tab' src={tab.favIconUrl} height="20px" style="margin-right: 10px;"/> 
+                <img alt=' ' src={tab.favIconUrl} height="20px" style="margin-right: 10px;"/> 
                 
                 <div class="text-concat">
                     {tab.title}

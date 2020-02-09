@@ -1,22 +1,24 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, getContext, setContext } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import CreateCollectionModal from './CreateCollectionModal.svelte';
-    import { getContext } from 'svelte';
 
     const { open } = getContext('simple-modal');
 
+    // array of BookmarkTreeNode
     let allCollections = [];
+
+    setContext('collections', allCollections)
 
     onMount(() => {
         chrome.storage.local.get('pid', function (res) {
             chrome.bookmarks.getChildren(res['pid'], function (children) {
                 allCollections = children;
             });
-        })
+        });
     });
 
-    var createCollection = () => {
+    var clickAddCollection = () => {
         open(CreateCollectionModal, {});
     }
 </script>
@@ -39,7 +41,7 @@
     .plus-icon {
         position: absolute;
         margin-right: 20px;
-        margin-bottom: 100px;
+        margin-bottom: 160px;
         bottom: 0;
         right: 0;
         width: 40px;
@@ -57,11 +59,12 @@
 </style>
 
 <main style="position: relative;">
-    {#if allCollections.length==0}
-        <h3>No Collections</h3>
+
+    {#if allCollections.length==0 }
+        <h3 style="padding: 10px;">No Collections</h3>
     {/if}
 
-    <button class="plus-icon" on:click|preventDefault|stopPropagation={createCollection}></button>
+    <button class="plus-icon" on:click|preventDefault|stopPropagation={clickAddCollection}></button>
 
     <div class="scroll">
         {#each allCollections as collection,i}
@@ -71,5 +74,4 @@
         {/each}
         <div style="height: 200px;"></div>
     </div>
-
 </main>

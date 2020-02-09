@@ -1,23 +1,38 @@
 <script>
     let collectionName = '';
     let errorString = '';
+
+    function createBookmarkFolder() {
+        // chrome.storage.local.get('pid', function (map) {
+        //     chrome.bookmarks.create({
+        //         'parentId': map.pid,
+        //         'title': collectionName,
+        //         'index': 0
+        //     }, function (createdFolder) {
+
+        //     });
+        // });
+    }
+
     var onClickCreate = () => {
+        collectionName = collectionName.trim();
         if (collectionName.length > 0) {
             errorString = '';
+            createBookmarkFolder();
         } else {
             errorString = 'Enter a collection Name';
         }
     }
 
-    function handleKeydown(event) {
+    function handleKeyUp(event) {
         // on press enter
         if (event.keyCode == 13) {
             onClickCreate();
         }
     }
 
-    function keepTrimed() {
-        collectionName = collectionName.trim();
+    function inputFormatter(str) {
+        collectionName = str.replace(/\s+/g, ' ');
     }
 </script>
 <style>
@@ -53,13 +68,13 @@
     }
 </style>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window on:keyup={handleKeyUp} />
 
 <main>
     <h1>Collection Name -</h1>
 
     <!-- svelte-ignore a11y-autofocus -->
-    <input bind:value={collectionName} type="text" onchange={keepTrimed} autofocus>
+    <input bind:value={collectionName} type="text" onchange={inputFormatter(collectionName)} autofocus>
 
     <div class="modal-bottom-bar">
         <div style="padding: 10px; color: red;">{errorString}</div>
