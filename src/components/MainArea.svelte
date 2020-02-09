@@ -1,5 +1,5 @@
 <script>
-    import { onMount, getContext, setContext } from 'svelte';
+    import { onMount, getContext } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import CreateCollectionModal from './CreateCollectionModal.svelte';
 
@@ -7,8 +7,6 @@
 
     // array of BookmarkTreeNode
     let allCollections = [];
-
-    setContext('collections', allCollections)
 
     onMount(() => {
         chrome.storage.local.get('pid', function (res) {
@@ -18,8 +16,13 @@
         });
     });
 
-    var clickAddCollection = () => {
-        open(CreateCollectionModal, {});
+    var clickAddCollection = async () => {
+        var c = await open(CreateCollectionModal);
+        if (c) {
+            // add to list at its index
+            allCollections.splice(c.index, 0, c);
+            allCollections = allCollections;
+        }
     }
 </script>
 <style>
@@ -67,8 +70,8 @@
     <button class="plus-icon" on:click|preventDefault|stopPropagation={clickAddCollection}></button>
 
     <div class="scroll">
-        {#each allCollections as collection,i}
-            <div class="collection">
+        {#each allCollections as collection,i (collection.id)}
+            <div class="collection" in:fade="{{duration: 1000}}" out:fade>
                 {collection.title}
             </div>
         {/each}

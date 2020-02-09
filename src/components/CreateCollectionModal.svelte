@@ -1,17 +1,21 @@
 <script>
+    import { getContext } from 'svelte';
+
     let collectionName = '';
     let errorString = '';
 
-    function createBookmarkFolder() {
-        // chrome.storage.local.get('pid', function (map) {
-        //     chrome.bookmarks.create({
-        //         'parentId': map.pid,
-        //         'title': collectionName,
-        //         'index': 0
-        //     }, function (createdFolder) {
+    const { close } = getContext('simple-modal');
 
-        //     });
-        // });
+    function createBookmarkFolder() {
+        chrome.storage.local.get('pid', function (map) {
+            chrome.bookmarks.create({
+                'parentId': map.pid,
+                'title': collectionName,
+                'index': 0
+            }, function (createdFolder) {
+                close(createdFolder);
+            });
+        });
     }
 
     var onClickCreate = () => {

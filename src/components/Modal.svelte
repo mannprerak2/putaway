@@ -1,4 +1,11 @@
 <!--Base Modal Code taken from https://github.com/flekschas/svelte-simple-modal/blob/master/src/Modal.svelte -->
+<!-- 
+    Modified Methods 
+ 1. Open - This method returns a promise which will return an 
+           object when modal is closed (may be null)
+ 2. Close - You can call this and pass an object which will be returned 
+           by the promise in open
+-->
 
 <script>
     import { setContext as baseSetContext } from 'svelte';
@@ -29,19 +36,25 @@
     $: cssBg = toCssString(Object.assign({}, styleBg, customStyleBg));
     $: cssWindow = toCssString(Object.assign({}, styleWindow, customStyleWindow));
     $: cssContent = toCssString(Object.assign({}, styleContent, customStyleContent));
-    const open = (NewComponent, newProps = {}, style = { bg: {}, window: {}, content: {} }) => {
-        Component = NewComponent;
-        props = newProps;
-        customStyleBg = style.bg || {};
-        customStyleWindow = style.window || {};
-        customStyleContent = style.content || {};
-    };
-    const close = () => {
+    
+    var resolver;
+    const open = (NewComponent, newProps = {}, style = { bg: {}, window: {}, content: {} }) => new Promise(
+        (resolve) => {
+            resolver = resolve;
+            Component = NewComponent;
+            props = newProps;
+            customStyleBg = style.bg || {};
+            customStyleWindow = style.window || {};
+            customStyleContent = style.content || {};
+        }
+    );
+    const close = (objectToReturn) => {
         Component = null;
         props = null;
         customStyleBg = {};
         customStyleWindow = {};
         customStyleContent = {};
+        resolver(objectToReturn);
     };
     const handleKeyup = ({ key }) => {
         if (closeOnEsc && Component && key === 'Escape') {

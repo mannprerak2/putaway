@@ -2,7 +2,7 @@
   import TopBar from "./components/TopBar.svelte";
   import MainArea from "./components/MainArea.svelte";
   import OpenTabsBar from "./components/OpenTabsBar.svelte";
-  import Modal from 'svelte-simple-modal';
+  import Modal from './components/Modal.svelte';
 </script>
 
 <style>
