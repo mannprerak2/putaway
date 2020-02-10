@@ -24,8 +24,10 @@ button {
 }
 
 .scroll {
+	width: 100%;
 	height: 100vh;
-	overflow-x: auto;
+	overflow-x: hidden;
+	overflow-y: scroll;
 	scrollbar-width: 0;
 }
 

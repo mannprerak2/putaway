@@ -58,6 +58,7 @@
         background: -webkit-linear-gradient(0deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%), -webkit-linear-gradient(90deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%);
         border-color: gray;
         background-color: gray;
+        z-index: 2;
     }
 
     .plus-icon:hover {

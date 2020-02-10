@@ -13,7 +13,7 @@
   }
 
   #right-fixed-bar {
-    width: 6cm;
+    width: 20vw;
     display: table-cell;
     overflow: hidden;
     height: 100%;

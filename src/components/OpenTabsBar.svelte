@@ -74,7 +74,7 @@
 
 </style>
 
-<main style="height: 100%;">
+<div>
     <h2>Open Tabs - {allTabs.length}</h2>
     
     <div class="scroll">
@@ -93,4 +93,4 @@
         {/each}
         <div style="height: 200px;"></div>
     </div>
-</main>
+</div>
