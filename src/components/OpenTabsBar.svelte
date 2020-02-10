@@ -80,16 +80,16 @@
     <div class="scroll">
         {#each allTabs as tab,i (tab.id)}
             <div class="card" draggable="true" in:fly="{{ x: 500, duration: 400 }}" out:fade on:click|preventDefault={()=> onClickTabCard(tab)}>
-            <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onTabTileClose(tab,i)}></button>
-            
-            <div class="flex-row-container">
-                <img alt=' ' src={tab.favIconUrl} height="20px" style="margin-right: 10px;"/> 
+                <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onTabTileClose(tab,i)}></button>
                 
-                <div class="text-concat">
-                    {tab.title}
+                <div class="flex-row-container">
+                    <img alt=' ' src={tab.favIconUrl} height="20px" style="margin-right: 10px;"/> 
+                    
+                    <div class="text-concat">
+                        {tab.title}
+                    </div>
                 </div>
             </div>
-        </div>
         {/each}
         <div style="height: 200px;"></div>
     </div>

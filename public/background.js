@@ -1,6 +1,12 @@
 // On extension install
 // Creating a folder called PutAway in 'Other Bookmarks' Folder (if it doesn't exist)
 
+function storePid(pid) {
+    // store pid in local storage for use later
+    chrome.storage.local.set({ "pid": pid }, function () {
+        console.log('saved pid');
+    });
+}
 chrome.runtime.onInstalled.addListener(function () {
     const putAwayFolderName = 'PutAway';
 
@@ -17,13 +23,14 @@ chrome.runtime.onInstalled.addListener(function () {
                 }, function (newFolder) {
                     console.log("created folder: " + newFolder.title);
                     pid = newFolder.id;
+                    storePid(pid);
                 });
             } else {
                 console.log("PutAway already found");
                 pid = putawayfolder.id;
+                storePid(pid);
             }
-            // store pid in local storage for use later
-            chrome.storage.local.set({ "pid": pid });
+
         });
     });
 });

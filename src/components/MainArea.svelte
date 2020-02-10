@@ -2,7 +2,7 @@
     import { onMount, getContext } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import CreateCollectionModal from './CreateCollectionModal.svelte';
-
+    import CollectionTile from './tiles/CollectionTile.svelte';
     const { open } = getContext('simple-modal');
 
     // array of BookmarkTreeNode
@@ -10,8 +10,9 @@
 
     onMount(() => {
         chrome.storage.local.get('pid', function (res) {
-            chrome.bookmarks.getChildren(res['pid'], function (children) {
-                allCollections = children;
+            chrome.bookmarks.getChildren(res.pid, function (children) {
+                // only folders
+                allCollections = children.filter((e) => e.url == null);
             });
         });
     });
@@ -26,13 +27,6 @@
     }
 </script>
 <style>
-    .collection {
-        border-bottom: 1px solid gray;
-        height: 100px;
-        width: 100%;
-        padding: 10px;
-    }
-
     summary::-webkit-details-marker {
         color: blue;
     }
@@ -70,7 +64,7 @@
         cursor: pointer;
     }
 
-    .no-collections {
+    .no-collections-indicator {
         position: absolute;
         right: 0;
         top: 0;
@@ -88,7 +82,7 @@
 <main style="position: relative;">
 
     {#if allCollections.length==0 }
-        <div class="no-collections">
+        <div class="no-collections-indicator">
             <h3 >No Collections, Click '</h3>
             <button class="plus-icon-dummy"></button>
             <h3>' To create one</h3>
@@ -99,9 +93,7 @@
 
     <div class="scroll">
         {#each allCollections as collection,i (collection.id)}
-            <div class="collection" in:fade="{{duration: 1000}}" out:fade>
-                {collection.title}
-            </div>
+            <CollectionTile {collection}/>
         {/each}
         <div style="height: 200px;"></div>
     </div>
