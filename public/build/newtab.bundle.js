@@ -1136,22 +1136,42 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (66:4) {#if allCollections.length==0 }
+    // (90:4) {#if allCollections.length==0 }
     function create_if_block(ctx) {
-    	let h3;
+    	let div;
+    	let h30;
+    	let t1;
+    	let button;
+    	let t2;
+    	let h31;
 
     	const block = {
     		c: function create() {
-    			h3 = element("h3");
-    			h3.textContent = "No Collections";
-    			set_style(h3, "padding", "10px");
-    			add_location(h3, file$2, 66, 8, 1774);
+    			div = element("div");
+    			h30 = element("h3");
+    			h30.textContent = "No Collections, Click '";
+    			t1 = space();
+    			button = element("button");
+    			t2 = space();
+    			h31 = element("h3");
+    			h31.textContent = "' To create one";
+    			add_location(h30, file$2, 91, 12, 2569);
+    			attr_dev(button, "class", "plus-icon-dummy svelte-1n993kc");
+    			add_location(button, file$2, 92, 12, 2615);
+    			add_location(h31, file$2, 93, 12, 2669);
+    			attr_dev(div, "class", "no-collections svelte-1n993kc");
+    			add_location(div, file$2, 90, 8, 2528);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, h3, anchor);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, h30);
+    			append_dev(div, t1);
+    			append_dev(div, button);
+    			append_dev(div, t2);
+    			append_dev(div, h31);
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(h3);
+    			if (detaching) detach_dev(div);
     		}
     	};
 
@@ -1159,14 +1179,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(66:4) {#if allCollections.length==0 }",
+    		source: "(90:4) {#if allCollections.length==0 }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (73:8) {#each allCollections as collection,i (collection.id)}
+    // (101:8) {#each allCollections as collection,i (collection.id)}
     function create_each_block(key_1, ctx) {
     	let div;
     	let t_value = /*collection*/ ctx[3].title + "";
@@ -1181,8 +1201,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			t = text(t_value);
-    			attr_dev(div, "class", "collection svelte-xmbn07");
-    			add_location(div, file$2, 73, 12, 2034);
+    			attr_dev(div, "class", "collection svelte-1n993kc");
+    			add_location(div, file$2, 101, 12, 2922);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -1219,7 +1239,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(73:8) {#each allCollections as collection,i (collection.id)}",
+    		source: "(101:8) {#each allCollections as collection,i (collection.id)}",
     		ctx
     	});
 
@@ -1264,14 +1284,14 @@ var app = (function () {
 
     			t2 = space();
     			div0 = element("div");
-    			attr_dev(button, "class", "plus-icon svelte-xmbn07");
-    			add_location(button, file$2, 69, 4, 1836);
+    			attr_dev(button, "class", "plus-icon svelte-1n993kc");
+    			add_location(button, file$2, 97, 4, 2724);
     			set_style(div0, "height", "200px");
-    			add_location(div0, file$2, 77, 8, 2175);
+    			add_location(div0, file$2, 105, 8, 3063);
     			attr_dev(div1, "class", "scroll");
-    			add_location(div1, file$2, 71, 4, 1938);
+    			add_location(div1, file$2, 99, 4, 2826);
     			set_style(main, "position", "relative");
-    			add_location(main, file$2, 63, 0, 1694);
+    			add_location(main, file$2, 87, 0, 2448);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
