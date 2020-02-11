@@ -1140,12 +1140,12 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[2] = list[i];
-    	child_ctx[4] = i;
+    	child_ctx[6] = list[i];
+    	child_ctx[8] = i;
     	return child_ctx;
     }
 
-    // (60:8) {#if items.length==0 }
+    // (127:8) {#if items.length==0 }
     function create_if_block(ctx) {
     	let div;
     	let h3;
@@ -1155,9 +1155,9 @@ var app = (function () {
     			div = element("div");
     			h3 = element("h3");
     			h3.textContent = "Drag 'n' Drop tabs to add to 'em this collection";
-    			add_location(h3, file$2, 61, 16, 1330);
-    			attr_dev(div, "class", "no-items-indicator svelte-111953c");
-    			add_location(div, file$2, 60, 12, 1281);
+    			add_location(h3, file$2, 128, 16, 3175);
+    			attr_dev(div, "class", "no-items-indicator svelte-sa03c4");
+    			add_location(div, file$2, 127, 12, 3126);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1172,34 +1172,100 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(60:8) {#if items.length==0 }",
+    		source: "(127:8) {#if items.length==0 }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:8) {#each items as item,i}
+    // (133:8) {#each items as item,i}
     function create_each_block(ctx) {
-    	let div;
-    	let t_value = /*item*/ ctx[2] + "";
-    	let t;
+    	let div2;
+    	let button;
+    	let t0;
+    	let div1;
+    	let img;
+    	let img_src_value;
+    	let t1;
+    	let div0;
+    	let t2_value = /*item*/ ctx[6].title + "";
+    	let t2;
+    	let div2_outro;
+    	let current;
+    	let dispose;
+
+    	function click_handler(...args) {
+    		return /*click_handler*/ ctx[4](/*item*/ ctx[6], /*i*/ ctx[8], ...args);
+    	}
+
+    	function click_handler_1(...args) {
+    		return /*click_handler_1*/ ctx[5](/*item*/ ctx[6], ...args);
+    	}
 
     	const block = {
     		c: function create() {
-    			div = element("div");
-    			t = text(t_value);
-    			set_style(div, "padding-right", "80px");
-    			set_style(div, "display", "inline-block");
-    			add_location(div, file$2, 66, 12, 1467);
+    			div2 = element("div");
+    			button = element("button");
+    			t0 = space();
+    			div1 = element("div");
+    			img = element("img");
+    			t1 = space();
+    			div0 = element("div");
+    			t2 = text(t2_value);
+    			attr_dev(button, "class", "close-icon svelte-sa03c4");
+    			add_location(button, file$2, 134, 16, 3425);
+    			attr_dev(img, "alt", " ");
+    			if (img.src !== (img_src_value = /*item*/ ctx[6].url)) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "height", "20px");
+    			set_style(img, "margin-right", "10px");
+    			add_location(img, file$2, 137, 20, 3616);
+    			attr_dev(div0, "class", "text-concat svelte-sa03c4");
+    			add_location(div0, file$2, 139, 20, 3729);
+    			attr_dev(div1, "class", "flex-row-container");
+    			add_location(div1, file$2, 136, 16, 3563);
+    			attr_dev(div2, "class", "item svelte-sa03c4");
+    			attr_dev(div2, "draggable", "true");
+    			add_location(div2, file$2, 133, 12, 3312);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, t);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, button);
+    			append_dev(div2, t0);
+    			append_dev(div2, div1);
+    			append_dev(div1, img);
+    			append_dev(div1, t1);
+    			append_dev(div1, div0);
+    			append_dev(div0, t2);
+    			current = true;
+
+    			dispose = [
+    				listen_dev(button, "click", stop_propagation(prevent_default(click_handler)), false, true, true),
+    				listen_dev(div2, "click", prevent_default(click_handler_1), false, true, false)
+    			];
     		},
-    		p: noop,
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (!current || dirty & /*items*/ 2 && img.src !== (img_src_value = /*item*/ ctx[6].url)) {
+    				attr_dev(img, "src", img_src_value);
+    			}
+
+    			if ((!current || dirty & /*items*/ 2) && t2_value !== (t2_value = /*item*/ ctx[6].title + "")) set_data_dev(t2, t2_value);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			if (div2_outro) div2_outro.end(1);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			div2_outro = create_out_transition(div2, fade, {});
+    			current = false;
+    		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div2);
+    			if (detaching && div2_outro) div2_outro.end();
+    			run_all(dispose);
     		}
     	};
 
@@ -1207,7 +1273,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(66:8) {#each items as item,i}",
+    		source: "(133:8) {#each items as item,i}",
     		ctx
     	});
 
@@ -1235,6 +1301,10 @@ var app = (function () {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
     	const block = {
     		c: function create() {
     			div3 = element("div");
@@ -1251,15 +1321,16 @@ var app = (function () {
 
     			t3 = space();
     			div1 = element("div");
-    			attr_dev(div0, "class", "tile-top-bar svelte-111953c");
-    			add_location(div0, file$2, 56, 4, 1158);
+    			attr_dev(div0, "class", "tile-top-bar svelte-sa03c4");
+    			add_location(div0, file$2, 123, 4, 3003);
     			set_style(div1, "width", "200px");
     			set_style(div1, "height", "100%");
-    			add_location(div1, file$2, 70, 8, 1591);
-    			attr_dev(div2, "class", "item-area svelte-111953c");
-    			add_location(div2, file$2, 57, 4, 1213);
-    			attr_dev(div3, "class", "collection svelte-111953c");
-    			add_location(div3, file$2, 55, 0, 1092);
+    			set_style(div1, "display", "inline-block");
+    			add_location(div1, file$2, 145, 8, 3885);
+    			attr_dev(div2, "class", "item-area svelte-sa03c4");
+    			add_location(div2, file$2, 124, 4, 3058);
+    			attr_dev(div3, "class", "collection svelte-sa03c4");
+    			add_location(div3, file$2, 122, 0, 2937);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1284,7 +1355,18 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			if ((!current || dirty & /*collection*/ 1) && t0_value !== (t0_value = /*collection*/ ctx[0].title + "")) set_data_dev(t0, t0_value);
 
-    			if (dirty & /*items*/ 2) {
+    			if (/*items*/ ctx[1].length == 0) {
+    				if (!if_block) {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					if_block.m(div2, t2);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if (dirty & /*onClickItem, items, onItemDelete*/ 14) {
     				each_value = /*items*/ ctx[1];
     				let i;
 
@@ -1293,22 +1375,30 @@ var app = (function () {
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(div2, t3);
     					}
     				}
 
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
+    				group_outros();
+
+    				for (i = each_value.length; i < each_blocks.length; i += 1) {
+    					out(i);
     				}
 
-    				each_blocks.length = each_value.length;
+    				check_outros();
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
 
     			add_render_callback(() => {
     				if (div3_outro) div3_outro.end(1);
@@ -1319,6 +1409,12 @@ var app = (function () {
     			current = true;
     		},
     		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
     			if (div3_intro) div3_intro.invalidate();
     			div3_outro = create_out_transition(div3, fade, {});
     			current = false;
@@ -1344,32 +1440,55 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	let items = [];
+    	let { collection } = $$props;
 
     	onMount(() => {
-    		
+    		chrome.bookmarks.getChildren(collection.id, function (children) {
+    			// only bookmarks
+    			$$invalidate(1, items = children.filter(e => e.url != null));
+    		});
     	});
 
-    	let { collection } = $$props;
+    	var onItemDelete = (item, i) => {
+    		items.splice(i, 1);
+    		$$invalidate(1, items);
+    		chrome.bookmarks.remove(item.id);
+    	};
+
+    	var onClickItem = (item, e) => {
+    		chrome.tabs.create({ url: item.url, active: !e.ctrlKey });
+    	};
+
     	const writable_props = ["collection"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<CollectionTile> was created with unknown prop '${key}'`);
     	});
 
+    	const click_handler = (item, i) => onItemDelete(item, i);
+    	const click_handler_1 = (item, e) => onClickItem(item, e);
+
     	$$self.$set = $$props => {
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
     	};
 
     	$$self.$capture_state = () => {
-    		return { items, collection };
+    		return {
+    			items,
+    			collection,
+    			onItemDelete,
+    			onClickItem
+    		};
     	};
 
     	$$self.$inject_state = $$props => {
     		if ("items" in $$props) $$invalidate(1, items = $$props.items);
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
+    		if ("onItemDelete" in $$props) $$invalidate(2, onItemDelete = $$props.onItemDelete);
+    		if ("onClickItem" in $$props) $$invalidate(3, onClickItem = $$props.onClickItem);
     	};
 
-    	return [collection, items];
+    	return [collection, items, onItemDelete, onClickItem, click_handler, click_handler_1];
     }
 
     class CollectionTile extends SvelteComponentDev {
