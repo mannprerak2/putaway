@@ -2000,7 +2000,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$5, 79, 8, 2059);
+    			add_location(hr, file$5, 79, 8, 2076);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2029,7 +2029,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$5, 77, 8, 2001);
+    			add_location(hr, file$5, 77, 8, 2018);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2090,20 +2090,20 @@ var app = (function () {
     			div0 = element("div");
     			t3 = text(t3_value);
     			attr_dev(button, "class", "close-icon svelte-18bb33g");
-    			add_location(button, file$5, 89, 8, 2395);
+    			add_location(button, file$5, 89, 8, 2412);
     			attr_dev(img, "alt", " ");
     			if (img.src !== (img_src_value = /*tab*/ ctx[0].favIconUrl)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "height", "20px");
     			set_style(img, "margin-right", "10px");
-    			add_location(img, file$5, 92, 12, 2559);
+    			add_location(img, file$5, 92, 12, 2576);
     			attr_dev(div0, "class", "text-concat svelte-18bb33g");
-    			add_location(div0, file$5, 94, 12, 2651);
+    			add_location(div0, file$5, 94, 12, 2668);
     			attr_dev(div1, "class", "flex-row-container");
-    			add_location(div1, file$5, 91, 8, 2514);
+    			add_location(div1, file$5, 91, 8, 2531);
     			attr_dev(div2, "class", "card svelte-18bb33g");
     			attr_dev(div2, "draggable", "true");
-    			add_location(div2, file$5, 81, 4, 2111);
-    			add_location(div3, file$5, 75, 0, 1922);
+    			add_location(div2, file$5, 81, 4, 2128);
+    			add_location(div3, file$5, 75, 0, 1939);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2201,7 +2201,7 @@ var app = (function () {
     	};
 
     	var handleDragStart = e => {
-    		e.dataTransfer.setData("text", index);
+    		e.dataTransfer.setData("text", "t" + index.toString());
     	};
 
     	var handleDrop = e => {
@@ -2370,7 +2370,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (44:8) {#each allTabs as tab,i (tab.id)}
+    // (61:8) {#each allTabs as tab,i (tab.id)}
     function create_each_block$2(key_1, ctx) {
     	let first;
     	let current;
@@ -2424,7 +2424,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(44:8) {#each allTabs as tab,i (tab.id)}",
+    		source: "(61:8) {#each allTabs as tab,i (tab.id)}",
     		ctx
     	});
 
@@ -2469,12 +2469,12 @@ var app = (function () {
 
     			t3 = space();
     			div0 = element("div");
-    			add_location(h2, file$6, 40, 4, 997);
+    			add_location(h2, file$6, 57, 4, 1583);
     			set_style(div0, "height", "200px");
-    			add_location(div0, file$6, 46, 8, 1209);
+    			add_location(div0, file$6, 63, 8, 1795);
     			attr_dev(div1, "class", "scroll");
-    			add_location(div1, file$6, 42, 4, 1040);
-    			add_location(div2, file$6, 39, 0, 987);
+    			add_location(div1, file$6, 59, 4, 1626);
+    			add_location(div2, file$6, 56, 0, 1573);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2562,13 +2562,25 @@ var app = (function () {
 
     	var onDrop = (e, dropIndex) => {
     		e.preventDefault();
-    		var dragIndex = parseInt(e.dataTransfer.getData("text"));
+    		var rawData = e.dataTransfer.getData("text");
 
-    		// move tabs from dragIndex to dropIndex
-    		chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex });
+    		// first letter is t if a tab is dropped
+    		if (rawData[0] == "t") {
+    			var dragIndex = parseInt(rawData.substr(1));
 
-    		allTabs.splice(dropIndex, 0, allTabs.splice(dragIndex, 1)[0]);
-    		$$invalidate(0, allTabs);
+    			// move tabs from dragIndex to dropIndex
+    			if (dragIndex >= dropIndex) {
+    				chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex });
+    				allTabs.splice(dropIndex, 0, allTabs[dragIndex]);
+    				allTabs.splice(dragIndex + 1, 1);
+    			} else {
+    				chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex - 1 });
+    				allTabs.splice(dropIndex, 0, allTabs[dragIndex]);
+    				allTabs.splice(dragIndex, 1);
+    			}
+
+    			$$invalidate(0, allTabs);
+    		} else if (rawData[0] == "i") ; // first letter is i if an item was dropped here
     	};
 
     	$$self.$capture_state = () => {

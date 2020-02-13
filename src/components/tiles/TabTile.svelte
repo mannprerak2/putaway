@@ -16,7 +16,7 @@
 
     var handleDragStart = (e) => {
         e.dataTransfer
-            .setData("text", index);
+            .setData("text", "t" + index.toString());
     }
 
     var handleDrop = (e) => {

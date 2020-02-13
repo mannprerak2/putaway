@@ -26,12 +26,29 @@
 
     var onDrop = (e, dropIndex) => {
         e.preventDefault();
+        var rawData = e.dataTransfer.getData('text');
 
-        var dragIndex = parseInt(e.dataTransfer.getData('text'));
-        // move tabs from dragIndex to dropIndex
-        chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex });
-        allTabs.splice(dropIndex, 0, allTabs.splice(dragIndex, 1)[0]);
-        allTabs = allTabs;
+        // first letter is t if a tab is dropped
+        if (rawData[0] == "t") {
+            var dragIndex = parseInt(rawData.substr(1));
+            // move tabs from dragIndex to dropIndex
+            if (dragIndex >= dropIndex) {
+                chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex });
+                allTabs.splice(dropIndex, 0, allTabs[dragIndex]);
+                allTabs.splice(dragIndex + 1, 1);
+            }
+            else {
+                chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex - 1 });
+                allTabs.splice(dropIndex, 0, allTabs[dragIndex]);
+                allTabs.splice(dragIndex, 1);
+            }
+
+            allTabs = allTabs;
+        } else if (rawData[0] == "i") {
+            // first letter is i if an item was dropped here
+
+
+        }
     }
 </script>
 <style>
