@@ -27,9 +27,30 @@
         });
     }
 
-    var onDrop = (e) => {
+    var onDrop = (e, dropIndex) => {
         e.preventDefault();
-        console.log(e.dataTransfer);
+        var rawData = e.dataTransfer.getData('text');
+
+        // first letter is t if a tab is dropped
+        if (rawData[0] == "t") {
+
+        } else if (rawData[0] == "i") {
+            // first letter is i if an item was dropped here
+            var dragIndex = parseInt(rawData.substr(1));
+            // move items from dragIndex to dropIndex
+            if (dragIndex >= dropIndex) {
+                chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex });
+                items.splice(dropIndex, 0, items[dragIndex]);
+                items.splice(dragIndex + 1, 1);
+            }
+            else {
+                chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex - 1 });
+                items.splice(dropIndex, 0, items[dragIndex]);
+                items.splice(dragIndex, 1);
+            }
+
+            items = items;
+        }
     }
 </script>
 <style>
@@ -78,7 +99,7 @@
         font-size: 1em;
     }
 </style>
-<div class="collection" in:fade="{{duration: 500}}" out:fade on:drop={onDrop} on:dragover|preventDefault>
+<div class="collection" in:fade="{{duration: 500}}" out:fade on:dragover|preventDefault>
     <div class="tile-top-bar">{collection.title}</div>
     <div class="item-area">
 
@@ -89,7 +110,7 @@
         {/if}
 
         {#each items as item,index}
-            <ItemTile {index} {item} {onItemDelete} {onClickItem}/>
+            <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
         {/each}
         <div style="width: 200px; height: 100%; display: inline-block">
         </div>

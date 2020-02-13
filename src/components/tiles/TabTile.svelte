@@ -80,11 +80,10 @@
         <hr style="border: 1px solid white;">
     {/if}
     <div class="card" draggable="true" 
-        on:dragover={onDragEnter}
+        on:dragover|preventDefault={onDragEnter}
         on:dragleave={onDragLeave}
         on:dragstart={handleDragStart}
         on:drop={handleDrop}
-        on:dragover|preventDefault
         on:click|preventDefault={()=>
         onClickTabCard(tab)}>
         <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onTabTileClose(tab,index)}></button>

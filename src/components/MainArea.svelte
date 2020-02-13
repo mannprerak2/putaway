@@ -27,14 +27,6 @@
     }
 </script>
 <style>
-    summary::-webkit-details-marker {
-        color: blue;
-    }
-
-    summary:focus {
-        outline-style: none;
-    }
-
     .plus-icon-dummy {
         width: 20px;
         height: 20px;
@@ -48,7 +40,7 @@
     .plus-icon {
         position: absolute;
         margin-right: 20px;
-        margin-bottom: 100px;
+        margin-bottom: 8vh;
         bottom: 0;
         right: 0;
         width: 40px;

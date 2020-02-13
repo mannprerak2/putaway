@@ -5,7 +5,25 @@
     export let item;
     export let onItemDelete;
     export let onClickItem;
+    export let onDrop;
+    let dropLine = false;
+    var onDragEnter = (e) => {
+        dropLine = true;
+    }
+    var onDragLeave = (e) => {
+        dropLine = false;
+    }
 
+    var handleDragStart = (e) => {
+        e.dataTransfer
+            .setData("text", "i" + index.toString());
+    }
+
+    var handleDrop = (e) => {
+        e.preventDefault();
+        dropLine = false;
+        onDrop(e, index);
+    }
 </script>
 <style>
     .item {
@@ -14,7 +32,7 @@
         width: 15em;
         /* do not use margin top/bottom, it will overflow */
         height: 95%;
-        margin-right: 10px;
+        /* margin-right: 10px; */
         padding: 10px;
         display: inline-block;
         box-sizing: border-box;
@@ -55,17 +73,31 @@
         line-height: 1em;
         font-size: 1.2em;
     }
+
+    .vl {
+        border-left: 2px solid;
+        height: 100%;
+        margin-right: 3px;
+        margin-left: 3px;
+    }
 </style>
-<div class="item" draggable="true" out:fade
-    on:click|preventDefault={(e)=>
-    onClickItem(item,e)}>
-    <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onItemDelete(item,index)}></button>
+<div class="flex-row-container" style="height: 100%;">
+    {#if dropLine}
+        <div class="vl" style="border-color: black;"/>
+    {:else}
+        <div class="vl" style="border-color: white;"/>
+    {/if}
+    <div class="item" draggable="true" out:fade on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave}
+        on:dragstart={handleDragStart} on:drop={handleDrop} on:click|preventDefault={(e)=>
+        onClickItem(item,e)}>
+        <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onItemDelete(item,index)}></button>
 
-    <div class="flex-row-container">
-        <img alt=' ' src={item.url} height="20px" style="margin-right: 10px;" />
+        <div class="flex-row-container">
+            <img alt=' ' src={item.url} height="20px" style="margin-right: 10px;" />
 
-        <div class="text-concat">
-            {item.title}
+            <div class="text-concat">
+                {item.title}
+            </div>
         </div>
     </div>
 </div>
