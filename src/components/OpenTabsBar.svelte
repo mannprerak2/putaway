@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { fade, fly } from 'svelte/transition';
+    import TabTile from './tiles/TabTile.svelte';
 
     let allTabs = [];
 
@@ -23,73 +23,26 @@
         allTabs = allTabs;
         chrome.tabs.remove(tab.id);
     }
+
+    var onDrop = (e, dropIndex) => {
+        e.preventDefault();
+
+        var dragIndex = parseInt(e.dataTransfer.getData('text'));
+        // move tabs from dragIndex to dropIndex
+        chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex });
+        allTabs.splice(dropIndex, 0, allTabs.splice(dragIndex, 1)[0]);
+        allTabs = allTabs;
+    }
 </script>
 <style>
-    .card {
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 5px;
-        margin: 8px;
-        padding: 8px;
-        position: relative;
-        height: 2em;
-    }
-
-    .card:hover {
-        background-color: rgba(240, 240, 240, 1);
-        border: 1px solid black;
-        cursor: grab;
-        /* padding: (p-1)px to prevent shifting */
-        padding: 7px;
-    }
-
-    .close-icon {
-        display: none;
-    }
-
-    .card:hover .close-icon {
-        position: absolute;
-        right: -16px;
-        margin-right: 10px;
-        bottom: 0;
-        display: block;
-        box-sizing: border-box;
-        width: 16px;
-        height: 16px;
-        border-width: 3px;
-        border-style: solid;
-        border-color: gray;
-        border-radius: 100%;
-        background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%), -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%);
-        background-color: gray;
-    }
-
-    .text-concat {
-        position: relative;
-        display: inline-block;
-        word-wrap: break-word;
-        overflow: hidden;
-        max-height: 2em;
-        line-height: 1em;
-    }
-
 </style>
 
 <div>
     <h2>Open Tabs - {allTabs.length}</h2>
-    
+
     <div class="scroll">
         {#each allTabs as tab,i (tab.id)}
-            <div class="card" draggable="true" in:fly="{{ x: 500, duration: 400 }}" out:fade on:click|preventDefault={()=> onClickTabCard(tab)}>
-                <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onTabTileClose(tab,i)}></button>
-                
-                <div class="flex-row-container">
-                    <img alt=' ' src={tab.favIconUrl} height="20px" style="margin-right: 10px;"/> 
-                    
-                    <div class="text-concat">
-                        {tab.title}
-                    </div>
-                </div>
-            </div>
+            <TabTile {tab} index={i} {onClickTabCard} {onTabTileClose} {onDrop}/>
         {/each}
         <div style="height: 200px;"></div>
     </div>

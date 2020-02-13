@@ -5,6 +5,7 @@
     export let item;
     export let onItemDelete;
     export let onClickItem;
+
 </script>
 <style>
     .item {
@@ -55,7 +56,9 @@
         font-size: 1.2em;
     }
 </style>
-<div class="item" draggable="true" out:fade on:click|preventDefault={(e)=> onClickItem(item,e)}>
+<div class="item" draggable="true" out:fade
+    on:click|preventDefault={(e)=>
+    onClickItem(item,e)}>
     <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onItemDelete(item,index)}></button>
 
     <div class="flex-row-container">

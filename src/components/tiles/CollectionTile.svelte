@@ -20,11 +20,16 @@
         chrome.bookmarks.remove(item.id);
     }
 
-    var onClickItem = (item,e) => {
+    var onClickItem = (item, e) => {
         chrome.tabs.create({
             url: item.url,
             active: !e.ctrlKey
         });
+    }
+
+    var onDrop = (e) => {
+        e.preventDefault();
+        console.log(e.dataTransfer);
     }
 </script>
 <style>
@@ -73,7 +78,7 @@
         font-size: 1em;
     }
 </style>
-<div class="collection" in:fade="{{duration: 500}}" out:fade>
+<div class="collection" in:fade="{{duration: 500}}" out:fade on:drop={onDrop} on:dragover|preventDefault>
     <div class="tile-top-bar">{collection.title}</div>
     <div class="item-area">
 
