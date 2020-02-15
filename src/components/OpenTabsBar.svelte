@@ -42,12 +42,9 @@
                 allTabs.splice(dropIndex, 0, allTabs[dragIndex]);
                 allTabs.splice(dragIndex, 1);
             }
-
             allTabs = allTabs;
         } else if (rawData[0] == "i") {
-            // first letter is i if an item was dropped here
-            var item = JSON.parse(e.dataTransfer.getData("item"));
-            // TODO: convert item to tab and open tab at that dropIndex
+            // DO NOTHING
         }
     }
 </script>

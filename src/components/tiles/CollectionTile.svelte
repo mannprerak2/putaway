@@ -3,6 +3,8 @@
     import { onMount } from 'svelte';
     import ItemTile from './ItemTile.svelte';
     import EmptyItemTile from './EmptyItemTile.svelte';
+    import NoItemTileIndicator from './NoItemIndicatorTile.svelte';
+    import dropEventObject from './../../stores/dropEventStore';
 
     let items = [];
 
@@ -49,7 +51,6 @@
         // first letter is t if a tab is dropped
         if (rawData[0] == "t") {
             var tab = JSON.parse(e.dataTransfer.getData("tab"));
-            // TODO: save tab to bookmark at that collection and dropIndex
             saveTabToBookmark(tab, dropIndex);
         } else if (rawData[0] == "i") {
             // first letter is i if an item was dropped here
@@ -69,6 +70,11 @@
             }
         }
     }
+
+    // // this will run on every change in dropevent
+    // $: {
+    //     console.log($dropEventObject);
+    // }
 </script>
 <style>
     .collection {
@@ -100,35 +106,18 @@
     .item-area::-webkit-scrollbar {
         display: none;
     }
-
-    .no-items-indicator {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
-        color: rgba(10, 10, 10, 0.2);
-        font-size: 1em;
-    }
 </style>
 <div class="collection" in:fade="{{duration: 500}}" out:fade on:dragover|preventDefault>
     <div class="tile-top-bar">{collection.title}</div>
     <div class="item-area">
 
-        {#if items.length==0 }
-            <div class="no-items-indicator">
-                <h3 >Drag 'n' Drop tabs to add to 'em this collection</h3>
-            </div>
+        {#if items.length==0}
+            <NoItemTileIndicator index={items.length} {onDrop}/>
+        {:else}
+            {#each items as item,index}
+                <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
+            {/each}
+            <EmptyItemTile index={items.length} {onDrop}/>
         {/if}
-
-        {#each items as item,index}
-            <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
-        {/each}
-        <EmptyItemTile index={items.length} {onDrop}/>
     </div>
 </div>
