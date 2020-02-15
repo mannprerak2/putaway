@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import TabTile from './tiles/TabTile.svelte';
+    import EmptyTabTile from './tiles/EmptyTabTile.svelte'
 
     let allTabs = [];
 
@@ -27,7 +28,6 @@
     var onDrop = (e, dropIndex) => {
         e.preventDefault();
         var rawData = e.dataTransfer.getData('text');
-
         // first letter is t if a tab is dropped
         if (rawData[0] == "t") {
             var dragIndex = parseInt(rawData.substr(1));
@@ -46,8 +46,8 @@
             allTabs = allTabs;
         } else if (rawData[0] == "i") {
             // first letter is i if an item was dropped here
-
-
+            var item = JSON.parse(e.dataTransfer.getData("item"));
+            // TODO: convert item to tab and open tab at that dropIndex
         }
     }
 </script>
@@ -61,6 +61,6 @@
         {#each allTabs as tab,i (tab.id)}
             <TabTile {tab} index={i} {onClickTabCard} {onTabTileClose} {onDrop}/>
         {/each}
-        <div style="height: 200px;"></div>
+        <EmptyTabTile index={allTabs.length} {onDrop}/>
     </div>
 </div>

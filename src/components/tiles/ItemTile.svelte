@@ -17,6 +17,8 @@
     var handleDragStart = (e) => {
         e.dataTransfer
             .setData("text", "i" + index.toString());
+        e.dataTransfer
+            .setData("item", JSON.stringify(item));
     }
 
     var handleDrop = (e) => {
@@ -73,13 +75,6 @@
         line-height: 1em;
         font-size: 1.2em;
     }
-
-    .vl {
-        border-left: 2px solid;
-        height: 100%;
-        margin-right: 3px;
-        margin-left: 3px;
-    }
 </style>
 <div class="flex-row-container" style="height: 100%;">
     {#if dropLine}
@@ -93,10 +88,10 @@
         <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onItemDelete(item,index)}></button>
 
         <div class="flex-row-container">
-            <img alt=' ' src={item.url} height="20px" style="margin-right: 10px;" />
+            <img alt=' ' src={item.title.split(":::::")[1]} height="20px" style="margin-right: 10px;" />
 
             <div class="text-concat">
-                {item.title}
+                {item.title.split(':::::')[0]}
             </div>
         </div>
     </div>

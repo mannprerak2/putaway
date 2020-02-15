@@ -2,6 +2,7 @@
     import { fade, fly } from 'svelte/transition';
     import { onMount } from 'svelte';
     import ItemTile from './ItemTile.svelte';
+    import EmptyItemTile from './EmptyItemTile.svelte';
 
     let items = [];
 
@@ -27,13 +28,29 @@
         });
     }
 
+    function saveTabToBookmark(tab, dropIndex) {
+        chrome.bookmarks.create(
+            {
+                parentId: collection.id,
+                url: tab.url,
+                index: dropIndex,
+                title: tab.title + ":::::" + tab.favIconUrl
+            }, function (node) {
+                items.splice(dropIndex, 0, node);
+                items = items;
+            }
+        );
+    }
+
     var onDrop = (e, dropIndex) => {
         e.preventDefault();
         var rawData = e.dataTransfer.getData('text');
 
         // first letter is t if a tab is dropped
         if (rawData[0] == "t") {
-
+            var tab = JSON.parse(e.dataTransfer.getData("tab"));
+            // TODO: save tab to bookmark at that collection and dropIndex
+            saveTabToBookmark(tab, dropIndex);
         } else if (rawData[0] == "i") {
             // first letter is i if an item was dropped here
             var dragIndex = parseInt(rawData.substr(1));
@@ -42,14 +59,14 @@
                 chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex });
                 items.splice(dropIndex, 0, items[dragIndex]);
                 items.splice(dragIndex + 1, 1);
+                items = items;
             }
             else {
                 chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex - 1 });
                 items.splice(dropIndex, 0, items[dragIndex]);
                 items.splice(dragIndex, 1);
+                items = items;
             }
-
-            items = items;
         }
     }
 </script>
@@ -112,7 +129,6 @@
         {#each items as item,index}
             <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
         {/each}
-        <div style="width: 200px; height: 100%; display: inline-block">
-        </div>
+        <EmptyItemTile index={items.length} {onDrop}/>
     </div>
 </div>

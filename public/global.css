@@ -34,3 +34,10 @@ button {
 .scroll::-webkit-scrollbar {
 	display: none;
 }
+
+.vl {
+	border-left: 2px solid;
+	height: 100%;
+	margin-right: 3px;
+	margin-left: 3px;
+}
