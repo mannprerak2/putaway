@@ -2046,19 +2046,77 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[8] = list[i];
-    	child_ctx[10] = i;
+    	child_ctx[15] = list[i];
+    	child_ctx[1] = i;
     	return child_ctx;
     }
 
-    // (148:8) {:else}
+    // (158:4) {:else}
+    function create_else_block_1(ctx) {
+    	let hr;
+
+    	const block = {
+    		c: function create() {
+    			hr = element("hr");
+    			set_style(hr, "border", "1px solid white");
+    			add_location(hr, file$5, 158, 8, 4839);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, hr, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(hr);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(158:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (156:4) {#if dropLine}
+    function create_if_block_1(ctx) {
+    	let hr;
+
+    	const block = {
+    		c: function create() {
+    			hr = element("hr");
+    			set_style(hr, "border", "1px solid black");
+    			add_location(hr, file$5, 156, 8, 4781);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, hr, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(hr);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(156:4) {#if dropLine}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (168:8) {:else}
     function create_else_block$3(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let t;
     	let current;
-    	let each_value = /*items*/ ctx[1];
-    	const get_key = ctx => /*item*/ ctx[8].id;
+    	let each_value = /*items*/ ctx[2];
+    	const get_key = ctx => /*item*/ ctx[15].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -2069,8 +2127,8 @@ var app = (function () {
 
     	const emptyitemtile = new EmptyItemTile({
     			props: {
-    				index: /*items*/ ctx[1].length,
-    				onDrop: /*onDrop*/ ctx[4]
+    				index: /*items*/ ctx[2].length,
+    				onDrop: /*onDrop*/ ctx[10]
     			},
     			$$inline: true
     		});
@@ -2094,13 +2152,13 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const each_value = /*items*/ ctx[1];
+    			const each_value = /*items*/ ctx[2];
     			group_outros();
     			validate_each_keys(ctx, each_value, get_each_context, get_key);
     			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, t.parentNode, outro_and_destroy_block, create_each_block, t, get_each_context);
     			check_outros();
     			const emptyitemtile_changes = {};
-    			if (dirty & /*items*/ 2) emptyitemtile_changes.index = /*items*/ ctx[1].length;
+    			if (dirty & /*items*/ 4) emptyitemtile_changes.index = /*items*/ ctx[2].length;
     			emptyitemtile.$set(emptyitemtile_changes);
     		},
     		i: function intro(local) {
@@ -2135,21 +2193,21 @@ var app = (function () {
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(148:8) {:else}",
+    		source: "(168:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (146:8) {#if items.length==0}
+    // (166:8) {#if items.length==0}
     function create_if_block$3(ctx) {
     	let current;
 
     	const noitemtileindicator = new NoItemIndicatorTile({
     			props: {
-    				index: /*items*/ ctx[1].length,
-    				onDrop: /*onDrop*/ ctx[4]
+    				index: /*items*/ ctx[2].length,
+    				onDrop: /*onDrop*/ ctx[10]
     			},
     			$$inline: true
     		});
@@ -2164,7 +2222,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const noitemtileindicator_changes = {};
-    			if (dirty & /*items*/ 2) noitemtileindicator_changes.index = /*items*/ ctx[1].length;
+    			if (dirty & /*items*/ 4) noitemtileindicator_changes.index = /*items*/ ctx[2].length;
     			noitemtileindicator.$set(noitemtileindicator_changes);
     		},
     		i: function intro(local) {
@@ -2185,25 +2243,25 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(146:8) {#if items.length==0}",
+    		source: "(166:8) {#if items.length==0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (149:12) {#each items as item,index (item.id)}
+    // (169:12) {#each items as item,index (item.id)}
     function create_each_block(key_1, ctx) {
     	let first;
     	let current;
 
     	const itemtile = new ItemTile({
     			props: {
-    				index: /*index*/ ctx[10],
-    				item: /*item*/ ctx[8],
-    				onItemDelete: /*onItemDelete*/ ctx[2],
-    				onClickItem: /*onClickItem*/ ctx[3],
-    				onDrop: /*onDrop*/ ctx[4]
+    				index: /*index*/ ctx[1],
+    				item: /*item*/ ctx[15],
+    				onItemDelete: /*onItemDelete*/ ctx[8],
+    				onClickItem: /*onClickItem*/ ctx[9],
+    				onDrop: /*onDrop*/ ctx[10]
     			},
     			$$inline: true
     		});
@@ -2223,8 +2281,8 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const itemtile_changes = {};
-    			if (dirty & /*items*/ 2) itemtile_changes.index = /*index*/ ctx[10];
-    			if (dirty & /*items*/ 2) itemtile_changes.item = /*item*/ ctx[8];
+    			if (dirty & /*items*/ 4) itemtile_changes.index = /*index*/ ctx[1];
+    			if (dirty & /*items*/ 4) itemtile_changes.item = /*item*/ ctx[15];
     			itemtile.$set(itemtile_changes);
     		},
     		i: function intro(local) {
@@ -2246,7 +2304,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(149:12) {#each items as item,index (item.id)}",
+    		source: "(169:12) {#each items as item,index (item.id)}",
     		ctx
     	});
 
@@ -2254,61 +2312,112 @@ var app = (function () {
     }
 
     function create_fragment$5(ctx) {
+    	let div4;
+    	let t0;
     	let div2;
     	let div0;
-    	let t0_value = /*collection*/ ctx[0].title + "";
-    	let t0;
+    	let t1_value = /*collection*/ ctx[0].title + "";
     	let t1;
+    	let t2;
     	let div1;
-    	let current_block_type_index;
-    	let if_block;
-    	let div2_intro;
+    	let t3;
+    	let span;
     	let div2_outro;
+    	let t4;
+    	let div3;
+    	let current_block_type_index;
+    	let if_block1;
+    	let div4_intro;
+    	let div4_outro;
     	let current;
     	let dispose;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*dropLine*/ ctx[3]) return create_if_block_1;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block0 = current_block_type(ctx);
     	const if_block_creators = [create_if_block$3, create_else_block$3];
     	const if_blocks = [];
 
-    	function select_block_type(ctx, dirty) {
-    		if (/*items*/ ctx[1].length == 0) return 0;
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*items*/ ctx[2].length == 0) return 0;
     		return 1;
     	}
 
-    	current_block_type_index = select_block_type(ctx);
-    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	current_block_type_index = select_block_type_1(ctx);
+    	if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
     	const block = {
     		c: function create() {
+    			div4 = element("div");
+    			if_block0.c();
+    			t0 = space();
     			div2 = element("div");
     			div0 = element("div");
-    			t0 = text(t0_value);
-    			t1 = space();
+    			t1 = text(t1_value);
+    			t2 = space();
     			div1 = element("div");
-    			if_block.c();
-    			attr_dev(div0, "class", "tile-top-bar svelte-11b4624");
-    			add_location(div0, file$5, 142, 4, 4620);
-    			attr_dev(div1, "class", "item-area svelte-11b4624");
-    			add_location(div1, file$5, 143, 4, 4675);
-    			attr_dev(div2, "class", "collection svelte-11b4624");
-    			add_location(div2, file$5, 141, 0, 4527);
+    			t3 = space();
+    			span = element("span");
+    			t4 = space();
+    			div3 = element("div");
+    			if_block1.c();
+    			add_location(div0, file$5, 161, 87, 5071);
+    			set_style(div1, "flex-grow", "1");
+    			add_location(div1, file$5, 162, 4, 5105);
+    			add_location(span, file$5, 162, 32, 5133);
+    			attr_dev(div2, "class", "tile-top-bar svelte-1dklzav");
+    			attr_dev(div2, "draggable", "true");
+    			add_location(div2, file$5, 160, 4, 4891);
+    			attr_dev(div3, "class", "item-area svelte-1dklzav");
+    			add_location(div3, file$5, 163, 4, 5151);
+    			attr_dev(div4, "class", "collection svelte-1dklzav");
+    			add_location(div4, file$5, 154, 0, 4665);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div2, anchor);
+    			insert_dev(target, div4, anchor);
+    			if_block0.m(div4, null);
+    			append_dev(div4, t0);
+    			append_dev(div4, div2);
     			append_dev(div2, div0);
-    			append_dev(div0, t0);
-    			append_dev(div2, t1);
+    			append_dev(div0, t1);
+    			append_dev(div2, t2);
     			append_dev(div2, div1);
-    			if_blocks[current_block_type_index].m(div1, null);
+    			append_dev(div2, t3);
+    			append_dev(div2, span);
+    			append_dev(div4, t4);
+    			append_dev(div4, div3);
+    			if_blocks[current_block_type_index].m(div3, null);
     			current = true;
-    			dispose = listen_dev(div2, "dragover", prevent_default(/*dragover_handler*/ ctx[7]), false, true, false);
+
+    			dispose = [
+    				listen_dev(div2, "dragover", prevent_default(/*onDragEnter*/ ctx[4]), false, true, false),
+    				listen_dev(div2, "dragleave", /*onDragLeave*/ ctx[5], false, false, false),
+    				listen_dev(div2, "dragstart", /*handleDragStart*/ ctx[6], false, false, false),
+    				listen_dev(div2, "drop", /*handleDrop*/ ctx[7], false, false, false),
+    				listen_dev(div4, "dragover", prevent_default(/*dragover_handler*/ ctx[14]), false, true, false)
+    			];
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*collection*/ 1) && t0_value !== (t0_value = /*collection*/ ctx[0].title + "")) set_data_dev(t0, t0_value);
+    			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(div4, t0);
+    				}
+    			}
+
+    			if ((!current || dirty & /*collection*/ 1) && t1_value !== (t1_value = /*collection*/ ctx[0].title + "")) set_data_dev(t1, t1_value);
     			let previous_block_index = current_block_type_index;
-    			current_block_type_index = select_block_type(ctx);
+    			current_block_type_index = select_block_type_1(ctx);
 
     			if (current_block_type_index === previous_block_index) {
     				if_blocks[current_block_type_index].p(ctx, dirty);
@@ -2320,40 +2429,44 @@ var app = (function () {
     				});
 
     				check_outros();
-    				if_block = if_blocks[current_block_type_index];
+    				if_block1 = if_blocks[current_block_type_index];
 
-    				if (!if_block) {
-    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-    					if_block.c();
+    				if (!if_block1) {
+    					if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block1.c();
     				}
 
-    				transition_in(if_block, 1);
-    				if_block.m(div1, null);
+    				transition_in(if_block1, 1);
+    				if_block1.m(div3, null);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(if_block);
+    			if (div2_outro) div2_outro.end(1);
+    			transition_in(if_block1);
 
     			add_render_callback(() => {
-    				if (div2_outro) div2_outro.end(1);
-    				if (!div2_intro) div2_intro = create_in_transition(div2, fade, { duration: 500 });
-    				div2_intro.start();
+    				if (div4_outro) div4_outro.end(1);
+    				if (!div4_intro) div4_intro = create_in_transition(div4, fade, { duration: 500 });
+    				div4_intro.start();
     			});
 
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(if_block);
-    			if (div2_intro) div2_intro.invalidate();
     			div2_outro = create_out_transition(div2, fade, {});
+    			transition_out(if_block1);
+    			if (div4_intro) div4_intro.invalidate();
+    			div4_outro = create_out_transition(div4, fade, {});
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div2);
-    			if_blocks[current_block_type_index].d();
+    			if (detaching) detach_dev(div4);
+    			if_block0.d();
     			if (detaching && div2_outro) div2_outro.end();
-    			dispose();
+    			if_blocks[current_block_type_index].d();
+    			if (detaching && div4_outro) div4_outro.end();
+    			run_all(dispose);
     		}
     	};
 
@@ -2371,11 +2484,32 @@ var app = (function () {
     function instance$4($$self, $$props, $$invalidate) {
     	let items = [];
     	let { collection } = $$props;
+    	let { onCollectionDrop } = $$props;
+    	let { index } = $$props;
+    	let dropLine = false;
+
+    	var onDragEnter = e => {
+    		$$invalidate(3, dropLine = true);
+    	};
+
+    	var onDragLeave = e => {
+    		$$invalidate(3, dropLine = false);
+    	};
+
+    	var handleDragStart = e => {
+    		e.dataTransfer.setData("text", "c" + index.toString());
+    	};
+
+    	var handleDrop = e => {
+    		e.preventDefault();
+    		$$invalidate(3, dropLine = false);
+    		onCollectionDrop(e, index);
+    	};
 
     	onMount(() => {
     		chrome.bookmarks.getChildren(collection.id, function (children) {
     			// only bookmarks
-    			$$invalidate(1, items = children.filter(e => e.url != null));
+    			$$invalidate(2, items = children.filter(e => e.url != null));
     		});
     	});
 
@@ -2411,7 +2545,7 @@ var app = (function () {
     				items.splice(dropIndex, 0, obj.sourceObj);
     			}
 
-    			$$invalidate(1, items);
+    			$$invalidate(2, items);
     		} else if (obj.source[0] == "t" && obj.target[0] == "i") {
     			saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)));
     		}
@@ -2421,7 +2555,7 @@ var app = (function () {
 
     	var onItemDelete = (item, i) => {
     		items.splice(i, 1);
-    		$$invalidate(1, items);
+    		$$invalidate(2, items);
     		chrome.bookmarks.remove(item.id);
     	};
 
@@ -2439,39 +2573,26 @@ var app = (function () {
     			},
     			function (node) {
     				items.splice(dropIndex, 0, node);
-    				$$invalidate(1, items);
+    				$$invalidate(2, items);
     			}
     		);
     	}
 
+    	// called when an item drops (child components call this)
     	var onDrop = (e, dropIndex) => {
     		e.preventDefault();
     		var rawData = e.dataTransfer.getData("text");
+    		var obj = JSON.parse(e.dataTransfer.getData("object"));
 
-    		// first letter is t if a tab is dropped
-    		if (rawData[0] == "t") {
-    			var tab = JSON.parse(e.dataTransfer.getData("object"));
-
-    			deo.set({
-    				source: rawData,
-    				target: "i" + dropIndex.toString(),
-    				sourceObj: tab,
-    				targetObj: collection
-    			});
-    		} else if (rawData[0] == "i") {
-    			// first letter is i if an item was dropped here
-    			var item = JSON.parse(e.dataTransfer.getData("object"));
-
-    			deo.set({
-    				source: rawData,
-    				target: "i" + dropIndex.toString(),
-    				sourceObj: item,
-    				targetObj: collection
-    			});
-    		}
+    		deo.set({
+    			source: rawData,
+    			target: "i" + dropIndex.toString(),
+    			sourceObj: obbj,
+    			targetObj: collection
+    		});
     	};
 
-    	const writable_props = ["collection"];
+    	const writable_props = ["collection", "onCollectionDrop", "index"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<CollectionTile> was created with unknown prop '${key}'`);
@@ -2483,12 +2604,21 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
+    		if ("onCollectionDrop" in $$props) $$invalidate(11, onCollectionDrop = $$props.onCollectionDrop);
+    		if ("index" in $$props) $$invalidate(1, index = $$props.index);
     	};
 
     	$$self.$capture_state = () => {
     		return {
     			items,
     			collection,
+    			onCollectionDrop,
+    			index,
+    			dropLine,
+    			onDragEnter,
+    			onDragLeave,
+    			handleDragStart,
+    			handleDrop,
     			onItemDelete,
     			onClickItem,
     			onDrop
@@ -2496,19 +2626,33 @@ var app = (function () {
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ("items" in $$props) $$invalidate(1, items = $$props.items);
+    		if ("items" in $$props) $$invalidate(2, items = $$props.items);
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
-    		if ("onItemDelete" in $$props) $$invalidate(2, onItemDelete = $$props.onItemDelete);
-    		if ("onClickItem" in $$props) $$invalidate(3, onClickItem = $$props.onClickItem);
-    		if ("onDrop" in $$props) $$invalidate(4, onDrop = $$props.onDrop);
+    		if ("onCollectionDrop" in $$props) $$invalidate(11, onCollectionDrop = $$props.onCollectionDrop);
+    		if ("index" in $$props) $$invalidate(1, index = $$props.index);
+    		if ("dropLine" in $$props) $$invalidate(3, dropLine = $$props.dropLine);
+    		if ("onDragEnter" in $$props) $$invalidate(4, onDragEnter = $$props.onDragEnter);
+    		if ("onDragLeave" in $$props) $$invalidate(5, onDragLeave = $$props.onDragLeave);
+    		if ("handleDragStart" in $$props) $$invalidate(6, handleDragStart = $$props.handleDragStart);
+    		if ("handleDrop" in $$props) $$invalidate(7, handleDrop = $$props.handleDrop);
+    		if ("onItemDelete" in $$props) $$invalidate(8, onItemDelete = $$props.onItemDelete);
+    		if ("onClickItem" in $$props) $$invalidate(9, onClickItem = $$props.onClickItem);
+    		if ("onDrop" in $$props) $$invalidate(10, onDrop = $$props.onDrop);
     	};
 
     	return [
     		collection,
+    		index,
     		items,
+    		dropLine,
+    		onDragEnter,
+    		onDragLeave,
+    		handleDragStart,
+    		handleDrop,
     		onItemDelete,
     		onClickItem,
     		onDrop,
+    		onCollectionDrop,
     		unsubsribe,
     		saveTabToBookmark,
     		dragover_handler
@@ -2518,7 +2662,12 @@ var app = (function () {
     class CollectionTile extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$5, safe_not_equal, { collection: 0 });
+
+    		init(this, options, instance$4, create_fragment$5, safe_not_equal, {
+    			collection: 0,
+    			onCollectionDrop: 11,
+    			index: 1
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -2533,6 +2682,14 @@ var app = (function () {
     		if (/*collection*/ ctx[0] === undefined && !("collection" in props)) {
     			console.warn("<CollectionTile> was created without expected prop 'collection'");
     		}
+
+    		if (/*onCollectionDrop*/ ctx[11] === undefined && !("onCollectionDrop" in props)) {
+    			console.warn("<CollectionTile> was created without expected prop 'onCollectionDrop'");
+    		}
+
+    		if (/*index*/ ctx[1] === undefined && !("index" in props)) {
+    			console.warn("<CollectionTile> was created without expected prop 'index'");
+    		}
     	}
 
     	get collection() {
@@ -2542,20 +2699,262 @@ var app = (function () {
     	set collection(value) {
     		throw new Error("<CollectionTile>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get onCollectionDrop() {
+    		throw new Error("<CollectionTile>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set onCollectionDrop(value) {
+    		throw new Error("<CollectionTile>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get index() {
+    		throw new Error("<CollectionTile>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set index(value) {
+    		throw new Error("<CollectionTile>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/components/tiles/EmptyCollectionTile.svelte generated by Svelte v3.18.1 */
+
+    const file$6 = "src/components/tiles/EmptyCollectionTile.svelte";
+
+    // (24:4) {:else}
+    function create_else_block$4(ctx) {
+    	let hr;
+
+    	const block = {
+    		c: function create() {
+    			hr = element("hr");
+    			set_style(hr, "border", "1px solid white");
+    			add_location(hr, file$6, 24, 8, 529);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, hr, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(hr);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$4.name,
+    		type: "else",
+    		source: "(24:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (22:4) {#if dropLine}
+    function create_if_block$4(ctx) {
+    	let hr;
+
+    	const block = {
+    		c: function create() {
+    			hr = element("hr");
+    			set_style(hr, "border", "1px solid black");
+    			add_location(hr, file$6, 22, 8, 471);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, hr, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(hr);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$4.name,
+    		type: "if",
+    		source: "(22:4) {#if dropLine}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$6(ctx) {
+    	let div1;
+    	let t;
+    	let div0;
+    	let dispose;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*dropLine*/ ctx[0]) return create_if_block$4;
+    		return create_else_block$4;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			if_block.c();
+    			t = space();
+    			div0 = element("div");
+    			set_style(div0, "height", "200px");
+    			add_location(div0, file$6, 26, 4, 581);
+    			add_location(div1, file$6, 20, 0, 438);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			if_block.m(div1, null);
+    			append_dev(div1, t);
+    			append_dev(div1, div0);
+
+    			dispose = [
+    				listen_dev(div0, "dragover", prevent_default(/*onDragEnter*/ ctx[1]), false, true, false),
+    				listen_dev(div0, "dragleave", /*onDragLeave*/ ctx[2], false, false, false),
+    				listen_dev(div0, "drop", /*handleDrop*/ ctx[3], false, false, false)
+    			];
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div1, t);
+    				}
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if_block.d();
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	let { index } = $$props;
+    	let { onCollectionDrop } = $$props;
+    	let dropLine = false;
+
+    	var onDragEnter = e => {
+    		$$invalidate(0, dropLine = true);
+    	};
+
+    	var onDragLeave = e => {
+    		$$invalidate(0, dropLine = false);
+    	};
+
+    	var handleDrop = e => {
+    		e.preventDefault();
+    		$$invalidate(0, dropLine = false);
+    		onCollectionDrop(e, index);
+    	};
+
+    	const writable_props = ["index", "onCollectionDrop"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<EmptyCollectionTile> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ("index" in $$props) $$invalidate(4, index = $$props.index);
+    		if ("onCollectionDrop" in $$props) $$invalidate(5, onCollectionDrop = $$props.onCollectionDrop);
+    	};
+
+    	$$self.$capture_state = () => {
+    		return {
+    			index,
+    			onCollectionDrop,
+    			dropLine,
+    			onDragEnter,
+    			onDragLeave,
+    			handleDrop
+    		};
+    	};
+
+    	$$self.$inject_state = $$props => {
+    		if ("index" in $$props) $$invalidate(4, index = $$props.index);
+    		if ("onCollectionDrop" in $$props) $$invalidate(5, onCollectionDrop = $$props.onCollectionDrop);
+    		if ("dropLine" in $$props) $$invalidate(0, dropLine = $$props.dropLine);
+    		if ("onDragEnter" in $$props) $$invalidate(1, onDragEnter = $$props.onDragEnter);
+    		if ("onDragLeave" in $$props) $$invalidate(2, onDragLeave = $$props.onDragLeave);
+    		if ("handleDrop" in $$props) $$invalidate(3, handleDrop = $$props.handleDrop);
+    	};
+
+    	return [dropLine, onDragEnter, onDragLeave, handleDrop, index, onCollectionDrop];
+    }
+
+    class EmptyCollectionTile extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$5, create_fragment$6, safe_not_equal, { index: 4, onCollectionDrop: 5 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "EmptyCollectionTile",
+    			options,
+    			id: create_fragment$6.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*index*/ ctx[4] === undefined && !("index" in props)) {
+    			console.warn("<EmptyCollectionTile> was created without expected prop 'index'");
+    		}
+
+    		if (/*onCollectionDrop*/ ctx[5] === undefined && !("onCollectionDrop" in props)) {
+    			console.warn("<EmptyCollectionTile> was created without expected prop 'onCollectionDrop'");
+    		}
+    	}
+
+    	get index() {
+    		throw new Error("<EmptyCollectionTile>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set index(value) {
+    		throw new Error("<EmptyCollectionTile>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get onCollectionDrop() {
+    		throw new Error("<EmptyCollectionTile>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set onCollectionDrop(value) {
+    		throw new Error("<EmptyCollectionTile>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/components/MainArea.svelte generated by Svelte v3.18.1 */
-    const file$6 = "src/components/MainArea.svelte";
+    const file$7 = "src/components/MainArea.svelte";
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[3] = list[i];
-    	child_ctx[5] = i;
+    	child_ctx[5] = list[i];
+    	child_ctx[7] = i;
     	return child_ctx;
     }
 
-    // (77:4) {#if allCollections.length==0 }
-    function create_if_block$4(ctx) {
+    // (113:4) {#if allCollections.length==0 }
+    function create_if_block$5(ctx) {
     	let div;
     	let h30;
     	let t1;
@@ -2573,12 +2972,12 @@ var app = (function () {
     			t2 = space();
     			h31 = element("h3");
     			h31.textContent = "' To create one";
-    			add_location(h30, file$6, 78, 12, 2475);
+    			add_location(h30, file$7, 114, 12, 3852);
     			attr_dev(button, "class", "plus-icon-dummy svelte-1sz8a6i");
-    			add_location(button, file$6, 79, 12, 2521);
-    			add_location(h31, file$6, 80, 12, 2575);
+    			add_location(button, file$7, 115, 12, 3898);
+    			add_location(h31, file$7, 116, 12, 3952);
     			attr_dev(div, "class", "no-collections-indicator svelte-1sz8a6i");
-    			add_location(div, file$6, 77, 8, 2424);
+    			add_location(div, file$7, 113, 8, 3801);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2595,22 +2994,26 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$5.name,
     		type: "if",
-    		source: "(77:4) {#if allCollections.length==0 }",
+    		source: "(113:4) {#if allCollections.length==0 }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (88:8) {#each allCollections as collection,i (collection.id)}
+    // (124:8) {#each allCollections as collection,i (collection.id)}
     function create_each_block$1(key_1, ctx) {
     	let first;
     	let current;
 
     	const collectiontile = new CollectionTile({
-    			props: { collection: /*collection*/ ctx[3] },
+    			props: {
+    				collection: /*collection*/ ctx[5],
+    				index: /*i*/ ctx[7],
+    				onCollectionDrop: /*onCollectionDrop*/ ctx[2]
+    			},
     			$$inline: true
     		});
 
@@ -2629,7 +3032,8 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const collectiontile_changes = {};
-    			if (dirty & /*allCollections*/ 1) collectiontile_changes.collection = /*collection*/ ctx[3];
+    			if (dirty & /*allCollections*/ 1) collectiontile_changes.collection = /*collection*/ ctx[5];
+    			if (dirty & /*allCollections*/ 1) collectiontile_changes.index = /*i*/ ctx[7];
     			collectiontile.$set(collectiontile_changes);
     		},
     		i: function intro(local) {
@@ -2651,28 +3055,27 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(88:8) {#each allCollections as collection,i (collection.id)}",
+    		source: "(124:8) {#each allCollections as collection,i (collection.id)}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$6(ctx) {
+    function create_fragment$7(ctx) {
     	let main;
     	let t0;
     	let button;
     	let t1;
-    	let div1;
+    	let div;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let t2;
-    	let div0;
     	let current;
     	let dispose;
-    	let if_block = /*allCollections*/ ctx[0].length == 0 && create_if_block$4(ctx);
+    	let if_block = /*allCollections*/ ctx[0].length == 0 && create_if_block$5(ctx);
     	let each_value = /*allCollections*/ ctx[0];
-    	const get_key = ctx => /*collection*/ ctx[3].id;
+    	const get_key = ctx => /*collection*/ ctx[5].id;
     	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -2681,6 +3084,14 @@ var app = (function () {
     		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
     	}
 
+    	const emptycollectiontile = new EmptyCollectionTile({
+    			props: {
+    				index: /*allCollections*/ ctx[0].length,
+    				onCollectionDrop: /*onCollectionDrop*/ ctx[2]
+    			},
+    			$$inline: true
+    		});
+
     	const block = {
     		c: function create() {
     			main = element("main");
@@ -2688,22 +3099,20 @@ var app = (function () {
     			t0 = space();
     			button = element("button");
     			t1 = space();
-    			div1 = element("div");
+    			div = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
     			t2 = space();
-    			div0 = element("div");
+    			create_component(emptycollectiontile.$$.fragment);
     			attr_dev(button, "class", "plus-icon svelte-1sz8a6i");
-    			add_location(button, file$6, 84, 4, 2630);
-    			set_style(div0, "height", "200px");
-    			add_location(div0, file$6, 90, 8, 2883);
-    			attr_dev(div1, "class", "scroll");
-    			add_location(div1, file$6, 86, 4, 2732);
+    			add_location(button, file$7, 120, 4, 4007);
+    			attr_dev(div, "class", "scroll");
+    			add_location(div, file$7, 122, 4, 4109);
     			set_style(main, "position", "relative");
-    			add_location(main, file$6, 74, 0, 2344);
+    			add_location(main, file$7, 110, 0, 3721);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2714,21 +3123,21 @@ var app = (function () {
     			append_dev(main, t0);
     			append_dev(main, button);
     			append_dev(main, t1);
-    			append_dev(main, div1);
+    			append_dev(main, div);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div1, null);
+    				each_blocks[i].m(div, null);
     			}
 
-    			append_dev(div1, t2);
-    			append_dev(div1, div0);
+    			append_dev(div, t2);
+    			mount_component(emptycollectiontile, div, null);
     			current = true;
     			dispose = listen_dev(button, "click", stop_propagation(prevent_default(/*clickAddCollection*/ ctx[1])), false, true, true);
     		},
     		p: function update(ctx, [dirty]) {
     			if (/*allCollections*/ ctx[0].length == 0) {
     				if (!if_block) {
-    					if_block = create_if_block$4(ctx);
+    					if_block = create_if_block$5(ctx);
     					if_block.c();
     					if_block.m(main, t0);
     				}
@@ -2740,8 +3149,11 @@ var app = (function () {
     			const each_value = /*allCollections*/ ctx[0];
     			group_outros();
     			validate_each_keys(ctx, each_value, get_each_context$1, get_key);
-    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div1, outro_and_destroy_block, create_each_block$1, t2, get_each_context$1);
+    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div, outro_and_destroy_block, create_each_block$1, t2, get_each_context$1);
     			check_outros();
+    			const emptycollectiontile_changes = {};
+    			if (dirty & /*allCollections*/ 1) emptycollectiontile_changes.index = /*allCollections*/ ctx[0].length;
+    			emptycollectiontile.$set(emptycollectiontile_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -2750,6 +3162,7 @@ var app = (function () {
     				transition_in(each_blocks[i]);
     			}
 
+    			transition_in(emptycollectiontile.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
@@ -2757,6 +3170,7 @@ var app = (function () {
     				transition_out(each_blocks[i]);
     			}
 
+    			transition_out(emptycollectiontile.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -2767,13 +3181,14 @@ var app = (function () {
     				each_blocks[i].d();
     			}
 
+    			destroy_component(emptycollectiontile);
     			dispose();
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$6.name,
+    		id: create_fragment$7.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2782,7 +3197,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$5($$self, $$props, $$invalidate) {
+    function instance$6($$self, $$props, $$invalidate) {
     	const { open } = getContext("simple-modal");
 
     	// array of BookmarkTreeNode
@@ -2808,6 +3223,40 @@ var app = (function () {
     		}
     	};
 
+    	var onCollectionDrop = (e, dropIndex) => {
+    		e.preventDefault();
+    		var rawData = e.dataTransfer.getData("text");
+
+    		deo.set({
+    			source: rawData,
+    			target: "c" + dropIndex.toString(),
+    			sourceObj: null,
+    			targetObj: null
+    		});
+    	};
+
+    	const unsubsribe = deo.subscribe(obj => {
+    		if (obj.source[0] == "c" && obj.target[0] == "c") {
+    			var dragIndex = parseInt(obj.source.substr(1));
+    			var dropIndex = parseInt(obj.target.substr(1));
+
+    			// move allCollections from dragIndex to dropIndex
+    			if (dragIndex >= dropIndex) {
+    				chrome.bookmarks.move(allCollections[dragIndex].id, { index: dropIndex });
+    				allCollections.splice(dropIndex, 0, allCollections[dragIndex]);
+    				allCollections.splice(dragIndex + 1, 1);
+    			} else {
+    				chrome.bookmarks.move(allCollections[dragIndex].id, { index: dropIndex });
+    				allCollections.splice(dropIndex, 0, allCollections[dragIndex]);
+    				allCollections.splice(dragIndex, 1);
+    			}
+
+    			$$invalidate(0, allCollections);
+    		}
+    	});
+
+    	onDestroy(unsubsribe);
+
     	$$self.$capture_state = () => {
     		return {};
     	};
@@ -2815,37 +3264,38 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ("allCollections" in $$props) $$invalidate(0, allCollections = $$props.allCollections);
     		if ("clickAddCollection" in $$props) $$invalidate(1, clickAddCollection = $$props.clickAddCollection);
+    		if ("onCollectionDrop" in $$props) $$invalidate(2, onCollectionDrop = $$props.onCollectionDrop);
     	};
 
-    	return [allCollections, clickAddCollection];
+    	return [allCollections, clickAddCollection, onCollectionDrop];
     }
 
     class MainArea extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$6, safe_not_equal, {});
+    		init(this, options, instance$6, create_fragment$7, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "MainArea",
     			options,
-    			id: create_fragment$6.name
+    			id: create_fragment$7.name
     		});
     	}
     }
 
     /* src/components/tiles/TabTile.svelte generated by Svelte v3.18.1 */
-    const file$7 = "src/components/tiles/TabTile.svelte";
+    const file$8 = "src/components/tiles/TabTile.svelte";
 
     // (81:4) {:else}
-    function create_else_block$4(ctx) {
+    function create_else_block$5(ctx) {
     	let hr;
 
     	const block = {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$7, 81, 8, 2152);
+    			add_location(hr, file$8, 81, 8, 2152);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2857,7 +3307,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$4.name,
+    		id: create_else_block$5.name,
     		type: "else",
     		source: "(81:4) {:else}",
     		ctx
@@ -2867,14 +3317,14 @@ var app = (function () {
     }
 
     // (79:4) {#if dropLine}
-    function create_if_block$5(ctx) {
+    function create_if_block$6(ctx) {
     	let hr;
 
     	const block = {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$7, 79, 8, 2094);
+    			add_location(hr, file$8, 79, 8, 2094);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2886,7 +3336,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$5.name,
+    		id: create_if_block$6.name,
     		type: "if",
     		source: "(79:4) {#if dropLine}",
     		ctx
@@ -2895,7 +3345,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$7(ctx) {
+    function create_fragment$8(ctx) {
     	let div3;
     	let t0;
     	let div2;
@@ -2914,8 +3364,8 @@ var app = (function () {
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*dropLine*/ ctx[4]) return create_if_block$5;
-    		return create_else_block$4;
+    		if (/*dropLine*/ ctx[4]) return create_if_block$6;
+    		return create_else_block$5;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -2935,20 +3385,20 @@ var app = (function () {
     			div0 = element("div");
     			t3 = text(t3_value);
     			attr_dev(button, "class", "close-icon svelte-18bb33g");
-    			add_location(button, file$7, 90, 8, 2468);
+    			add_location(button, file$8, 90, 8, 2468);
     			attr_dev(img, "alt", " ");
     			if (img.src !== (img_src_value = /*tab*/ ctx[0].favIconUrl)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "height", "20px");
     			set_style(img, "margin-right", "10px");
-    			add_location(img, file$7, 93, 12, 2632);
+    			add_location(img, file$8, 93, 12, 2632);
     			attr_dev(div0, "class", "text-concat svelte-18bb33g");
-    			add_location(div0, file$7, 95, 12, 2724);
+    			add_location(div0, file$8, 95, 12, 2724);
     			attr_dev(div1, "class", "flex-row-container");
-    			add_location(div1, file$7, 92, 8, 2587);
+    			add_location(div1, file$8, 92, 8, 2587);
     			attr_dev(div2, "class", "card svelte-18bb33g");
     			attr_dev(div2, "draggable", "true");
-    			add_location(div2, file$7, 83, 4, 2204);
-    			add_location(div3, file$7, 77, 0, 2015);
+    			add_location(div2, file$8, 83, 4, 2204);
+    			add_location(div3, file$8, 77, 0, 2015);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3019,7 +3469,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$7.name,
+    		id: create_fragment$8.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3028,7 +3478,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$6($$self, $$props, $$invalidate) {
+    function instance$7($$self, $$props, $$invalidate) {
     	let { tab } = $$props;
     	let { index } = $$props;
     	let { onClickTabCard } = $$props;
@@ -3120,7 +3570,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$6, create_fragment$7, safe_not_equal, {
+    		init(this, options, instance$7, create_fragment$8, safe_not_equal, {
     			tab: 0,
     			index: 1,
     			onClickTabCard: 2,
@@ -3132,7 +3582,7 @@ var app = (function () {
     			component: this,
     			tagName: "TabTile",
     			options,
-    			id: create_fragment$7.name
+    			id: create_fragment$8.name
     		});
 
     		const { ctx } = this.$$;
@@ -3202,17 +3652,17 @@ var app = (function () {
 
     /* src/components/tiles/EmptyTabTile.svelte generated by Svelte v3.18.1 */
 
-    const file$8 = "src/components/tiles/EmptyTabTile.svelte";
+    const file$9 = "src/components/tiles/EmptyTabTile.svelte";
 
     // (24:4) {:else}
-    function create_else_block$5(ctx) {
+    function create_else_block$6(ctx) {
     	let hr;
 
     	const block = {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$8, 24, 8, 509);
+    			add_location(hr, file$9, 24, 8, 509);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -3224,7 +3674,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$5.name,
+    		id: create_else_block$6.name,
     		type: "else",
     		source: "(24:4) {:else}",
     		ctx
@@ -3234,14 +3684,14 @@ var app = (function () {
     }
 
     // (22:4) {#if dropLine}
-    function create_if_block$6(ctx) {
+    function create_if_block$7(ctx) {
     	let hr;
 
     	const block = {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$8, 22, 8, 451);
+    			add_location(hr, file$9, 22, 8, 451);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -3253,7 +3703,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$6.name,
+    		id: create_if_block$7.name,
     		type: "if",
     		source: "(22:4) {#if dropLine}",
     		ctx
@@ -3262,15 +3712,15 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$8(ctx) {
+    function create_fragment$9(ctx) {
     	let div1;
     	let t;
     	let div0;
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*dropLine*/ ctx[0]) return create_if_block$6;
-    		return create_else_block$5;
+    		if (/*dropLine*/ ctx[0]) return create_if_block$7;
+    		return create_else_block$6;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -3283,8 +3733,8 @@ var app = (function () {
     			t = space();
     			div0 = element("div");
     			set_style(div0, "height", "200px");
-    			add_location(div0, file$8, 26, 4, 561);
-    			add_location(div1, file$8, 20, 0, 418);
+    			add_location(div0, file$9, 26, 4, 561);
+    			add_location(div1, file$9, 20, 0, 418);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3323,7 +3773,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$8.name,
+    		id: create_fragment$9.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3332,7 +3782,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$7($$self, $$props, $$invalidate) {
+    function instance$8($$self, $$props, $$invalidate) {
     	let { index } = $$props;
     	let { onDrop } = $$props;
     	let dropLine = false;
@@ -3388,13 +3838,13 @@ var app = (function () {
     class EmptyTabTile extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$8, safe_not_equal, { index: 4, onDrop: 5 });
+    		init(this, options, instance$8, create_fragment$9, safe_not_equal, { index: 4, onDrop: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "EmptyTabTile",
     			options,
-    			id: create_fragment$8.name
+    			id: create_fragment$9.name
     		});
 
     		const { ctx } = this.$$;
@@ -3427,7 +3877,7 @@ var app = (function () {
     }
 
     /* src/components/OpenTabsBar.svelte generated by Svelte v3.18.1 */
-    const file$9 = "src/components/OpenTabsBar.svelte";
+    const file$a = "src/components/OpenTabsBar.svelte";
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
@@ -3497,7 +3947,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$9(ctx) {
+    function create_fragment$a(ctx) {
     	let div1;
     	let h2;
     	let t0;
@@ -3542,10 +3992,10 @@ var app = (function () {
 
     			t3 = space();
     			create_component(emptytabtile.$$.fragment);
-    			add_location(h2, file$9, 70, 4, 2237);
+    			add_location(h2, file$a, 70, 4, 2237);
     			attr_dev(div0, "class", "scroll");
-    			add_location(div0, file$9, 72, 4, 2280);
-    			add_location(div1, file$9, 69, 0, 2227);
+    			add_location(div0, file$a, 72, 4, 2280);
+    			add_location(div1, file$a, 69, 0, 2227);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3608,7 +4058,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$9.name,
+    		id: create_fragment$a.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3617,7 +4067,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$8($$self, $$props, $$invalidate) {
+    function instance$9($$self, $$props, $$invalidate) {
     	let allTabs = [];
 
     	onMount(() => {
@@ -3696,13 +4146,13 @@ var app = (function () {
     class OpenTabsBar extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$9, safe_not_equal, {});
+    		init(this, options, instance$9, create_fragment$a, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "OpenTabsBar",
     			options,
-    			id: create_fragment$9.name
+    			id: create_fragment$a.name
     		});
     	}
     }
@@ -3710,10 +4160,10 @@ var app = (function () {
     /* src/components/Modal.svelte generated by Svelte v3.18.1 */
 
     const { Object: Object_1 } = globals;
-    const file$a = "src/components/Modal.svelte";
+    const file$b = "src/components/Modal.svelte";
 
     // (197:4) {#if Component}
-    function create_if_block$7(ctx) {
+    function create_if_block$8(ctx) {
     	let div3;
     	let div2;
     	let div1;
@@ -3723,7 +4173,7 @@ var app = (function () {
     	let div3_transition;
     	let current;
     	let dispose;
-    	let if_block = /*closeButton*/ ctx[0] && create_if_block_1(ctx);
+    	let if_block = /*closeButton*/ ctx[0] && create_if_block_1$1(ctx);
     	const component_spread_levels = [/*props*/ ctx[6]];
     	let component_props = {};
 
@@ -3744,15 +4194,15 @@ var app = (function () {
     			create_component(component.$$.fragment);
     			attr_dev(div0, "class", "content svelte-1ge3zj3");
     			attr_dev(div0, "style", /*cssContent*/ ctx[11]);
-    			add_location(div0, file$a, 213, 12, 5899);
+    			add_location(div0, file$b, 213, 12, 5899);
     			attr_dev(div1, "class", "window svelte-1ge3zj3");
     			attr_dev(div1, "style", /*cssWindow*/ ctx[10]);
-    			add_location(div1, file$a, 205, 10, 5638);
+    			add_location(div1, file$b, 205, 10, 5638);
     			attr_dev(div2, "class", "window-wrap svelte-1ge3zj3");
-    			add_location(div2, file$a, 204, 8, 5585);
+    			add_location(div2, file$b, 204, 8, 5585);
     			attr_dev(div3, "class", "bg svelte-1ge3zj3");
     			attr_dev(div3, "style", /*cssBg*/ ctx[9]);
-    			add_location(div3, file$a, 197, 6, 5404);
+    			add_location(div3, file$b, 197, 6, 5404);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div3, anchor);
@@ -3772,7 +4222,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block_1(ctx);
+    					if_block = create_if_block_1$1(ctx);
     					if_block.c();
     					if_block.m(div1, t);
     				}
@@ -3837,7 +4287,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$7.name,
+    		id: create_if_block$8.name,
     		type: "if",
     		source: "(197:4) {#if Component}",
     		ctx
@@ -3847,7 +4297,7 @@ var app = (function () {
     }
 
     // (211:12) {#if closeButton}
-    function create_if_block_1(ctx) {
+    function create_if_block_1$1(ctx) {
     	let button;
     	let dispose;
 
@@ -3855,7 +4305,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			attr_dev(button, "class", "close svelte-1ge3zj3");
-    			add_location(button, file$a, 211, 14, 5820);
+    			add_location(button, file$b, 211, 14, 5820);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -3870,7 +4320,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1.name,
+    		id: create_if_block_1$1.name,
     		type: "if",
     		source: "(211:12) {#if closeButton}",
     		ctx
@@ -3879,12 +4329,12 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$a(ctx) {
+    function create_fragment$b(ctx) {
     	let div;
     	let t;
     	let current;
     	let dispose;
-    	let if_block = /*Component*/ ctx[5] && create_if_block$7(ctx);
+    	let if_block = /*Component*/ ctx[5] && create_if_block$8(ctx);
     	const default_slot_template = /*$$slots*/ ctx[30].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[29], null);
 
@@ -3895,7 +4345,7 @@ var app = (function () {
     			t = space();
     			if (default_slot) default_slot.c();
     			attr_dev(div, "class", "svelte-1ge3zj3");
-    			add_location(div, file$a, 195, 0, 5372);
+    			add_location(div, file$b, 195, 0, 5372);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3918,7 +4368,7 @@ var app = (function () {
     					if_block.p(ctx, dirty);
     					transition_in(if_block, 1);
     				} else {
-    					if_block = create_if_block$7(ctx);
+    					if_block = create_if_block$8(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div, t);
@@ -3958,7 +4408,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$b.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3967,7 +4417,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$a($$self, $$props, $$invalidate) {
     	let { key = "simple-modal" } = $$props;
     	let { closeButton = true } = $$props;
     	let { closeOnEsc = true } = $$props;
@@ -4190,8 +4640,8 @@ var app = (function () {
     		init(
     			this,
     			options,
-    			instance$9,
-    			create_fragment$a,
+    			instance$a,
+    			create_fragment$b,
     			safe_not_equal,
     			{
     				key: 15,
@@ -4214,7 +4664,7 @@ var app = (function () {
     			component: this,
     			tagName: "Modal",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$b.name
     		});
     	}
 
@@ -4316,7 +4766,7 @@ var app = (function () {
     }
 
     /* src/NewTab.svelte generated by Svelte v3.18.1 */
-    const file$b = "src/NewTab.svelte";
+    const file$c = "src/NewTab.svelte";
 
     // (47:0) <Modal closeButton={false}>
     function create_default_slot(ctx) {
@@ -4348,21 +4798,21 @@ var app = (function () {
     			create_component(opentabsbar.$$.fragment);
     			attr_dev(div0, "id", "top-bar-container");
     			attr_dev(div0, "class", "svelte-bcfzgv");
-    			add_location(div0, file$b, 51, 8, 931);
+    			add_location(div0, file$c, 51, 8, 931);
     			attr_dev(div1, "id", "top-bar");
     			attr_dev(div1, "class", "svelte-bcfzgv");
-    			add_location(div1, file$b, 50, 6, 904);
+    			add_location(div1, file$c, 50, 6, 904);
     			attr_dev(div2, "id", "main-free-area");
     			attr_dev(div2, "class", "svelte-bcfzgv");
-    			add_location(div2, file$b, 55, 6, 1015);
+    			add_location(div2, file$c, 55, 6, 1015);
     			attr_dev(div3, "id", "left-free-area");
     			attr_dev(div3, "class", "svelte-bcfzgv");
-    			add_location(div3, file$b, 49, 4, 872);
+    			add_location(div3, file$c, 49, 4, 872);
     			attr_dev(div4, "id", "right-fixed-bar");
     			attr_dev(div4, "class", "svelte-bcfzgv");
-    			add_location(div4, file$b, 60, 4, 1091);
+    			add_location(div4, file$c, 60, 4, 1091);
     			attr_dev(div5, "class", "container-table svelte-bcfzgv");
-    			add_location(div5, file$b, 47, 2, 837);
+    			add_location(div5, file$c, 47, 2, 837);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div5, anchor);
@@ -4410,7 +4860,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$b(ctx) {
+    function create_fragment$c(ctx) {
     	let current;
 
     	const modal = new Modal({
@@ -4458,7 +4908,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -4470,13 +4920,13 @@ var app = (function () {
     class NewTab extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$b, safe_not_equal, {});
+    		init(this, options, null, create_fragment$c, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "NewTab",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$c.name
     		});
     	}
     }

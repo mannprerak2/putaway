@@ -9,6 +9,26 @@
     let items = [];
 
     export let collection;
+    export let onCollectionDrop;
+    export let index;
+    let dropLine = false;
+    var onDragEnter = (e) => {
+        dropLine = true;
+    }
+    var onDragLeave = (e) => {
+        dropLine = false;
+    }
+
+    var handleDragStart = (e) => {
+        e.dataTransfer
+            .setData("text", "c" + index.toString());
+    }
+
+    var handleDrop = (e) => {
+        e.preventDefault();
+        dropLine = false;
+        onCollectionDrop(e, index);
+    }
 
     onMount(() => {
         chrome.bookmarks.getChildren(collection.id, function (children) {
@@ -83,29 +103,18 @@
         );
     }
 
+    // called when an item drops (child components call this)
     var onDrop = (e, dropIndex) => {
         e.preventDefault();
         var rawData = e.dataTransfer.getData('text');
 
-        // first letter is t if a tab is dropped
-        if (rawData[0] == "t") {
-            var tab = JSON.parse(e.dataTransfer.getData("object"));
-            deo.set({
-                source: rawData,
-                target: "i" + dropIndex.toString(),
-                sourceObj: tab,
-                targetObj: collection
-            });
-        } else if (rawData[0] == "i") {
-            // first letter is i if an item was dropped here
-            var item = JSON.parse(e.dataTransfer.getData("object"));
-            deo.set({
-                source: rawData,
-                target: "i" + dropIndex.toString(),
-                sourceObj: item,
-                targetObj: collection
-            });
-        }
+        var obj = JSON.parse(e.dataTransfer.getData("object"));
+        deo.set({
+            source: rawData,
+            target: "i" + dropIndex.toString(),
+            sourceObj: obbj,
+            targetObj: collection
+        });
     }
 </script>
 <style>
@@ -113,16 +122,20 @@
         border-bottom: 1px solid gray;
         width: 100%;
         padding: 10px;
+        padding-top: 0px;
         box-sizing: border-box;
     }
 
     .tile-top-bar {
         font-size: 2em;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
     }
 
     .item-area {
         /*Item Height Marker*/
-        height: 8em;
+        height: 5em;
         /* needs to be 77vw as opentabsbar has 20vw */
         width: 77vw;
         overflow-x: scroll;
@@ -140,7 +153,14 @@
     }
 </style>
 <div class="collection" in:fade="{{duration: 500}}" out:fade on:dragover|preventDefault>
-    <div class="tile-top-bar">{collection.title}</div>
+    {#if dropLine}
+        <hr style="border: 1px solid black;">
+    {:else}
+        <hr style="border: 1px solid white;">
+    {/if}
+    <div class="tile-top-bar" draggable="true" out:fade on:dragover|preventDefault={onDragEnter}
+        on:dragleave={onDragLeave} on:dragstart={handleDragStart} on:drop={handleDrop}><div>{collection.title}</div>
+    <div style="flex-grow:1;"/> <span/></div>
     <div class="item-area">
 
         {#if items.length==0}

@@ -1,9 +1,11 @@
 <script>
-    import { onMount, getContext } from 'svelte';
+    import { onMount, onDestroy, getContext } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import CreateCollectionModal from './CreateCollectionModal.svelte';
     import CollectionTile from './tiles/CollectionTile.svelte';
     const { open } = getContext('simple-modal');
+    import { deo } from './../stores/dropEventStore.js';
+    import EmptyCollectionTile from './tiles/EmptyCollectionTile.svelte';
 
     // array of BookmarkTreeNode
     let allCollections = [];
@@ -25,6 +27,40 @@
             allCollections = allCollections;
         }
     }
+
+    var onCollectionDrop = (e, dropIndex) => {
+        e.preventDefault();
+        var rawData = e.dataTransfer.getData('text');
+
+        deo.set({
+            source: rawData,
+            target: "c" + dropIndex.toString(),
+            sourceObj: null,
+            targetObj: null
+        });
+    }
+
+    const unsubsribe = deo.subscribe(obj => {
+        if (obj.source[0] == "c" &&
+            obj.target[0] == "c") {
+            var dragIndex = parseInt(obj.source.substr(1));
+            var dropIndex = parseInt(obj.target.substr(1));
+            // move allCollections from dragIndex to dropIndex
+            if (dragIndex >= dropIndex) {
+                chrome.bookmarks.move(allCollections[dragIndex].id, { index: dropIndex });
+                allCollections.splice(dropIndex, 0, allCollections[dragIndex]);
+                allCollections.splice(dragIndex + 1, 1);
+            }
+            else {
+                chrome.bookmarks.move(allCollections[dragIndex].id, { index: dropIndex });
+                allCollections.splice(dropIndex, 0, allCollections[dragIndex]);
+                allCollections.splice(dragIndex, 1);
+            }
+            allCollections = allCollections;
+        }
+    });
+    onDestroy(unsubsribe);
+
 </script>
 <style>
     .plus-icon-dummy {
@@ -86,8 +122,8 @@
 
     <div class="scroll">
         {#each allCollections as collection,i (collection.id)}
-            <CollectionTile {collection}/>
+            <CollectionTile {collection} index={i} {onCollectionDrop}/>
         {/each}
-        <div style="height: 200px;"></div>
+        <EmptyCollectionTile index={allCollections.length} {onCollectionDrop}/>
     </div>
 </main>
