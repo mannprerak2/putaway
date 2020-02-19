@@ -65,12 +65,12 @@
                 chrome.bookmarks.move(obj.sourceObj.id, { index: dropIndex, parentId: obj.targetObj.id });
 
                 items.splice(dragIndex, 1);
-            } else {// obj.targetObj.parentId == collection.id
+            } else {// obj.targetObj.id == collection.id
                 items.splice(dropIndex, 0, obj.sourceObj);
             }
             items = items;
         } else if (obj.source[0] == "t" &&
-            obj.target[0] == "i") {
+            obj.target[0] == "i" && obj.targetObj.id == collection.id) {
             saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)));
         }
     });
@@ -112,7 +112,7 @@
         deo.set({
             source: rawData,
             target: "i" + dropIndex.toString(),
-            sourceObj: obbj,
+            sourceObj: obj,
             targetObj: collection
         });
     }

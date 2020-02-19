@@ -2059,7 +2059,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$5, 158, 8, 4839);
+    			add_location(hr, file$5, 158, 8, 4869);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2088,7 +2088,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$5, 156, 8, 4781);
+    			add_location(hr, file$5, 156, 8, 4811);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2365,17 +2365,17 @@ var app = (function () {
     			t4 = space();
     			div3 = element("div");
     			if_block1.c();
-    			add_location(div0, file$5, 161, 87, 5071);
+    			add_location(div0, file$5, 161, 87, 5101);
     			set_style(div1, "flex-grow", "1");
-    			add_location(div1, file$5, 162, 4, 5105);
-    			add_location(span, file$5, 162, 32, 5133);
+    			add_location(div1, file$5, 162, 4, 5135);
+    			add_location(span, file$5, 162, 32, 5163);
     			attr_dev(div2, "class", "tile-top-bar svelte-1dklzav");
     			attr_dev(div2, "draggable", "true");
-    			add_location(div2, file$5, 160, 4, 4891);
+    			add_location(div2, file$5, 160, 4, 4921);
     			attr_dev(div3, "class", "item-area svelte-1dklzav");
-    			add_location(div3, file$5, 163, 4, 5151);
+    			add_location(div3, file$5, 163, 4, 5181);
     			attr_dev(div4, "class", "collection svelte-1dklzav");
-    			add_location(div4, file$5, 154, 0, 4665);
+    			add_location(div4, file$5, 154, 0, 4695);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2541,12 +2541,12 @@ var app = (function () {
 
     				items.splice(dragIndex, 1);
     			} else {
-    				// obj.targetObj.parentId == collection.id
+    				// obj.targetObj.id == collection.id
     				items.splice(dropIndex, 0, obj.sourceObj);
     			}
 
     			$$invalidate(2, items);
-    		} else if (obj.source[0] == "t" && obj.target[0] == "i") {
+    		} else if (obj.source[0] == "t" && obj.target[0] == "i" && obj.targetObj.id == collection.id) {
     			saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)));
     		}
     	});
@@ -2587,7 +2587,7 @@ var app = (function () {
     		deo.set({
     			source: rawData,
     			target: "i" + dropIndex.toString(),
-    			sourceObj: obbj,
+    			sourceObj: obj,
     			targetObj: collection
     		});
     	};
