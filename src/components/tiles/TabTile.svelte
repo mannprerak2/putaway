@@ -18,7 +18,7 @@
         e.dataTransfer
             .setData("text", "t" + index.toString());
         e.dataTransfer
-            .setData("tab", JSON.stringify(tab));
+            .setData("object", JSON.stringify(tab));
     }
 
     var handleDrop = (e) => {

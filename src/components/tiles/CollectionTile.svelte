@@ -1,10 +1,10 @@
 <script>
     import { fade, fly } from 'svelte/transition';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import ItemTile from './ItemTile.svelte';
     import EmptyItemTile from './EmptyItemTile.svelte';
     import NoItemTileIndicator from './NoItemIndicatorTile.svelte';
-    import dropEventObject from './../../stores/dropEventStore';
+    import { deo } from './../../stores/dropEventStore.js';
 
     let items = [];
 
@@ -16,6 +16,45 @@
             items = children.filter((e) => e.url != null);
         });
     });
+
+    const unsubsribe = deo.subscribe(obj => {
+        if (obj.source[0] == "i" &&
+            obj.target[0] == "i" &&
+            (obj.sourceObj.parentId == collection.id ||
+                obj.targetObj.id == collection.id)) {
+
+            // target is collection (not item)
+            // source is item (not collection)
+
+            var dragIndex = parseInt(obj.source.substr(1));
+            var dropIndex = parseInt(obj.target.substr(1));
+            if (obj.sourceObj.parentId == collection.id && obj.targetObj.id == collection.id) {
+                // move items from dragIndex to dropIndex
+                if (dragIndex >= dropIndex) {
+                    chrome.bookmarks.move(obj.sourceObj.id, { index: dropIndex });
+                    items.splice(dropIndex, 0, obj.sourceObj);
+                    items.splice(dragIndex + 1, 1);
+                }
+                else {
+                    chrome.bookmarks.move(obj.sourceObj.id, { index: dropIndex });
+                    items.splice(dropIndex, 0, obj.sourceObj);
+                    items.splice(dragIndex, 1);
+                }
+            } else if (obj.sourceObj.parentId == collection.id) {
+                // source is responsible for movement of bookmark
+                chrome.bookmarks.move(obj.sourceObj.id, { index: dropIndex, parentId: obj.targetObj.id });
+
+                items.splice(dragIndex, 1);
+            } else {// obj.targetObj.parentId == collection.id
+                items.splice(dropIndex, 0, obj.sourceObj);
+            }
+            items = items;
+        } else if (obj.source[0] == "t" &&
+            obj.target[0] == "i") {
+            saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)));
+        }
+    });
+    onDestroy(unsubsribe);
 
     var onItemDelete = (item, i) => {
         items.splice(i, 1);
@@ -50,31 +89,24 @@
 
         // first letter is t if a tab is dropped
         if (rawData[0] == "t") {
-            var tab = JSON.parse(e.dataTransfer.getData("tab"));
-            saveTabToBookmark(tab, dropIndex);
+            var tab = JSON.parse(e.dataTransfer.getData("object"));
+            deo.set({
+                source: rawData,
+                target: "i" + dropIndex.toString(),
+                sourceObj: tab,
+                targetObj: collection
+            });
         } else if (rawData[0] == "i") {
             // first letter is i if an item was dropped here
-            var dragIndex = parseInt(rawData.substr(1));
-            // move items from dragIndex to dropIndex
-            if (dragIndex >= dropIndex) {
-                chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex });
-                items.splice(dropIndex, 0, items[dragIndex]);
-                items.splice(dragIndex + 1, 1);
-                items = items;
-            }
-            else {
-                chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex - 1 });
-                items.splice(dropIndex, 0, items[dragIndex]);
-                items.splice(dragIndex, 1);
-                items = items;
-            }
+            var item = JSON.parse(e.dataTransfer.getData("object"));
+            deo.set({
+                source: rawData,
+                target: "i" + dropIndex.toString(),
+                sourceObj: item,
+                targetObj: collection
+            });
         }
     }
-
-    // // this will run on every change in dropevent
-    // $: {
-    //     console.log($dropEventObject);
-    // }
 </script>
 <style>
     .collection {
@@ -114,7 +146,7 @@
         {#if items.length==0}
             <NoItemTileIndicator index={items.length} {onDrop}/>
         {:else}
-            {#each items as item,index}
+            {#each items as item,index (item.id)}
                 <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
             {/each}
             <EmptyItemTile index={items.length} {onDrop}/>

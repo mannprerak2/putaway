@@ -102,12 +102,6 @@ var app = (function () {
     function detach(node) {
         node.parentNode.removeChild(node);
     }
-    function destroy_each(iterations, detaching) {
-        for (let i = 0; i < iterations.length; i += 1) {
-            if (iterations[i])
-                iterations[i].d(detaching);
-        }
-    }
     function element(name) {
         return document.createElement(name);
     }
@@ -228,6 +222,9 @@ var app = (function () {
     }
     function onMount(fn) {
         get_current_component().$$.on_mount.push(fn);
+    }
+    function onDestroy(fn) {
+        get_current_component().$$.on_destroy.push(fn);
     }
     function setContext(key, context) {
         get_current_component().$$.context.set(key, context);
@@ -1156,7 +1153,7 @@ var app = (function () {
     			div = element("div");
     			attr_dev(div, "class", "vl");
     			set_style(div, "border-color", "white");
-    			add_location(div, file$2, 82, 8, 2132);
+    			add_location(div, file$2, 82, 8, 2134);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1186,7 +1183,7 @@ var app = (function () {
     			div = element("div");
     			attr_dev(div, "class", "vl");
     			set_style(div, "border-color", "black");
-    			add_location(div, file$2, 80, 8, 2065);
+    			add_location(div, file$2, 80, 8, 2067);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -1246,22 +1243,22 @@ var app = (function () {
     			div0 = element("div");
     			t3 = text(t3_value);
     			attr_dev(button, "class", "close-icon svelte-13j9ulv");
-    			add_location(button, file$2, 87, 8, 2434);
+    			add_location(button, file$2, 87, 8, 2436);
     			attr_dev(img, "alt", " ");
     			if (img.src !== (img_src_value = /*item*/ ctx[1].title.split(":::::")[1])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "height", "20px");
     			set_style(img, "margin-right", "10px");
-    			add_location(img, file$2, 90, 12, 2597);
+    			add_location(img, file$2, 90, 12, 2599);
     			attr_dev(div0, "class", "text-concat svelte-13j9ulv");
-    			add_location(div0, file$2, 92, 12, 2703);
+    			add_location(div0, file$2, 92, 12, 2705);
     			attr_dev(div1, "class", "flex-row-container");
-    			add_location(div1, file$2, 89, 8, 2552);
+    			add_location(div1, file$2, 89, 8, 2554);
     			attr_dev(div2, "class", "item svelte-13j9ulv");
     			attr_dev(div2, "draggable", "true");
-    			add_location(div2, file$2, 84, 4, 2193);
+    			add_location(div2, file$2, 84, 4, 2195);
     			attr_dev(div3, "class", "flex-row-container");
     			set_style(div3, "height", "100%");
-    			add_location(div3, file$2, 78, 0, 1983);
+    			add_location(div3, file$2, 78, 0, 1985);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1352,7 +1349,7 @@ var app = (function () {
 
     	var handleDragStart = e => {
     		e.dataTransfer.setData("text", "i" + index.toString());
-    		e.dataTransfer.setData("item", JSON.stringify(item));
+    		e.dataTransfer.setData("object", JSON.stringify(item));
     	};
 
     	var handleDrop = e => {
@@ -1978,30 +1975,97 @@ var app = (function () {
     	}
     }
 
+    const subscriber_queue = [];
+    /**
+     * Create a `Writable` store that allows both updating and reading by subscription.
+     * @param {*=}value initial value
+     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+     */
+    function writable(value, start = noop) {
+        let stop;
+        const subscribers = [];
+        function set(new_value) {
+            if (safe_not_equal(value, new_value)) {
+                value = new_value;
+                if (stop) { // store is ready
+                    const run_queue = !subscriber_queue.length;
+                    for (let i = 0; i < subscribers.length; i += 1) {
+                        const s = subscribers[i];
+                        s[1]();
+                        subscriber_queue.push(s, value);
+                    }
+                    if (run_queue) {
+                        for (let i = 0; i < subscriber_queue.length; i += 2) {
+                            subscriber_queue[i][0](subscriber_queue[i + 1]);
+                        }
+                        subscriber_queue.length = 0;
+                    }
+                }
+            }
+        }
+        function update(fn) {
+            set(fn(value));
+        }
+        function subscribe(run, invalidate = noop) {
+            const subscriber = [run, invalidate];
+            subscribers.push(subscriber);
+            if (subscribers.length === 1) {
+                stop = start(set) || noop;
+            }
+            run(value);
+            return () => {
+                const index = subscribers.indexOf(subscriber);
+                if (index !== -1) {
+                    subscribers.splice(index, 1);
+                }
+                if (subscribers.length === 0) {
+                    stop();
+                    stop = null;
+                }
+            };
+        }
+        return { set, update, subscribe };
+    }
+
+    const deo = writable({
+        source: "null",
+        target: "null"
+    });
+    // schema of this object
+    /*
+    {
+        source: dragged element (string, first letter describes type (i, t)
+        target: drop zone (string, can be "tab" or "item" or "collection")
+        sourceObj: json of source
+        targetObj: json of target
+    }
+    */
+
     /* src/components/tiles/CollectionTile.svelte generated by Svelte v3.18.1 */
     const file$5 = "src/components/tiles/CollectionTile.svelte";
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[7] = list[i];
-    	child_ctx[9] = i;
+    	child_ctx[8] = list[i];
+    	child_ctx[10] = i;
     	return child_ctx;
     }
 
-    // (110:8) {:else}
+    // (148:8) {:else}
     function create_else_block$3(ctx) {
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
     	let t;
     	let current;
     	let each_value = /*items*/ ctx[1];
-    	let each_blocks = [];
+    	const get_key = ctx => /*item*/ ctx[8].id;
+    	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
     	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
 
     	const emptyitemtile = new EmptyItemTile({
     			props: {
@@ -2030,33 +2094,11 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*items, onItemDelete, onClickItem, onDrop*/ 30) {
-    				each_value = /*items*/ ctx[1];
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
-    					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
-    						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(t.parentNode, t);
-    					}
-    				}
-
-    				group_outros();
-
-    				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out(i);
-    				}
-
-    				check_outros();
-    			}
-
+    			const each_value = /*items*/ ctx[1];
+    			group_outros();
+    			validate_each_keys(ctx, each_value, get_each_context, get_key);
+    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, t.parentNode, outro_and_destroy_block, create_each_block, t, get_each_context);
+    			check_outros();
     			const emptyitemtile_changes = {};
     			if (dirty & /*items*/ 2) emptyitemtile_changes.index = /*items*/ ctx[1].length;
     			emptyitemtile.$set(emptyitemtile_changes);
@@ -2072,8 +2114,6 @@ var app = (function () {
     			current = true;
     		},
     		o: function outro(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				transition_out(each_blocks[i]);
     			}
@@ -2082,7 +2122,10 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_each(each_blocks, detaching);
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d(detaching);
+    			}
+
     			if (detaching) detach_dev(t);
     			destroy_component(emptyitemtile, detaching);
     		}
@@ -2092,14 +2135,14 @@ var app = (function () {
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(110:8) {:else}",
+    		source: "(148:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (108:8) {#if items.length==0}
+    // (146:8) {#if items.length==0}
     function create_if_block$3(ctx) {
     	let current;
 
@@ -2142,21 +2185,22 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(108:8) {#if items.length==0}",
+    		source: "(146:8) {#if items.length==0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:12) {#each items as item,index}
-    function create_each_block(ctx) {
+    // (149:12) {#each items as item,index (item.id)}
+    function create_each_block(key_1, ctx) {
+    	let first;
     	let current;
 
     	const itemtile = new ItemTile({
     			props: {
-    				index: /*index*/ ctx[9],
-    				item: /*item*/ ctx[7],
+    				index: /*index*/ ctx[10],
+    				item: /*item*/ ctx[8],
     				onItemDelete: /*onItemDelete*/ ctx[2],
     				onClickItem: /*onClickItem*/ ctx[3],
     				onDrop: /*onDrop*/ ctx[4]
@@ -2165,16 +2209,22 @@ var app = (function () {
     		});
 
     	const block = {
+    		key: key_1,
+    		first: null,
     		c: function create() {
+    			first = empty();
     			create_component(itemtile.$$.fragment);
+    			this.first = first;
     		},
     		m: function mount(target, anchor) {
+    			insert_dev(target, first, anchor);
     			mount_component(itemtile, target, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
     			const itemtile_changes = {};
-    			if (dirty & /*items*/ 2) itemtile_changes.item = /*item*/ ctx[7];
+    			if (dirty & /*items*/ 2) itemtile_changes.index = /*index*/ ctx[10];
+    			if (dirty & /*items*/ 2) itemtile_changes.item = /*item*/ ctx[8];
     			itemtile.$set(itemtile_changes);
     		},
     		i: function intro(local) {
@@ -2187,6 +2237,7 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
+    			if (detaching) detach_dev(first);
     			destroy_component(itemtile, detaching);
     		}
     	};
@@ -2195,7 +2246,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(111:12) {#each items as item,index}",
+    		source: "(149:12) {#each items as item,index (item.id)}",
     		ctx
     	});
 
@@ -2235,11 +2286,11 @@ var app = (function () {
     			div1 = element("div");
     			if_block.c();
     			attr_dev(div0, "class", "tile-top-bar svelte-11b4624");
-    			add_location(div0, file$5, 104, 4, 3038);
+    			add_location(div0, file$5, 142, 4, 4620);
     			attr_dev(div1, "class", "item-area svelte-11b4624");
-    			add_location(div1, file$5, 105, 4, 3093);
+    			add_location(div1, file$5, 143, 4, 4675);
     			attr_dev(div2, "class", "collection svelte-11b4624");
-    			add_location(div2, file$5, 103, 0, 2945);
+    			add_location(div2, file$5, 141, 0, 4527);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2252,7 +2303,7 @@ var app = (function () {
     			append_dev(div2, div1);
     			if_blocks[current_block_type_index].m(div1, null);
     			current = true;
-    			dispose = listen_dev(div2, "dragover", prevent_default(/*dragover_handler*/ ctx[6]), false, true, false);
+    			dispose = listen_dev(div2, "dragover", prevent_default(/*dragover_handler*/ ctx[7]), false, true, false);
     		},
     		p: function update(ctx, [dirty]) {
     			if ((!current || dirty & /*collection*/ 1) && t0_value !== (t0_value = /*collection*/ ctx[0].title + "")) set_data_dev(t0, t0_value);
@@ -2328,6 +2379,46 @@ var app = (function () {
     		});
     	});
 
+    	const unsubsribe = deo.subscribe(obj => {
+    		if (obj.source[0] == "i" && obj.target[0] == "i" && (obj.sourceObj.parentId == collection.id || obj.targetObj.id == collection.id)) {
+    			// target is collection (not item)
+    			// source is item (not collection)
+    			var dragIndex = parseInt(obj.source.substr(1));
+
+    			var dropIndex = parseInt(obj.target.substr(1));
+
+    			if (obj.sourceObj.parentId == collection.id && obj.targetObj.id == collection.id) {
+    				// move items from dragIndex to dropIndex
+    				if (dragIndex >= dropIndex) {
+    					chrome.bookmarks.move(obj.sourceObj.id, { index: dropIndex });
+    					items.splice(dropIndex, 0, obj.sourceObj);
+    					items.splice(dragIndex + 1, 1);
+    				} else {
+    					chrome.bookmarks.move(obj.sourceObj.id, { index: dropIndex });
+    					items.splice(dropIndex, 0, obj.sourceObj);
+    					items.splice(dragIndex, 1);
+    				}
+    			} else if (obj.sourceObj.parentId == collection.id) {
+    				// source is responsible for movement of bookmark
+    				chrome.bookmarks.move(obj.sourceObj.id, {
+    					index: dropIndex,
+    					parentId: obj.targetObj.id
+    				});
+
+    				items.splice(dragIndex, 1);
+    			} else {
+    				// obj.targetObj.parentId == collection.id
+    				items.splice(dropIndex, 0, obj.sourceObj);
+    			}
+
+    			$$invalidate(1, items);
+    		} else if (obj.source[0] == "t" && obj.target[0] == "i") {
+    			saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)));
+    		}
+    	});
+
+    	onDestroy(unsubsribe);
+
     	var onItemDelete = (item, i) => {
     		items.splice(i, 1);
     		$$invalidate(1, items);
@@ -2359,24 +2450,24 @@ var app = (function () {
 
     		// first letter is t if a tab is dropped
     		if (rawData[0] == "t") {
-    			var tab = JSON.parse(e.dataTransfer.getData("tab"));
-    			saveTabToBookmark(tab, dropIndex);
+    			var tab = JSON.parse(e.dataTransfer.getData("object"));
+
+    			deo.set({
+    				source: rawData,
+    				target: "i" + dropIndex.toString(),
+    				sourceObj: tab,
+    				targetObj: collection
+    			});
     		} else if (rawData[0] == "i") {
     			// first letter is i if an item was dropped here
-    			var dragIndex = parseInt(rawData.substr(1));
+    			var item = JSON.parse(e.dataTransfer.getData("object"));
 
-    			// move items from dragIndex to dropIndex
-    			if (dragIndex >= dropIndex) {
-    				chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex });
-    				items.splice(dropIndex, 0, items[dragIndex]);
-    				items.splice(dragIndex + 1, 1);
-    				$$invalidate(1, items);
-    			} else {
-    				chrome.bookmarks.move(items[dragIndex].id, { index: dropIndex - 1 });
-    				items.splice(dropIndex, 0, items[dragIndex]);
-    				items.splice(dragIndex, 1);
-    				$$invalidate(1, items);
-    			}
+    			deo.set({
+    				source: rawData,
+    				target: "i" + dropIndex.toString(),
+    				sourceObj: item,
+    				targetObj: collection
+    			});
     		}
     	};
 
@@ -2418,6 +2509,7 @@ var app = (function () {
     		onItemDelete,
     		onClickItem,
     		onDrop,
+    		unsubsribe,
     		saveTabToBookmark,
     		dragover_handler
     	];
@@ -2753,7 +2845,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$7, 81, 8, 2149);
+    			add_location(hr, file$7, 81, 8, 2152);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2782,7 +2874,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$7, 79, 8, 2091);
+    			add_location(hr, file$7, 79, 8, 2094);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2843,20 +2935,20 @@ var app = (function () {
     			div0 = element("div");
     			t3 = text(t3_value);
     			attr_dev(button, "class", "close-icon svelte-18bb33g");
-    			add_location(button, file$7, 90, 8, 2465);
+    			add_location(button, file$7, 90, 8, 2468);
     			attr_dev(img, "alt", " ");
     			if (img.src !== (img_src_value = /*tab*/ ctx[0].favIconUrl)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "height", "20px");
     			set_style(img, "margin-right", "10px");
-    			add_location(img, file$7, 93, 12, 2629);
+    			add_location(img, file$7, 93, 12, 2632);
     			attr_dev(div0, "class", "text-concat svelte-18bb33g");
-    			add_location(div0, file$7, 95, 12, 2721);
+    			add_location(div0, file$7, 95, 12, 2724);
     			attr_dev(div1, "class", "flex-row-container");
-    			add_location(div1, file$7, 92, 8, 2584);
+    			add_location(div1, file$7, 92, 8, 2587);
     			attr_dev(div2, "class", "card svelte-18bb33g");
     			attr_dev(div2, "draggable", "true");
-    			add_location(div2, file$7, 83, 4, 2201);
-    			add_location(div3, file$7, 77, 0, 2012);
+    			add_location(div2, file$7, 83, 4, 2204);
+    			add_location(div3, file$7, 77, 0, 2015);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2954,7 +3046,7 @@ var app = (function () {
 
     	var handleDragStart = e => {
     		e.dataTransfer.setData("text", "t" + index.toString());
-    		e.dataTransfer.setData("tab", JSON.stringify(tab));
+    		e.dataTransfer.setData("object", JSON.stringify(tab));
     	};
 
     	var handleDrop = e => {
@@ -3339,20 +3431,20 @@ var app = (function () {
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[4] = list[i];
-    	child_ctx[6] = i;
+    	child_ctx[5] = list[i];
+    	child_ctx[7] = i;
     	return child_ctx;
     }
 
-    // (58:8) {#each allTabs as tab,i (tab.id)}
+    // (74:8) {#each allTabs as tab,i (tab.id)}
     function create_each_block$2(key_1, ctx) {
     	let first;
     	let current;
 
     	const tabtile = new TabTile({
     			props: {
-    				tab: /*tab*/ ctx[4],
-    				index: /*i*/ ctx[6],
+    				tab: /*tab*/ ctx[5],
+    				index: /*i*/ ctx[7],
     				onClickTabCard: /*onClickTabCard*/ ctx[1],
     				onTabTileClose: /*onTabTileClose*/ ctx[2],
     				onDrop: /*onDrop*/ ctx[3]
@@ -3375,8 +3467,8 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const tabtile_changes = {};
-    			if (dirty & /*allTabs*/ 1) tabtile_changes.tab = /*tab*/ ctx[4];
-    			if (dirty & /*allTabs*/ 1) tabtile_changes.index = /*i*/ ctx[6];
+    			if (dirty & /*allTabs*/ 1) tabtile_changes.tab = /*tab*/ ctx[5];
+    			if (dirty & /*allTabs*/ 1) tabtile_changes.index = /*i*/ ctx[7];
     			tabtile.$set(tabtile_changes);
     		},
     		i: function intro(local) {
@@ -3398,7 +3490,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(58:8) {#each allTabs as tab,i (tab.id)}",
+    		source: "(74:8) {#each allTabs as tab,i (tab.id)}",
     		ctx
     	});
 
@@ -3418,7 +3510,7 @@ var app = (function () {
     	let t3;
     	let current;
     	let each_value = /*allTabs*/ ctx[0];
-    	const get_key = ctx => /*tab*/ ctx[4].id;
+    	const get_key = ctx => /*tab*/ ctx[5].id;
     	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -3450,10 +3542,10 @@ var app = (function () {
 
     			t3 = space();
     			create_component(emptytabtile.$$.fragment);
-    			add_location(h2, file$9, 54, 4, 1603);
+    			add_location(h2, file$9, 70, 4, 2237);
     			attr_dev(div0, "class", "scroll");
-    			add_location(div0, file$9, 56, 4, 1646);
-    			add_location(div1, file$9, 53, 0, 1593);
+    			add_location(div0, file$9, 72, 4, 2280);
+    			add_location(div1, file$9, 69, 0, 2227);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3536,6 +3628,34 @@ var app = (function () {
     		});
     	});
 
+    	const unsubsribe = deo.subscribe(obj => {
+    		if (obj.source[0] == "t") {
+    			if (obj.target[0] == "i") {
+    				chrome.tabs.remove(obj.sourceObj.id);
+    				allTabs.splice(parseInt(obj.source.substr(1)), 1);
+    				$$invalidate(0, allTabs);
+    			} else if (obj.target[0] == "t") {
+    				var dragIndex = parseInt(obj.source.substr(1));
+    				var dropIndex = parseInt(obj.target.substr(1));
+
+    				// move tabs from dragIndex to dropIndex
+    				if (dragIndex >= dropIndex) {
+    					chrome.tabs.move(obj.sourceObj.id, { index: dropIndex });
+    					allTabs.splice(dropIndex, 0, obj.sourceObj);
+    					allTabs.splice(dragIndex + 1, 1);
+    				} else {
+    					chrome.tabs.move(obj.sourceObj.id, { index: dropIndex - 1 });
+    					allTabs.splice(dropIndex, 0, obj.sourceObj);
+    					allTabs.splice(dragIndex, 1);
+    				}
+
+    				$$invalidate(0, allTabs);
+    			}
+    		}
+    	});
+
+    	onDestroy(unsubsribe);
+
     	var onClickTabCard = tab => {
     		chrome.tabs.update(tab.id, { active: true });
     	};
@@ -3549,24 +3669,14 @@ var app = (function () {
     	var onDrop = (e, dropIndex) => {
     		e.preventDefault();
     		var rawData = e.dataTransfer.getData("text");
+    		var obj = JSON.parse(e.dataTransfer.getData("object"));
 
-    		// first letter is t if a tab is dropped
-    		if (rawData[0] == "t") {
-    			var dragIndex = parseInt(rawData.substr(1));
-
-    			// move tabs from dragIndex to dropIndex
-    			if (dragIndex >= dropIndex) {
-    				chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex });
-    				allTabs.splice(dropIndex, 0, allTabs[dragIndex]);
-    				allTabs.splice(dragIndex + 1, 1);
-    			} else {
-    				chrome.tabs.move(allTabs[dragIndex].id, { index: dropIndex - 1 });
-    				allTabs.splice(dropIndex, 0, allTabs[dragIndex]);
-    				allTabs.splice(dragIndex, 1);
-    			}
-
-    			$$invalidate(0, allTabs);
-    		} else if (rawData[0] == "i") ; // DO NOTHING
+    		deo.set({
+    			source: rawData,
+    			target: "t" + dropIndex.toString(),
+    			sourceObj: obj,
+    			targetObj: allTabs[dropIndex]
+    		});
     	};
 
     	$$self.$capture_state = () => {
