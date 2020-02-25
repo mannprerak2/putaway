@@ -5,6 +5,7 @@
     import EmptyItemTile from './EmptyItemTile.svelte';
     import NoItemTileIndicator from './NoItemIndicatorTile.svelte';
     import { deo } from './../../stores/dropEventStore.js';
+    import { searchText } from './../../stores/searchTextStore.js'
 
     let items = [];
 
@@ -161,22 +162,23 @@
 </style>
 <div class="collection" in:fade="{{duration: 500}}" out:fade on:dragover|preventDefault>
     {#if dropLine}
-        <hr style="border: 1px solid black;">
-    {:else}
-        <hr style="border: 1px solid white;">
-    {/if}
-    <div class="tile-top-bar" draggable="true" out:fade on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave} on:dragstart={handleDragStart} on:drop={handleDrop}><div>{collection.title}</div>
-    <div style="flex-grow:1;"/> <span/></div>
-    <div class="item-area">
-
-        {#if items.length==0}
-            <NoItemTileIndicator index={items.length} {onDrop}/>
+            <hr style="border: 1px solid black;">
         {:else}
-            {#each items as item,index (item.id)}
-                <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
-            {/each}
-            <EmptyItemTile index={items.length} {onDrop}/>
+            <hr style="border: 1px solid white;">
         {/if}
-    </div>
+        <div class="tile-top-bar" draggable="true" out:fade on:dragover|preventDefault={onDragEnter}
+            on:dragleave={onDragLeave} on:dragstart={handleDragStart} on:drop={handleDrop}><div>{collection.title}</div>
+        <div style="flex-grow:1;"/> <span/></div>
+        <div class="item-area">
+            {#if items.length==0}
+                <NoItemTileIndicator index={items.length} {onDrop}/>
+            {:else}
+                {#each items as item,index (item.id)}
+                    {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }
+                        <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
+                    {/if}
+                {/each}
+                <EmptyItemTile index={items.length} {onDrop}/>
+            {/if}
+        </div>
 </div>
