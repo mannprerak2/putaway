@@ -2051,7 +2051,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (158:4) {:else}
+    // (165:4) {:else}
     function create_else_block_1(ctx) {
     	let hr;
 
@@ -2059,7 +2059,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$5, 158, 8, 4869);
+    			add_location(hr, file$5, 165, 8, 5114);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2073,14 +2073,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(158:4) {:else}",
+    		source: "(165:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (156:4) {#if dropLine}
+    // (163:4) {#if dropLine}
     function create_if_block_1(ctx) {
     	let hr;
 
@@ -2088,7 +2088,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$5, 156, 8, 4811);
+    			add_location(hr, file$5, 163, 8, 5056);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2102,14 +2102,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(156:4) {#if dropLine}",
+    		source: "(163:4) {#if dropLine}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (168:8) {:else}
+    // (175:8) {:else}
     function create_else_block$3(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
@@ -2193,14 +2193,14 @@ var app = (function () {
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(168:8) {:else}",
+    		source: "(175:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (166:8) {#if items.length==0}
+    // (173:8) {#if items.length==0}
     function create_if_block$3(ctx) {
     	let current;
 
@@ -2243,14 +2243,14 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(166:8) {#if items.length==0}",
+    		source: "(173:8) {#if items.length==0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (169:12) {#each items as item,index (item.id)}
+    // (176:12) {#each items as item,index (item.id)}
     function create_each_block(key_1, ctx) {
     	let first;
     	let current;
@@ -2304,7 +2304,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(169:12) {#each items as item,index (item.id)}",
+    		source: "(176:12) {#each items as item,index (item.id)}",
     		ctx
     	});
 
@@ -2365,17 +2365,17 @@ var app = (function () {
     			t4 = space();
     			div3 = element("div");
     			if_block1.c();
-    			add_location(div0, file$5, 161, 87, 5101);
+    			add_location(div0, file$5, 168, 87, 5346);
     			set_style(div1, "flex-grow", "1");
-    			add_location(div1, file$5, 162, 4, 5135);
-    			add_location(span, file$5, 162, 32, 5163);
+    			add_location(div1, file$5, 169, 4, 5380);
+    			add_location(span, file$5, 169, 32, 5408);
     			attr_dev(div2, "class", "tile-top-bar svelte-1dklzav");
     			attr_dev(div2, "draggable", "true");
-    			add_location(div2, file$5, 160, 4, 4921);
+    			add_location(div2, file$5, 167, 4, 5166);
     			attr_dev(div3, "class", "item-area svelte-1dklzav");
-    			add_location(div3, file$5, 163, 4, 5181);
+    			add_location(div3, file$5, 170, 4, 5426);
     			attr_dev(div4, "class", "collection svelte-1dklzav");
-    			add_location(div4, file$5, 154, 0, 4695);
+    			add_location(div4, file$5, 161, 0, 4940);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2521,6 +2521,7 @@ var app = (function () {
 
     			var dropIndex = parseInt(obj.target.substr(1));
 
+    			// when moving item within the same collection
     			if (obj.sourceObj.parentId == collection.id && obj.targetObj.id == collection.id) {
     				// move items from dragIndex to dropIndex
     				if (dragIndex >= dropIndex) {
@@ -2532,7 +2533,8 @@ var app = (function () {
     					items.splice(dropIndex, 0, obj.sourceObj);
     					items.splice(dragIndex, 1);
     				}
-    			} else if (obj.sourceObj.parentId == collection.id) {
+    			} else // when moving item to a different collection
+    			if (obj.sourceObj.parentId == collection.id) {
     				// source is responsible for movement of bookmark
     				chrome.bookmarks.move(obj.sourceObj.id, {
     					index: dropIndex,
@@ -2542,7 +2544,10 @@ var app = (function () {
     				items.splice(dragIndex, 1);
     			} else {
     				// obj.targetObj.id == collection.id
-    				items.splice(dropIndex, 0, obj.sourceObj);
+    				var newObj = JSON.parse(JSON.stringify(obj.sourceObj));
+
+    				newObj.parentId = collection.id;
+    				items.splice(dropIndex, 0, newObj);
     			}
 
     			$$invalidate(2, items);

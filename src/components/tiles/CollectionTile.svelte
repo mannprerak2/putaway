@@ -48,6 +48,8 @@
 
             var dragIndex = parseInt(obj.source.substr(1));
             var dropIndex = parseInt(obj.target.substr(1));
+
+            // when moving item within the same collection
             if (obj.sourceObj.parentId == collection.id && obj.targetObj.id == collection.id) {
                 // move items from dragIndex to dropIndex
                 if (dragIndex >= dropIndex) {
@@ -60,13 +62,18 @@
                     items.splice(dropIndex, 0, obj.sourceObj);
                     items.splice(dragIndex, 1);
                 }
-            } else if (obj.sourceObj.parentId == collection.id) {
+            }
+            // when moving item to a different collection
+            else if (obj.sourceObj.parentId == collection.id) {
                 // source is responsible for movement of bookmark
                 chrome.bookmarks.move(obj.sourceObj.id, { index: dropIndex, parentId: obj.targetObj.id });
 
                 items.splice(dragIndex, 1);
             } else {// obj.targetObj.id == collection.id
-                items.splice(dropIndex, 0, obj.sourceObj);
+                var newObj = JSON.parse(JSON.stringify(obj.sourceObj));
+                newObj.parentId = collection.id;
+
+                items.splice(dropIndex, 0, newObj);
             }
             items = items;
         } else if (obj.source[0] == "t" &&
