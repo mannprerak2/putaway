@@ -2,6 +2,7 @@
     import { onMount, onDestroy, getContext } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import CreateCollectionModal from './CreateCollectionModal.svelte';
+    import DeleteCollectionModal from './DeleteCollectionModal.svelte';
     import CollectionTile from './tiles/CollectionTile.svelte';
     const { open } = getContext('simple-modal');
     import { deo } from './../stores/dropEventStore.js';
@@ -61,6 +62,14 @@
     });
     onDestroy(unsubsribe);
 
+    var clickDeleteCollection = async (index) => {
+        var c = await open(DeleteCollectionModal, {collectionName:allCollections[index].title});
+        if (c) {
+            chrome.bookmarks.remove(allCollections[index].id);
+            allCollections.splice(index, 1);
+            allCollections = allCollections;
+        }
+    }
 </script>
 <style>
     .plus-icon-dummy {
@@ -122,7 +131,7 @@
 
     <div class="scroll">
         {#each allCollections as collection,i (collection.id)}
-            <CollectionTile {collection} index={i} {onCollectionDrop}/>
+            <CollectionTile {collection} index={i} {onCollectionDrop} {clickDeleteCollection}/>
         {/each}
         <EmptyCollectionTile index={allCollections.length} {onCollectionDrop}/>
     </div>

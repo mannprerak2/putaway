@@ -12,6 +12,7 @@
     export let collection;
     export let onCollectionDrop;
     export let index;
+    export let clickDeleteCollection;
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
@@ -167,8 +168,13 @@
             <hr style="border: 1px solid white;">
         {/if}
         <div class="tile-top-bar" draggable="true" out:fade on:dragover|preventDefault={onDragEnter}
-            on:dragleave={onDragLeave} on:dragstart={handleDragStart} on:drop={handleDrop}><div>{collection.title}</div>
-        <div style="flex-grow:1;"/> <span/></div>
+            on:dragleave={onDragLeave} on:dragstart={handleDragStart} on:drop={handleDrop}>
+            <div>{collection.title}</div>
+            <div style="flex-grow:1;"/> 
+            <div on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em;">🗑️</div>
+            &nbsp
+            <div style="font-size: 0.8em;">⋮</div>
+        </div>
         <div class="item-area">
             {#if items.length==0}
                 <NoItemTileIndicator index={items.length} {onDrop}/>
