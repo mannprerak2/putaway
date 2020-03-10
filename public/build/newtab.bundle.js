@@ -2221,7 +2221,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (167:8) {:else}
+    // (168:8) {:else}
     function create_else_block_1(ctx) {
     	let hr;
 
@@ -2229,7 +2229,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$6, 167, 12, 5231);
+    			add_location(hr, file$6, 168, 12, 5271);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2243,14 +2243,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(167:8) {:else}",
+    		source: "(168:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (165:4) {#if dropLine}
+    // (166:4) {#if dropLine}
     function create_if_block_2(ctx) {
     	let hr;
 
@@ -2258,7 +2258,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$6, 165, 12, 5165);
+    			add_location(hr, file$6, 166, 12, 5205);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2272,14 +2272,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(165:4) {#if dropLine}",
+    		source: "(166:4) {#if dropLine}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (181:12) {:else}
+    // (182:12) {:else}
     function create_else_block$3(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
@@ -2363,14 +2363,14 @@ var app = (function () {
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(181:12) {:else}",
+    		source: "(182:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (179:12) {#if items.length==0}
+    // (180:12) {#if items.length==0}
     function create_if_block$3(ctx) {
     	let current;
 
@@ -2413,14 +2413,14 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(179:12) {#if items.length==0}",
+    		source: "(180:12) {#if items.length==0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (183:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }
+    // (184:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }
     function create_if_block_1(ctx) {
     	let current;
 
@@ -2467,14 +2467,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(183:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }",
+    		source: "(184:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (182:16) {#each items as item,index (item.id)}
+    // (183:16) {#each items as item,index (item.id)}
     function create_each_block(key_1, ctx) {
     	let first;
     	let show_if = /*item*/ ctx[18].title.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase()) || /*item*/ ctx[18].url.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase());
@@ -2540,7 +2540,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(182:16) {#each items as item,index (item.id)}",
+    		source: "(183:16) {#each items as item,index (item.id)}",
     		ctx
     	});
 
@@ -2607,20 +2607,20 @@ var app = (function () {
     			t7 = space();
     			div5 = element("div");
     			if_block1.c();
-    			add_location(div0, file$6, 171, 12, 5488);
+    			add_location(div0, file$6, 172, 12, 5528);
     			set_style(div1, "flex-grow", "1");
-    			add_location(div1, file$6, 172, 12, 5530);
+    			add_location(div1, file$6, 173, 12, 5570);
     			set_style(div2, "font-size", "0.8em");
-    			add_location(div2, file$6, 173, 12, 5571);
+    			add_location(div2, file$6, 174, 12, 5611);
     			set_style(div3, "font-size", "0.8em");
-    			add_location(div3, file$6, 175, 12, 5686);
+    			add_location(div3, file$6, 176, 12, 5726);
     			attr_dev(div4, "class", "tile-top-bar svelte-1dklzav");
     			attr_dev(div4, "draggable", "true");
-    			add_location(div4, file$6, 169, 8, 5291);
+    			add_location(div4, file$6, 170, 8, 5331);
     			attr_dev(div5, "class", "item-area svelte-1dklzav");
-    			add_location(div5, file$6, 177, 8, 5748);
+    			add_location(div5, file$6, 178, 8, 5788);
     			attr_dev(div6, "class", "collection svelte-1dklzav");
-    			add_location(div6, file$6, 163, 0, 5045);
+    			add_location(div6, file$6, 164, 0, 5085);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2804,7 +2804,7 @@ var app = (function () {
 
     			$$invalidate(3, items);
     		} else if (obj.source[0] == "t" && obj.target[0] == "i" && obj.targetObj.id == collection.id) {
-    			saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)));
+    			saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)), !obj.ctrl);
     		}
     	});
 
@@ -2845,7 +2845,8 @@ var app = (function () {
     			source: rawData,
     			target: "i" + dropIndex.toString(),
     			sourceObj: obj,
-    			targetObj: collection
+    			targetObj: collection,
+    			ctrl: e.ctrlKey
     		});
     	};
 
@@ -3252,12 +3253,12 @@ var app = (function () {
     			t2 = space();
     			h31 = element("h3");
     			h31.textContent = "' To create one";
-    			add_location(h30, file$8, 123, 12, 4258);
+    			add_location(h30, file$8, 123, 12, 4262);
     			attr_dev(button, "class", "plus-icon-dummy svelte-1sz8a6i");
-    			add_location(button, file$8, 124, 12, 4304);
-    			add_location(h31, file$8, 125, 12, 4358);
+    			add_location(button, file$8, 124, 12, 4308);
+    			add_location(h31, file$8, 125, 12, 4362);
     			attr_dev(div, "class", "no-collections-indicator svelte-1sz8a6i");
-    			add_location(div, file$8, 122, 8, 4207);
+    			add_location(div, file$8, 122, 8, 4211);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3389,11 +3390,11 @@ var app = (function () {
     			t2 = space();
     			create_component(emptycollectiontile.$$.fragment);
     			attr_dev(button, "class", "plus-icon svelte-1sz8a6i");
-    			add_location(button, file$8, 129, 4, 4413);
+    			add_location(button, file$8, 129, 4, 4417);
     			attr_dev(div, "class", "scroll");
-    			add_location(div, file$8, 131, 4, 4515);
+    			add_location(div, file$8, 131, 4, 4519);
     			set_style(main, "position", "relative");
-    			add_location(main, file$8, 119, 0, 4127);
+    			add_location(main, file$8, 119, 0, 4131);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3544,7 +3545,7 @@ var app = (function () {
     		});
 
     		if (c) {
-    			chrome.bookmarks.remove(allCollections[index].id);
+    			chrome.bookmarks.removeTree(allCollections[index].id);
     			allCollections.splice(index, 1);
     			$$invalidate(0, allCollections);
     		}
@@ -4180,7 +4181,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (74:8) {#each allTabs as tab,i (tab.id)}
+    // (76:8) {#each allTabs as tab,i (tab.id)}
     function create_each_block$2(key_1, ctx) {
     	let first;
     	let current;
@@ -4234,7 +4235,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(74:8) {#each allTabs as tab,i (tab.id)}",
+    		source: "(76:8) {#each allTabs as tab,i (tab.id)}",
     		ctx
     	});
 
@@ -4286,10 +4287,10 @@ var app = (function () {
 
     			t3 = space();
     			create_component(emptytabtile.$$.fragment);
-    			add_location(h2, file$b, 70, 4, 2237);
+    			add_location(h2, file$b, 72, 4, 2368);
     			attr_dev(div0, "class", "scroll");
-    			add_location(div0, file$b, 72, 4, 2280);
-    			add_location(div1, file$b, 69, 0, 2227);
+    			add_location(div0, file$b, 74, 4, 2411);
+    			add_location(div1, file$b, 71, 0, 2358);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4375,9 +4376,13 @@ var app = (function () {
     	const unsubsribe = deo.subscribe(obj => {
     		if (obj.source[0] == "t") {
     			if (obj.target[0] == "i") {
-    				chrome.tabs.remove(obj.sourceObj.id);
-    				allTabs.splice(parseInt(obj.source.substr(1)), 1);
-    				$$invalidate(0, allTabs);
+    				if (obj.ctrl != null && !obj.ctrl) {
+    					//  only delete tab if ctrl wasn't held by user
+    					chrome.tabs.remove(obj.sourceObj.id);
+
+    					allTabs.splice(parseInt(obj.source.substr(1)), 1);
+    					$$invalidate(0, allTabs);
+    				}
     			} else if (obj.target[0] == "t") {
     				var dragIndex = parseInt(obj.source.substr(1));
     				var dropIndex = parseInt(obj.target.substr(1));

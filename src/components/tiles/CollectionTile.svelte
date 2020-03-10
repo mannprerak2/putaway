@@ -80,7 +80,7 @@
             items = items;
         } else if (obj.source[0] == "t" &&
             obj.target[0] == "i" && obj.targetObj.id == collection.id) {
-            saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)));
+            saveTabToBookmark(obj.sourceObj, parseInt(obj.target.substr(1)), !obj.ctrl);
         }
     });
     onDestroy(unsubsribe);
@@ -122,7 +122,8 @@
             source: rawData,
             target: "i" + dropIndex.toString(),
             sourceObj: obj,
-            targetObj: collection
+            targetObj: collection,
+            ctrl: e.ctrlKey
         });
     }
 </script>

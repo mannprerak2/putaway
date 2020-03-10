@@ -19,9 +19,11 @@
     const unsubsribe = deo.subscribe(obj => {
         if (obj.source[0] == "t") {
             if (obj.target[0] == "i") {
-                chrome.tabs.remove(obj.sourceObj.id);
-                allTabs.splice(parseInt(obj.source.substr(1)), 1);
-                allTabs = allTabs;
+                if (obj.ctrl != null && !obj.ctrl) { //  only delete tab if ctrl wasn't held by user
+                    chrome.tabs.remove(obj.sourceObj.id);
+                    allTabs.splice(parseInt(obj.source.substr(1)), 1);
+                    allTabs = allTabs;
+                }
             } else if (obj.target[0] == "t") {
                 var dragIndex = parseInt(obj.source.substr(1));
                 var dropIndex = parseInt(obj.target.substr(1))
