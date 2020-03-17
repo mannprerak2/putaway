@@ -98,6 +98,12 @@
         });
     }
 
+    var openAllOfCollection = () => {
+        items.forEach((i)=>{
+            chrome.tabs.create({url:i.url});
+        });
+    }
+
     function saveTabToBookmark(tab, dropIndex) {
         chrome.bookmarks.create(
             {
@@ -161,6 +167,16 @@
     .item-area::-webkit-scrollbar {
         display: none;
     }
+
+    #open-all-tabs {
+        border: 1px solid gray;
+        border-radius: 15px;
+        padding: 2px;
+        font-size: 0.5em;
+    }
+    #open-all-tabs:hover {
+        background-color: rgba(240, 240, 240, 1);
+    }
 </style>
 <div class="collection" in:fade="{{duration: 500}}" out:fade on:dragover|preventDefault>
     {#if dropLine}
@@ -172,6 +188,8 @@
             on:dragleave={onDragLeave} on:dragstart={handleDragStart} on:drop={handleDrop}>
             <div>{collection.title}</div>
             <div style="flex-grow:1;"/> 
+            <div id="open-all-tabs" on:click={openAllOfCollection}>Open {items.length} Tabs</div>
+            &nbsp
             <div on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em;">🗑️</div>
             &nbsp
             <div style="font-size: 0.8em;">⋮</div>

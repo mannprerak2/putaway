@@ -2216,12 +2216,12 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[18] = list[i];
+    	child_ctx[19] = list[i];
     	child_ctx[2] = i;
     	return child_ctx;
     }
 
-    // (168:8) {:else}
+    // (184:8) {:else}
     function create_else_block_1(ctx) {
     	let hr;
 
@@ -2229,7 +2229,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid white");
-    			add_location(hr, file$6, 168, 12, 5271);
+    			add_location(hr, file$6, 184, 12, 5622);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2243,14 +2243,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(168:8) {:else}",
+    		source: "(184:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (166:4) {#if dropLine}
+    // (182:4) {#if dropLine}
     function create_if_block_2(ctx) {
     	let hr;
 
@@ -2258,7 +2258,7 @@ var app = (function () {
     		c: function create() {
     			hr = element("hr");
     			set_style(hr, "border", "1px solid black");
-    			add_location(hr, file$6, 166, 12, 5205);
+    			add_location(hr, file$6, 182, 12, 5556);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, hr, anchor);
@@ -2272,21 +2272,21 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(166:4) {#if dropLine}",
+    		source: "(182:4) {#if dropLine}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (182:12) {:else}
+    // (200:12) {:else}
     function create_else_block$3(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let t;
     	let current;
     	let each_value = /*items*/ ctx[3];
-    	const get_key = ctx => /*item*/ ctx[18].id;
+    	const get_key = ctx => /*item*/ ctx[19].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -2298,7 +2298,7 @@ var app = (function () {
     	const emptyitemtile = new EmptyItemTile({
     			props: {
     				index: /*items*/ ctx[3].length,
-    				onDrop: /*onDrop*/ ctx[12]
+    				onDrop: /*onDrop*/ ctx[13]
     			},
     			$$inline: true
     		});
@@ -2363,21 +2363,21 @@ var app = (function () {
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(182:12) {:else}",
+    		source: "(200:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (180:12) {#if items.length==0}
+    // (198:12) {#if items.length==0}
     function create_if_block$3(ctx) {
     	let current;
 
     	const noitemtileindicator = new NoItemIndicatorTile({
     			props: {
     				index: /*items*/ ctx[3].length,
-    				onDrop: /*onDrop*/ ctx[12]
+    				onDrop: /*onDrop*/ ctx[13]
     			},
     			$$inline: true
     		});
@@ -2413,24 +2413,24 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(180:12) {#if items.length==0}",
+    		source: "(198:12) {#if items.length==0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (184:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }
+    // (202:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }
     function create_if_block_1(ctx) {
     	let current;
 
     	const itemtile = new ItemTile({
     			props: {
     				index: /*index*/ ctx[2],
-    				item: /*item*/ ctx[18],
+    				item: /*item*/ ctx[19],
     				onItemDelete: /*onItemDelete*/ ctx[10],
     				onClickItem: /*onClickItem*/ ctx[11],
-    				onDrop: /*onDrop*/ ctx[12]
+    				onDrop: /*onDrop*/ ctx[13]
     			},
     			$$inline: true
     		});
@@ -2446,7 +2446,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const itemtile_changes = {};
     			if (dirty & /*items*/ 8) itemtile_changes.index = /*index*/ ctx[2];
-    			if (dirty & /*items*/ 8) itemtile_changes.item = /*item*/ ctx[18];
+    			if (dirty & /*items*/ 8) itemtile_changes.item = /*item*/ ctx[19];
     			itemtile.$set(itemtile_changes);
     		},
     		i: function intro(local) {
@@ -2467,17 +2467,17 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(184:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }",
+    		source: "(202:20) {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (183:16) {#each items as item,index (item.id)}
+    // (201:16) {#each items as item,index (item.id)}
     function create_each_block(key_1, ctx) {
     	let first;
-    	let show_if = /*item*/ ctx[18].title.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase()) || /*item*/ ctx[18].url.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase());
+    	let show_if = /*item*/ ctx[19].title.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase()) || /*item*/ ctx[19].url.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase());
     	let if_block_anchor;
     	let current;
     	let if_block = show_if && create_if_block_1(ctx);
@@ -2498,7 +2498,7 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*items, $searchText*/ 40) show_if = /*item*/ ctx[18].title.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase()) || /*item*/ ctx[18].url.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase());
+    			if (dirty & /*items, $searchText*/ 40) show_if = /*item*/ ctx[19].title.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase()) || /*item*/ ctx[19].url.toLowerCase().includes(/*$searchText*/ ctx[5].toLowerCase());
 
     			if (show_if) {
     				if (if_block) {
@@ -2540,7 +2540,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(183:16) {#each items as item,index (item.id)}",
+    		source: "(201:16) {#each items as item,index (item.id)}",
     		ctx
     	});
 
@@ -2548,9 +2548,9 @@ var app = (function () {
     }
 
     function create_fragment$6(ctx) {
-    	let div6;
+    	let div7;
     	let t0;
-    	let div4;
+    	let div5;
     	let div0;
     	let t1_value = /*collection*/ ctx[0].title + "";
     	let t1;
@@ -2558,15 +2558,21 @@ var app = (function () {
     	let div1;
     	let t3;
     	let div2;
+    	let t4;
+    	let t5_value = /*items*/ ctx[3].length + "";
     	let t5;
-    	let div3;
-    	let div4_outro;
+    	let t6;
     	let t7;
-    	let div5;
+    	let div3;
+    	let t9;
+    	let div4;
+    	let div5_outro;
+    	let t11;
+    	let div6;
     	let current_block_type_index;
     	let if_block1;
-    	let div6_intro;
-    	let div6_outro;
+    	let div7_intro;
+    	let div7_outro;
     	let current;
     	let dispose;
 
@@ -2590,66 +2596,80 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div6 = element("div");
+    			div7 = element("div");
     			if_block0.c();
     			t0 = space();
-    			div4 = element("div");
+    			div5 = element("div");
     			div0 = element("div");
     			t1 = text(t1_value);
     			t2 = space();
     			div1 = element("div");
     			t3 = space();
     			div2 = element("div");
-    			div2.textContent = "🗑️";
-    			t5 = text("\n             \n            ");
+    			t4 = text("Open ");
+    			t5 = text(t5_value);
+    			t6 = text(" Tabs");
+    			t7 = text("\n             \n            ");
     			div3 = element("div");
-    			div3.textContent = "⋮";
-    			t7 = space();
-    			div5 = element("div");
+    			div3.textContent = "🗑️";
+    			t9 = text("\n             \n            ");
+    			div4 = element("div");
+    			div4.textContent = "⋮";
+    			t11 = space();
+    			div6 = element("div");
     			if_block1.c();
-    			add_location(div0, file$6, 172, 12, 5528);
+    			add_location(div0, file$6, 188, 12, 5879);
     			set_style(div1, "flex-grow", "1");
-    			add_location(div1, file$6, 173, 12, 5570);
-    			set_style(div2, "font-size", "0.8em");
-    			add_location(div2, file$6, 174, 12, 5611);
+    			add_location(div1, file$6, 189, 12, 5921);
+    			attr_dev(div2, "id", "open-all-tabs");
+    			attr_dev(div2, "class", "svelte-1934fk3");
+    			add_location(div2, file$6, 190, 12, 5962);
     			set_style(div3, "font-size", "0.8em");
-    			add_location(div3, file$6, 176, 12, 5726);
-    			attr_dev(div4, "class", "tile-top-bar svelte-1dklzav");
-    			attr_dev(div4, "draggable", "true");
-    			add_location(div4, file$6, 170, 8, 5331);
-    			attr_dev(div5, "class", "item-area svelte-1dklzav");
-    			add_location(div5, file$6, 178, 8, 5788);
-    			attr_dev(div6, "class", "collection svelte-1dklzav");
-    			add_location(div6, file$6, 164, 0, 5085);
+    			add_location(div3, file$6, 192, 12, 6078);
+    			set_style(div4, "font-size", "0.8em");
+    			add_location(div4, file$6, 194, 12, 6193);
+    			attr_dev(div5, "class", "tile-top-bar svelte-1934fk3");
+    			attr_dev(div5, "draggable", "true");
+    			add_location(div5, file$6, 186, 8, 5682);
+    			attr_dev(div6, "class", "item-area svelte-1934fk3");
+    			add_location(div6, file$6, 196, 8, 6255);
+    			attr_dev(div7, "class", "collection svelte-1934fk3");
+    			add_location(div7, file$6, 180, 0, 5436);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div6, anchor);
-    			if_block0.m(div6, null);
-    			append_dev(div6, t0);
-    			append_dev(div6, div4);
-    			append_dev(div4, div0);
+    			insert_dev(target, div7, anchor);
+    			if_block0.m(div7, null);
+    			append_dev(div7, t0);
+    			append_dev(div7, div5);
+    			append_dev(div5, div0);
     			append_dev(div0, t1);
-    			append_dev(div4, t2);
-    			append_dev(div4, div1);
-    			append_dev(div4, t3);
-    			append_dev(div4, div2);
-    			append_dev(div4, t5);
-    			append_dev(div4, div3);
-    			append_dev(div6, t7);
-    			append_dev(div6, div5);
-    			if_blocks[current_block_type_index].m(div5, null);
+    			append_dev(div5, t2);
+    			append_dev(div5, div1);
+    			append_dev(div5, t3);
+    			append_dev(div5, div2);
+    			append_dev(div2, t4);
+    			append_dev(div2, t5);
+    			append_dev(div2, t6);
+    			append_dev(div5, t7);
+    			append_dev(div5, div3);
+    			append_dev(div5, t9);
+    			append_dev(div5, div4);
+    			append_dev(div7, t11);
+    			append_dev(div7, div6);
+    			if_blocks[current_block_type_index].m(div6, null);
     			current = true;
 
     			dispose = [
-    				listen_dev(div2, "click", /*click_handler*/ ctx[17], false, false, false),
-    				listen_dev(div4, "dragover", prevent_default(/*onDragEnter*/ ctx[6]), false, true, false),
-    				listen_dev(div4, "dragleave", /*onDragLeave*/ ctx[7], false, false, false),
-    				listen_dev(div4, "dragstart", /*handleDragStart*/ ctx[8], false, false, false),
-    				listen_dev(div4, "drop", /*handleDrop*/ ctx[9], false, false, false),
-    				listen_dev(div6, "dragover", prevent_default(/*dragover_handler*/ ctx[16]), false, true, false)
+    				listen_dev(div2, "click", /*openAllOfCollection*/ ctx[12], false, false, false),
+    				listen_dev(div3, "click", /*click_handler*/ ctx[18], false, false, false),
+    				listen_dev(div5, "dragover", prevent_default(/*onDragEnter*/ ctx[6]), false, true, false),
+    				listen_dev(div5, "dragleave", /*onDragLeave*/ ctx[7], false, false, false),
+    				listen_dev(div5, "dragstart", /*handleDragStart*/ ctx[8], false, false, false),
+    				listen_dev(div5, "drop", /*handleDrop*/ ctx[9], false, false, false),
+    				listen_dev(div7, "dragover", prevent_default(/*dragover_handler*/ ctx[17]), false, true, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
@@ -2659,11 +2679,12 @@ var app = (function () {
 
     				if (if_block0) {
     					if_block0.c();
-    					if_block0.m(div6, t0);
+    					if_block0.m(div7, t0);
     				}
     			}
 
     			if ((!current || dirty & /*collection*/ 1) && t1_value !== (t1_value = /*collection*/ ctx[0].title + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*items*/ 8) && t5_value !== (t5_value = /*items*/ ctx[3].length + "")) set_data_dev(t5, t5_value);
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type_1(ctx);
 
@@ -2685,35 +2706,35 @@ var app = (function () {
     				}
 
     				transition_in(if_block1, 1);
-    				if_block1.m(div5, null);
+    				if_block1.m(div6, null);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
-    			if (div4_outro) div4_outro.end(1);
+    			if (div5_outro) div5_outro.end(1);
     			transition_in(if_block1);
 
     			add_render_callback(() => {
-    				if (div6_outro) div6_outro.end(1);
-    				if (!div6_intro) div6_intro = create_in_transition(div6, fade, { duration: 500 });
-    				div6_intro.start();
+    				if (div7_outro) div7_outro.end(1);
+    				if (!div7_intro) div7_intro = create_in_transition(div7, fade, { duration: 500 });
+    				div7_intro.start();
     			});
 
     			current = true;
     		},
     		o: function outro(local) {
-    			div4_outro = create_out_transition(div4, fade, {});
+    			div5_outro = create_out_transition(div5, fade, {});
     			transition_out(if_block1);
-    			if (div6_intro) div6_intro.invalidate();
-    			div6_outro = create_out_transition(div6, fade, {});
+    			if (div7_intro) div7_intro.invalidate();
+    			div7_outro = create_out_transition(div7, fade, {});
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div6);
+    			if (detaching) detach_dev(div7);
     			if_block0.d();
-    			if (detaching && div4_outro) div4_outro.end();
+    			if (detaching && div5_outro) div5_outro.end();
     			if_blocks[current_block_type_index].d();
-    			if (detaching && div6_outro) div6_outro.end();
+    			if (detaching && div7_outro) div7_outro.end();
     			run_all(dispose);
     		}
     	};
@@ -2820,6 +2841,12 @@ var app = (function () {
     		chrome.tabs.create({ url: item.url, active: !e.ctrlKey });
     	};
 
+    	var openAllOfCollection = () => {
+    		items.forEach(i => {
+    			chrome.tabs.create({ url: i.url });
+    		});
+    	};
+
     	function saveTabToBookmark(tab, dropIndex) {
     		chrome.bookmarks.create(
     			{
@@ -2864,7 +2891,7 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
-    		if ("onCollectionDrop" in $$props) $$invalidate(13, onCollectionDrop = $$props.onCollectionDrop);
+    		if ("onCollectionDrop" in $$props) $$invalidate(14, onCollectionDrop = $$props.onCollectionDrop);
     		if ("index" in $$props) $$invalidate(2, index = $$props.index);
     		if ("clickDeleteCollection" in $$props) $$invalidate(1, clickDeleteCollection = $$props.clickDeleteCollection);
     	};
@@ -2883,6 +2910,7 @@ var app = (function () {
     			handleDrop,
     			onItemDelete,
     			onClickItem,
+    			openAllOfCollection,
     			onDrop,
     			$searchText
     		};
@@ -2891,7 +2919,7 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ("items" in $$props) $$invalidate(3, items = $$props.items);
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
-    		if ("onCollectionDrop" in $$props) $$invalidate(13, onCollectionDrop = $$props.onCollectionDrop);
+    		if ("onCollectionDrop" in $$props) $$invalidate(14, onCollectionDrop = $$props.onCollectionDrop);
     		if ("index" in $$props) $$invalidate(2, index = $$props.index);
     		if ("clickDeleteCollection" in $$props) $$invalidate(1, clickDeleteCollection = $$props.clickDeleteCollection);
     		if ("dropLine" in $$props) $$invalidate(4, dropLine = $$props.dropLine);
@@ -2901,7 +2929,8 @@ var app = (function () {
     		if ("handleDrop" in $$props) $$invalidate(9, handleDrop = $$props.handleDrop);
     		if ("onItemDelete" in $$props) $$invalidate(10, onItemDelete = $$props.onItemDelete);
     		if ("onClickItem" in $$props) $$invalidate(11, onClickItem = $$props.onClickItem);
-    		if ("onDrop" in $$props) $$invalidate(12, onDrop = $$props.onDrop);
+    		if ("openAllOfCollection" in $$props) $$invalidate(12, openAllOfCollection = $$props.openAllOfCollection);
+    		if ("onDrop" in $$props) $$invalidate(13, onDrop = $$props.onDrop);
     		if ("$searchText" in $$props) searchText.set($searchText = $$props.$searchText);
     	};
 
@@ -2918,6 +2947,7 @@ var app = (function () {
     		handleDrop,
     		onItemDelete,
     		onClickItem,
+    		openAllOfCollection,
     		onDrop,
     		onCollectionDrop,
     		unsubsribe,
@@ -2933,7 +2963,7 @@ var app = (function () {
 
     		init(this, options, instance$6, create_fragment$6, safe_not_equal, {
     			collection: 0,
-    			onCollectionDrop: 13,
+    			onCollectionDrop: 14,
     			index: 2,
     			clickDeleteCollection: 1
     		});
@@ -2952,7 +2982,7 @@ var app = (function () {
     			console.warn("<CollectionTile> was created without expected prop 'collection'");
     		}
 
-    		if (/*onCollectionDrop*/ ctx[13] === undefined && !("onCollectionDrop" in props)) {
+    		if (/*onCollectionDrop*/ ctx[14] === undefined && !("onCollectionDrop" in props)) {
     			console.warn("<CollectionTile> was created without expected prop 'onCollectionDrop'");
     		}
 
