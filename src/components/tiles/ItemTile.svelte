@@ -90,7 +90,7 @@
         <div class="flex-row-container">
             <img alt=' ' src={item.title.split(":::::")[1]} height="20px" style="margin-right: 10px;" />
 
-            <div class="text-concat">
+            <div class="text-concat" title={item.title.split(":::::")[0]}>
                 {item.title.split(':::::')[0]}
             </div>
         </div>

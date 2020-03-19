@@ -6,7 +6,7 @@
     import NoItemTileIndicator from './NoItemIndicatorTile.svelte';
     import { deo } from './../../stores/dropEventStore.js';
     import { searchText } from './../../stores/searchTextStore.js'
-
+    import PopupMenu from './../PopupMenu.svelte';
     let items = [];
 
     export let collection;
@@ -132,6 +132,10 @@
             ctrl: e.ctrlKey
         });
     }
+
+    var popupItems = ["New Note", "Edit Name"];
+    var onClickPopupItem = (item, index) => {
+    }
 </script>
 <style>
     .collection {
@@ -192,7 +196,8 @@
             &nbsp
             <div on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em;">🗑️</div>
             &nbsp
-            <div style="font-size: 0.8em;">⋮</div>
+            <PopupMenu items={popupItems} onClickItem={onClickPopupItem} />
+            <!-- <div style="font-size: 0.8em;">⋮</div> -->
         </div>
         <div class="item-area">
             {#if items.length==0}
