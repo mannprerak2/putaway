@@ -30,8 +30,7 @@
         z-index: 2;
     }
 
-    /* Links inside the dropdown */
-    .dropdown-content a {
+    .item {
         color: black;
         padding: 10px;
         text-decoration: none;
@@ -44,7 +43,7 @@
     <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>▲</div>
     <div class="dropdown-content">
         {#each items as item,index}
-        <a href="#" class="item" on:click={()=>{show=false;onClickItem(item,index)}}>{item}</a>
+        <div class="item" on:click={()=>{show=false;onClickItem(item,index)}}>{item}</div>
         {/each}
     </div>
     {:else}

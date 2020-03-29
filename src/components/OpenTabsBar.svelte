@@ -1,8 +1,10 @@
 <script>
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy, getContext } from 'svelte';
     import TabTile from './tiles/TabTile.svelte';
     import EmptyTabTile from './tiles/EmptyTabTile.svelte'
     import { deo } from './../stores/dropEventStore.js';
+    const { open } = getContext('simple-modal');
+    import SaveSessionModal from './modals/SaveSessionModal.svelte';
 
     let allTabs = [];
 
@@ -65,12 +67,40 @@
             targetObj: allTabs[dropIndex]
         });
     }
+
+    var saveSession = async () => {
+        var c = await open(SaveSessionModal);
+        if (c) {
+            var count = allTabs.length;
+            allTabs.forEach(tab => {
+                chrome.bookmarks.create({
+                    parentId: c.id,
+                    url: tab.url,
+                    title: tab.title + ":::::" + tab.favIconUrl
+                }, function (node) {
+                    count--;
+                    if (count == 0) {
+                        // reload tab to take effect
+                        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                            chrome.tabs.reload(tabs[0].id);
+                        });
+                    }
+                });
+            });
+        }
+    }
 </script>
 <style>
 </style>
 
 <div>
-    <h2>Open Tabs - {allTabs.length}</h2>
+    <div class="flex-row-container">
+        <h2>Open Tabs - {allTabs.length}</h2>
+        <div style="flex-grow:1;" />
+        {#if allTabs.length>0}
+        <div class="rounded-button" style="font-size: 1em;" on:click={saveSession}>Save Session</div>
+        {/if}
+    </div>
 
     <div class="scroll">
         {#each allTabs as tab,i (tab.id)}

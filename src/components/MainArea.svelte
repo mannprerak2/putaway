@@ -1,8 +1,8 @@
 <script>
     import { onMount, onDestroy, getContext } from 'svelte';
     import { fade, fly } from 'svelte/transition';
-    import CreateCollectionModal from './CreateCollectionModal.svelte';
-    import DeleteCollectionModal from './DeleteCollectionModal.svelte';
+    import CreateCollectionModal from './modals/CreateCollectionModal.svelte';
+    import DeleteCollectionModal from './modals/DeleteCollectionModal.svelte';
     import CollectionTile from './tiles/CollectionTile.svelte';
     const { open } = getContext('simple-modal');
     import { deo } from './../stores/dropEventStore.js';
