@@ -95,7 +95,7 @@
 
 <div>
     <div class="flex-row-container">
-        <h2>Open Tabs - {allTabs.length}</h2>
+        <div style="font-size: 1.8em;">Open Tabs - {allTabs.length}</div>
         <div style="flex-grow:1;" />
         {#if allTabs.length>0}
         <div class="rounded-button" style="font-size: 1em;" on:click={saveSession}>Save Session</div>

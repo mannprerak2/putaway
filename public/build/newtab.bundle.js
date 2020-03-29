@@ -962,10 +962,10 @@ var app = (function () {
     			main = element("main");
     			input = element("input");
     			attr_dev(input, "type", "text");
-    			attr_dev(input, "placeholder", "Search");
-    			attr_dev(input, "class", "svelte-1ivx5mh");
-    			add_location(input, file, 16, 4, 329);
-    			add_location(main, file, 15, 0, 318);
+    			attr_dev(input, "placeholder", "🔍 Search");
+    			attr_dev(input, "class", "svelte-zvir0m");
+    			add_location(input, file, 15, 4, 276);
+    			add_location(main, file, 14, 0, 265);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4824,7 +4824,7 @@ var app = (function () {
     			div.textContent = "Save Session";
     			attr_dev(div, "class", "rounded-button");
     			set_style(div, "font-size", "1em");
-    			add_location(div, file$d, 100, 8, 3424);
+    			add_location(div, file$d, 100, 8, 3452);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4910,17 +4910,17 @@ var app = (function () {
     }
 
     function create_fragment$d(ctx) {
-    	let div3;
-    	let div1;
-    	let h2;
+    	let div4;
+    	let div2;
+    	let div0;
     	let t0;
     	let t1_value = /*allTabs*/ ctx[0].length + "";
     	let t1;
     	let t2;
-    	let div0;
+    	let div1;
     	let t3;
     	let t4;
-    	let div2;
+    	let div3;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let t5;
@@ -4946,17 +4946,17 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
-    			div1 = element("div");
-    			h2 = element("h2");
+    			div4 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
     			t0 = text("Open Tabs - ");
     			t1 = text(t1_value);
     			t2 = space();
-    			div0 = element("div");
+    			div1 = element("div");
     			t3 = space();
     			if (if_block) if_block.c();
     			t4 = space();
-    			div2 = element("div");
+    			div3 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
@@ -4964,37 +4964,38 @@ var app = (function () {
 
     			t5 = space();
     			create_component(emptytabtile.$$.fragment);
-    			add_location(h2, file$d, 97, 8, 3310);
-    			set_style(div0, "flex-grow", "1");
-    			add_location(div0, file$d, 98, 8, 3356);
-    			attr_dev(div1, "class", "flex-row-container");
-    			add_location(div1, file$d, 96, 4, 3269);
-    			attr_dev(div2, "class", "scroll");
-    			add_location(div2, file$d, 104, 4, 3548);
-    			add_location(div3, file$d, 95, 0, 3259);
+    			set_style(div0, "font-size", "1.8em");
+    			add_location(div0, file$d, 97, 8, 3310);
+    			set_style(div1, "flex-grow", "1");
+    			add_location(div1, file$d, 98, 8, 3384);
+    			attr_dev(div2, "class", "flex-row-container");
+    			add_location(div2, file$d, 96, 4, 3269);
+    			attr_dev(div3, "class", "scroll");
+    			add_location(div3, file$d, 104, 4, 3576);
+    			add_location(div4, file$d, 95, 0, 3259);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div1);
-    			append_dev(div1, h2);
-    			append_dev(h2, t0);
-    			append_dev(h2, t1);
-    			append_dev(div1, t2);
-    			append_dev(div1, div0);
-    			append_dev(div1, t3);
-    			if (if_block) if_block.m(div1, null);
-    			append_dev(div3, t4);
-    			append_dev(div3, div2);
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, div2);
+    			append_dev(div2, div0);
+    			append_dev(div0, t0);
+    			append_dev(div0, t1);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
+    			append_dev(div2, t3);
+    			if (if_block) if_block.m(div2, null);
+    			append_dev(div4, t4);
+    			append_dev(div4, div3);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div2, null);
+    				each_blocks[i].m(div3, null);
     			}
 
-    			append_dev(div2, t5);
-    			mount_component(emptytabtile, div2, null);
+    			append_dev(div3, t5);
+    			mount_component(emptytabtile, div3, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
@@ -5006,7 +5007,7 @@ var app = (function () {
     				} else {
     					if_block = create_if_block$9(ctx);
     					if_block.c();
-    					if_block.m(div1, null);
+    					if_block.m(div2, null);
     				}
     			} else if (if_block) {
     				if_block.d(1);
@@ -5016,7 +5017,7 @@ var app = (function () {
     			const each_value = /*allTabs*/ ctx[0];
     			group_outros();
     			validate_each_keys(ctx, each_value, get_each_context$3, get_key);
-    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div2, outro_and_destroy_block, create_each_block$3, t5, get_each_context$3);
+    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div3, outro_and_destroy_block, create_each_block$3, t5, get_each_context$3);
     			check_outros();
     			const emptytabtile_changes = {};
     			if (dirty & /*allTabs*/ 1) emptytabtile_changes.index = /*allTabs*/ ctx[0].length;
@@ -5041,7 +5042,7 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div4);
     			if (if_block) if_block.d();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {

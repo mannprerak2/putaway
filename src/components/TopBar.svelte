@@ -9,10 +9,9 @@
         margin-right: 16px;
         font-size: 2.5em;
         outline: none;
-        border-bottom: 1px solid rgb(170, 170, 170);
     }
 </style>
 
 <main>
-    <input type="text" placeholder="Search" bind:value={$searchText}>
+    <input type="text" placeholder="🔍 Search" bind:value={$searchText}>
 </main>
