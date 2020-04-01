@@ -1,17 +1,32 @@
 <script>
     import { searchText } from './../stores/searchTextStore.js'
+
+    export let darkTheme;
+    export let toggleTheme;
 </script>
 <style>
     input {
         padding: 6px;
-        border: none;
+        padding-left: 20px;
+        border: 1px dashed gray;
+        border-radius: 20px;
         margin-top: 8px;
         margin-right: 16px;
         font-size: 2.5em;
         outline: none;
+        background-color: var(--bg);
+        color: var(--txt);
     }
 </style>
 
 <main>
-    <input type="text" placeholder="🔍 Search" bind:value={$searchText}>
+    <div class="flex-row-container">
+        <input type="text" placeholder="🔍 Search" bind:value={$searchText}/>
+        <div style="flex-grow:1;"/>
+        {#if darkTheme}
+        <div on:click={toggleTheme} style="font-size: 2em; cursor: pointer;">☽</div>
+        {:else}
+        <div on:click={toggleTheme} style="font-size: 2em; cursor: pointer;">☀</div>
+        {/if}
+    </div>
 </main>

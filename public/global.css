@@ -2,10 +2,11 @@ html, body {
 	position: relative;
 	width: 100%;
 	height: 100%;
+	background-color: var(--bg);
+	color: var(--txt);
 }
 
 body {
-	color: #333;
 	margin: 0px;
 	overflow: hidden;
 	box-sizing: border-box;
@@ -43,7 +44,7 @@ button {
 }
 
 .rounded-button {
-	border: 1px solid gray;
+	border: 1px solid var(--outline-btn-border);
 	border-radius: 15px;
 	padding: 2px 5px;
 	font-size: 0.5em;
@@ -51,5 +52,5 @@ button {
 	cursor: pointer;
 }
 .rounded-button:hover {
-	background-color: rgba(240, 240, 240, 1);
+	background-color: var(--outline-btn-hover);
 }

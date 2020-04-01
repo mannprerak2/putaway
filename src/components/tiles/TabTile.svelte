@@ -29,7 +29,8 @@
 </script>
 <style>
     .card {
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+        /* box-shadow: 1px 2px var(--box-shadow); */
+        border: 1px solid var(--box-shadow);
         border-radius: 5px;
         margin: 6px;
         padding: 8px;
@@ -38,11 +39,10 @@
     }
 
     .card:hover {
-        background-color: rgba(240, 240, 240, 1);
-        border: 1px solid black;
+        background-color: var(--outline-btn-hover);
         cursor: grab;
         /* padding: (p-1)px to prevent shifting */
-        padding: 7px;
+        padding: 8px;
     }
 
     .close-icon {
@@ -77,9 +77,9 @@
 </style>
 <div in:fly="{{ x: 500, duration: 400 }}" out:fade>
     {#if dropLine}
-        <hr style="border: 1px solid black;">
+        <hr style="border: 1px solid var(--drop-indicator);">
     {:else}
-        <hr style="border: 1px solid white;">
+        <hr style="border: 1px solid var(--bg);">
     {/if}
     <div class="card" draggable="true" 
         on:dragover|preventDefault={onDragEnter}

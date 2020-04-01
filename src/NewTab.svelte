@@ -3,8 +3,19 @@
   import MainArea from "./components/MainArea.svelte";
   import OpenTabsBar from "./components/OpenTabsBar.svelte";
   import Modal from './components/Modal.svelte';
-</script>
 
+  let darkTheme = true;
+  var toggleTheme = () => {
+    darkTheme = !darkTheme;
+  }
+</script>
+<svelte:head>
+  {#if darkTheme}
+    <link rel="stylesheet" href="global-dark.css">
+  {:else}
+    <link rel="stylesheet" href="global-light.css">
+  {/if}
+</svelte:head>
 <style>
   .container-table {
     display: table;
@@ -37,6 +48,7 @@
     width: 100%;
     height: 100%;
     padding: 10px;
+    box-sizing: border-box;
   }
 
   #main-free-area {
@@ -50,7 +62,7 @@
     <div id="left-free-area">
       <div id="top-bar">
         <div id="top-bar-container">
-          <TopBar />
+          <TopBar {darkTheme} {toggleTheme}/>
         </div>
       </div>
       <div id="main-free-area">

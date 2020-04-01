@@ -29,7 +29,8 @@
 </script>
 <style>
     .item {
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+        /* box-shadow: 1px 2px var(--box-shadow); */
+        border: 1px solid var(--box-shadow);
         border-radius: 5px;
         width: 15em;
         /* do not use margin top/bottom, it will overflow */
@@ -43,6 +44,9 @@
 
     .close-icon {
         display: none;
+    }
+    .item:hover {
+        background-color: var(--outline-btn-hover);
     }
 
     .item:hover .close-icon {
@@ -78,9 +82,9 @@
 </style>
 <div class="flex-row-container" style="height: 100%;">
     {#if dropLine}
-        <div class="vl" style="border-color: black;"/>
+        <div class="vl" style="border-color: var(--drop-indicator);"/>
     {:else}
-        <div class="vl" style="border-color: white;"/>
+        <div class="vl" style="border-color: var(--bg);"/>
     {/if}
     <div class="item" draggable="true" out:fade on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave}
         on:dragstart={handleDragStart} on:drop={handleDrop} on:click|preventDefault={(e)=>

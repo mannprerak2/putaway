@@ -139,7 +139,7 @@
 </script>
 <style>
     .collection {
-        border-bottom: 1px solid gray;
+        border-bottom: 1px solid var(--collection-separator);
         width: 100%;
         padding: 10px;
         padding-top: 0px;
@@ -174,9 +174,9 @@
 </style>
 <div class="collection" in:fade="{{duration: 500}}" out:fade on:dragover|preventDefault>
     {#if dropLine}
-            <hr style="border: 1px solid black;">
+            <hr style="border: 1px solid var(--drop-indicator);">
         {:else}
-            <hr style="border: 1px solid white;">
+            <hr style="border: 1px solid var(--bg);">
         {/if}
         <div class="tile-top-bar" draggable="true" out:fade on:dragover|preventDefault={onDragEnter}
             on:dragleave={onDragLeave} on:dragstart={handleDragStart} on:drop={handleDrop}>

@@ -20,9 +20,9 @@
 </style>
 <div class="flex-row-container" style="height: 100%;">
     {#if dropLine}
-    <div class="vl" style="border-color: black;"/>
+        <div class="vl" style="border-color: var(--drop-indicator);"/>
     {:else}
-    <div class="vl" style="border-color: white;"/>
+        <div class="vl" style="border-color: var(--bg);"/>
     {/if}
     <div on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave} on:drop={handleDrop}
         style="width: 200px; height: 100%; display: inline-block">
