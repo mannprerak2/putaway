@@ -63,7 +63,7 @@
     onDestroy(unsubsribe);
 
     var clickDeleteCollection = async (index) => {
-        var c = await open(DeleteCollectionModal, {collectionName:allCollections[index].title});
+        var c = await open(DeleteCollectionModal, { collectionName: allCollections[index].title });
         if (c) {
             chrome.bookmarks.removeTree(allCollections[index].id);
             allCollections.splice(index, 1);

@@ -3,11 +3,21 @@
   import MainArea from "./components/MainArea.svelte";
   import OpenTabsBar from "./components/OpenTabsBar.svelte";
   import Modal from './components/Modal.svelte';
+  import { setDarkTheme, getDarkTheme } from './services/storage.js';
+  import { onMount } from 'svelte';
 
-  let darkTheme = true;
+  let darkTheme = false;
   var toggleTheme = () => {
     darkTheme = !darkTheme;
+    setDarkTheme(darkTheme);
   }
+
+  onMount(() => {
+    getDarkTheme(function (v) {
+      darkTheme = v;
+    });
+  });
+
 </script>
 <svelte:head>
   {#if darkTheme}
