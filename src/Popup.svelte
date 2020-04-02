@@ -5,8 +5,17 @@
   let searchText = "";
   // array of BookmarkTreeNode
   let allCollections = [];
-
+  let map = {};
+  let tab;
   onMount(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.bookmarks.search({ url: tabs[0].url }, function (bms) {
+        tab = tabs[0];
+        bms.forEach(b => {
+          map[b.parentId] = true;
+        });
+      });
+    });
     chrome.storage.local.get('pid', function (res) {
       chrome.bookmarks.getChildren(res.pid, function (children) {
         // only folders
@@ -32,7 +41,7 @@
     flex-direction: row;
     align-items: center;
     padding-bottom: 2px;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid rgb(201, 201, 201);
     height: 50px;
   }
 
@@ -75,13 +84,16 @@
 
   #open-putaway:hover {
     background-color: #e6e6e6;
-
   }
 
   #list {
     height: 300px;
     overflow-y: scroll;
-    scrollbar-width: 0;
+    scrollbar-width: none;
+  }
+
+  #list::-webkit-scrollbar {
+    display: none;
   }
 </style>
 
@@ -93,8 +105,11 @@
     </div>
     <div id="list">
       {#each allCollections as collection,i (collection.id)}
-          <CollectionTilePopup {collection}/>
+        {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }
+          <CollectionTilePopup {collection} {tab} alreadySaved={map[collection.id]}/>
+        {/if}
       {/each}
+      <div style="height: 60px;"></div>
     </div>
   </div>
   <div id="save-session">

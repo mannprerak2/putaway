@@ -64,6 +64,9 @@ var app = (function () {
             input.value = value;
         }
     }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
+    }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, false, false, detail);
@@ -442,32 +445,83 @@ var app = (function () {
 
     const file = "src/components/tiles/CollectionTilePopup.svelte";
 
-    function create_fragment(ctx) {
+    // (67:4) {#if savedInThis}
+    function create_if_block(ctx) {
     	let div;
-    	let t_value = /*collection*/ ctx[0].title + "";
-    	let t;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			t = text(t_value);
-    			attr_dev(div, "class", "popup-collection-tile svelte-1pwd24b");
-    			add_location(div, file, 13, 0, 211);
+    			div.textContent = "✓";
+    			attr_dev(div, "class", "save svelte-9polyd");
+    			add_location(div, file, 67, 4, 1599);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(67:4) {#if savedInThis}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment(ctx) {
+    	let div;
+    	let t0;
+    	let t1_value = /*collection*/ ctx[0].title + "";
+    	let t1;
+    	let dispose;
+    	let if_block = /*savedInThis*/ ctx[1] && create_if_block(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			t1 = text(t1_value);
+    			attr_dev(div, "class", "popup-collection-tile svelte-9polyd");
+    			add_location(div, file, 65, 0, 1520);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
-    			append_dev(div, t);
+    			if (if_block) if_block.m(div, null);
+    			append_dev(div, t0);
+    			append_dev(div, t1);
+    			dispose = listen_dev(div, "click", /*click*/ ctx[2], false, false, false);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*collection*/ 1 && t_value !== (t_value = /*collection*/ ctx[0].title + "")) set_data_dev(t, t_value);
+    			if (/*savedInThis*/ ctx[1]) {
+    				if (!if_block) {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					if_block.m(div, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if (dirty & /*collection*/ 1 && t1_value !== (t1_value = /*collection*/ ctx[0].title + "")) set_data_dev(t1, t1_value);
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
+    			if (if_block) if_block.d();
+    			dispose();
     		}
     	};
 
@@ -484,8 +538,50 @@ var app = (function () {
 
     function instance($$self, $$props, $$invalidate) {
     	let { collection } = $$props;
+    	let { tab } = $$props;
+    	let { alreadySaved } = $$props;
     	let savedInThis = false;
-    	const writable_props = ["collection"];
+
+    	if (alreadySaved) {
+    		savedInThis = alreadySaved;
+    	}
+
+    	// will contain a bookmark if one was created rn
+    	let bm;
+
+    	var click = () => {
+    		$$invalidate(1, savedInThis = !savedInThis);
+
+    		if (savedInThis) {
+    			saveTabToBookmark(tab);
+    		} else {
+    			if (bm) {
+    				chrome.bookmarks.remove(bm.id);
+    			} else {
+    				// remove all bookmarks in this with url of this tab
+    				chrome.bookmarks.search({ url: tab.url }, function (bms) {
+    					bms.forEach(b => {
+    						chrome.bookmarks.remove(b.id);
+    					});
+    				});
+    			}
+    		}
+    	};
+
+    	function saveTabToBookmark(tab) {
+    		chrome.bookmarks.create(
+    			{
+    				parentId: collection.id,
+    				url: tab.url,
+    				title: tab.title + ":::::" + tab.favIconUrl
+    			},
+    			function (node) {
+    				bm = node;
+    			}
+    		);
+    	}
+
+    	const writable_props = ["collection", "tab", "alreadySaved"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<CollectionTilePopup> was created with unknown prop '${key}'`);
@@ -493,24 +589,37 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
+    		if ("tab" in $$props) $$invalidate(3, tab = $$props.tab);
+    		if ("alreadySaved" in $$props) $$invalidate(4, alreadySaved = $$props.alreadySaved);
     	};
 
     	$$self.$capture_state = () => {
-    		return { collection, savedInThis };
+    		return {
+    			collection,
+    			tab,
+    			alreadySaved,
+    			savedInThis,
+    			bm,
+    			click
+    		};
     	};
 
     	$$self.$inject_state = $$props => {
     		if ("collection" in $$props) $$invalidate(0, collection = $$props.collection);
-    		if ("savedInThis" in $$props) savedInThis = $$props.savedInThis;
+    		if ("tab" in $$props) $$invalidate(3, tab = $$props.tab);
+    		if ("alreadySaved" in $$props) $$invalidate(4, alreadySaved = $$props.alreadySaved);
+    		if ("savedInThis" in $$props) $$invalidate(1, savedInThis = $$props.savedInThis);
+    		if ("bm" in $$props) bm = $$props.bm;
+    		if ("click" in $$props) $$invalidate(2, click = $$props.click);
     	};
 
-    	return [collection];
+    	return [collection, savedInThis, click, tab, alreadySaved];
     }
 
     class CollectionTilePopup extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { collection: 0 });
+    		init(this, options, instance, create_fragment, safe_not_equal, { collection: 0, tab: 3, alreadySaved: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -525,6 +634,14 @@ var app = (function () {
     		if (/*collection*/ ctx[0] === undefined && !("collection" in props)) {
     			console.warn("<CollectionTilePopup> was created without expected prop 'collection'");
     		}
+
+    		if (/*tab*/ ctx[3] === undefined && !("tab" in props)) {
+    			console.warn("<CollectionTilePopup> was created without expected prop 'tab'");
+    		}
+
+    		if (/*alreadySaved*/ ctx[4] === undefined && !("alreadySaved" in props)) {
+    			console.warn("<CollectionTilePopup> was created without expected prop 'alreadySaved'");
+    		}
     	}
 
     	get collection() {
@@ -534,6 +651,22 @@ var app = (function () {
     	set collection(value) {
     		throw new Error("<CollectionTilePopup>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get tab() {
+    		throw new Error("<CollectionTilePopup>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set tab(value) {
+    		throw new Error("<CollectionTilePopup>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get alreadySaved() {
+    		throw new Error("<CollectionTilePopup>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set alreadySaved(value) {
+    		throw new Error("<CollectionTilePopup>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Popup.svelte generated by Svelte v3.18.1 */
@@ -541,37 +674,37 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[3] = list[i];
-    	child_ctx[5] = i;
+    	child_ctx[5] = list[i];
+    	child_ctx[7] = i;
     	return child_ctx;
     }
 
-    // (95:6) {#each allCollections as collection,i (collection.id)}
-    function create_each_block(key_1, ctx) {
-    	let first;
+    // (108:8) {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }
+    function create_if_block$1(ctx) {
     	let current;
 
     	const collectiontilepopup = new CollectionTilePopup({
-    			props: { collection: /*collection*/ ctx[3] },
+    			props: {
+    				collection: /*collection*/ ctx[5],
+    				tab: /*tab*/ ctx[3],
+    				alreadySaved: /*map*/ ctx[2][/*collection*/ ctx[5].id]
+    			},
     			$$inline: true
     		});
 
     	const block = {
-    		key: key_1,
-    		first: null,
     		c: function create() {
-    			first = empty();
     			create_component(collectiontilepopup.$$.fragment);
-    			this.first = first;
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, first, anchor);
     			mount_component(collectiontilepopup, target, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
     			const collectiontilepopup_changes = {};
-    			if (dirty & /*allCollections*/ 2) collectiontilepopup_changes.collection = /*collection*/ ctx[3];
+    			if (dirty & /*allCollections*/ 2) collectiontilepopup_changes.collection = /*collection*/ ctx[5];
+    			if (dirty & /*tab*/ 8) collectiontilepopup_changes.tab = /*tab*/ ctx[3];
+    			if (dirty & /*map, allCollections*/ 6) collectiontilepopup_changes.alreadySaved = /*map*/ ctx[2][/*collection*/ ctx[5].id];
     			collectiontilepopup.$set(collectiontilepopup_changes);
     		},
     		i: function intro(local) {
@@ -584,8 +717,80 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(first);
     			destroy_component(collectiontilepopup, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(108:8) {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (107:6) {#each allCollections as collection,i (collection.id)}
+    function create_each_block(key_1, ctx) {
+    	let first;
+    	let show_if = /*collection*/ ctx[5].title.toLowerCase().includes(/*searchText*/ ctx[0].toLowerCase());
+    	let if_block_anchor;
+    	let current;
+    	let if_block = show_if && create_if_block$1(ctx);
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			first = empty();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			this.first = first;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, first, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*allCollections, searchText*/ 3) show_if = /*collection*/ ctx[5].title.toLowerCase().includes(/*searchText*/ ctx[0].toLowerCase());
+
+    			if (show_if) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    					transition_in(if_block, 1);
+    				} else {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(first);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -593,7 +798,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(95:6) {#each allCollections as collection,i (collection.id)}",
+    		source: "(107:6) {#each allCollections as collection,i (collection.id)}",
     		ctx
     	});
 
@@ -601,8 +806,8 @@ var app = (function () {
     }
 
     function create_fragment$1(ctx) {
-    	let div5;
-    	let div3;
+    	let div6;
+    	let div4;
     	let div1;
     	let input;
     	let t0;
@@ -611,15 +816,17 @@ var app = (function () {
     	let br;
     	let t2;
     	let t3;
-    	let div2;
+    	let div3;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let t4;
-    	let div4;
+    	let div2;
+    	let t5;
+    	let div5;
     	let current;
     	let dispose;
     	let each_value = /*allCollections*/ ctx[1];
-    	const get_key = ctx => /*collection*/ ctx[3].id;
+    	const get_key = ctx => /*collection*/ ctx[5].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -630,8 +837,8 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div5 = element("div");
-    			div3 = element("div");
+    			div6 = element("div");
+    			div4 = element("div");
     			div1 = element("div");
     			input = element("input");
     			t0 = space();
@@ -640,46 +847,50 @@ var app = (function () {
     			br = element("br");
     			t2 = text(" PutAway");
     			t3 = space();
-    			div2 = element("div");
+    			div3 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
     			t4 = space();
-    			div4 = element("div");
-    			div4.textContent = "⭳Save Session";
+    			div2 = element("div");
+    			t5 = space();
+    			div5 = element("div");
+    			div5.textContent = "⭳Save Session";
     			attr_dev(input, "type", "text");
     			attr_dev(input, "placeholder", "🔍 Search");
-    			attr_dev(input, "class", "svelte-fo9rrv");
-    			add_location(input, file$1, 90, 6, 1611);
-    			add_location(br, file$1, 91, 34, 1715);
+    			attr_dev(input, "class", "svelte-1sp2kpn");
+    			add_location(input, file$1, 102, 6, 1968);
+    			add_location(br, file$1, 103, 34, 2072);
     			attr_dev(div0, "id", "open-putaway");
-    			attr_dev(div0, "class", "svelte-fo9rrv");
-    			add_location(div0, file$1, 91, 6, 1687);
+    			attr_dev(div0, "class", "svelte-1sp2kpn");
+    			add_location(div0, file$1, 103, 6, 2044);
     			attr_dev(div1, "id", "top");
-    			attr_dev(div1, "class", "svelte-fo9rrv");
-    			add_location(div1, file$1, 89, 4, 1590);
-    			attr_dev(div2, "id", "list");
-    			attr_dev(div2, "class", "svelte-fo9rrv");
-    			add_location(div2, file$1, 93, 4, 1749);
-    			attr_dev(div3, "id", "main");
-    			attr_dev(div3, "class", "svelte-fo9rrv");
-    			add_location(div3, file$1, 88, 2, 1570);
-    			attr_dev(div4, "id", "save-session");
-    			attr_dev(div4, "class", "svelte-fo9rrv");
-    			add_location(div4, file$1, 99, 2, 1908);
-    			attr_dev(div5, "id", "popup");
-    			attr_dev(div5, "class", "svelte-fo9rrv");
-    			add_location(div5, file$1, 87, 0, 1551);
+    			attr_dev(div1, "class", "svelte-1sp2kpn");
+    			add_location(div1, file$1, 101, 4, 1947);
+    			set_style(div2, "height", "60px");
+    			add_location(div2, file$1, 111, 6, 2386);
+    			attr_dev(div3, "id", "list");
+    			attr_dev(div3, "class", "svelte-1sp2kpn");
+    			add_location(div3, file$1, 105, 4, 2106);
+    			attr_dev(div4, "id", "main");
+    			attr_dev(div4, "class", "svelte-1sp2kpn");
+    			add_location(div4, file$1, 100, 2, 1927);
+    			attr_dev(div5, "id", "save-session");
+    			attr_dev(div5, "class", "svelte-1sp2kpn");
+    			add_location(div5, file$1, 114, 2, 2442);
+    			attr_dev(div6, "id", "popup");
+    			attr_dev(div6, "class", "svelte-1sp2kpn");
+    			add_location(div6, file$1, 99, 0, 1908);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div5, anchor);
-    			append_dev(div5, div3);
-    			append_dev(div3, div1);
+    			insert_dev(target, div6, anchor);
+    			append_dev(div6, div4);
+    			append_dev(div4, div1);
     			append_dev(div1, input);
     			set_input_value(input, /*searchText*/ ctx[0]);
     			append_dev(div1, t0);
@@ -687,17 +898,19 @@ var app = (function () {
     			append_dev(div0, t1);
     			append_dev(div0, br);
     			append_dev(div0, t2);
-    			append_dev(div3, t3);
-    			append_dev(div3, div2);
+    			append_dev(div4, t3);
+    			append_dev(div4, div3);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div2, null);
+    				each_blocks[i].m(div3, null);
     			}
 
-    			append_dev(div5, t4);
-    			append_dev(div5, div4);
+    			append_dev(div3, t4);
+    			append_dev(div3, div2);
+    			append_dev(div6, t5);
+    			append_dev(div6, div5);
     			current = true;
-    			dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[2]);
+    			dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[4]);
     		},
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*searchText*/ 1 && input.value !== /*searchText*/ ctx[0]) {
@@ -707,7 +920,7 @@ var app = (function () {
     			const each_value = /*allCollections*/ ctx[1];
     			group_outros();
     			validate_each_keys(ctx, each_value, get_each_context, get_key);
-    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div2, outro_and_destroy_block, create_each_block, null, get_each_context);
+    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div3, outro_and_destroy_block, create_each_block, t4, get_each_context);
     			check_outros();
     		},
     		i: function intro(local) {
@@ -727,7 +940,7 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div5);
+    			if (detaching) detach_dev(div6);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].d();
@@ -754,7 +967,20 @@ var app = (function () {
     	// array of BookmarkTreeNode
     	let allCollections = [];
 
+    	let map = {};
+    	let tab;
+
     	onMount(() => {
+    		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    			chrome.bookmarks.search({ url: tabs[0].url }, function (bms) {
+    				$$invalidate(3, tab = tabs[0]);
+
+    				bms.forEach(b => {
+    					$$invalidate(2, map[b.parentId] = true, map);
+    				});
+    			});
+    		});
+
     		chrome.storage.local.get("pid", function (res) {
     			chrome.bookmarks.getChildren(res.pid, function (children) {
     				// only folders
@@ -775,9 +1001,11 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ("searchText" in $$props) $$invalidate(0, searchText = $$props.searchText);
     		if ("allCollections" in $$props) $$invalidate(1, allCollections = $$props.allCollections);
+    		if ("map" in $$props) $$invalidate(2, map = $$props.map);
+    		if ("tab" in $$props) $$invalidate(3, tab = $$props.tab);
     	};
 
-    	return [searchText, allCollections, input_input_handler];
+    	return [searchText, allCollections, map, tab, input_input_handler];
     }
 
     class Popup extends SvelteComponentDev {
