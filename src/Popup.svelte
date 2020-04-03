@@ -7,20 +7,25 @@
   let allCollections = [];
   let map = {};
   let tab;
+  let isNewTab = false;
   onMount(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.bookmarks.search({ url: tabs[0].url }, function (bms) {
-        tab = tabs[0];
-        bms.forEach(b => {
-          map[b.parentId] = true;
+      tab = tabs[0];
+      if (tab.url != 'chrome://newtab/') {
+        chrome.bookmarks.search({ url: tab.url }, function (bms) {
+          bms.forEach(b => {
+            map[b.parentId] = true;
+          });
         });
-      });
-    });
-    chrome.storage.local.get('pid', function (res) {
-      chrome.bookmarks.getChildren(res.pid, function (children) {
-        // only folders
-        allCollections = children.filter((e) => e.url == null);
-      });
+        chrome.storage.local.get('pid', function (res) {
+          chrome.bookmarks.getChildren(res.pid, function (children) {
+            // only folders
+            allCollections = children.filter((e) => e.url == null);
+          });
+        });
+      } else {
+        isNewTab = true;
+      }
     });
   });
 </script>
@@ -48,7 +53,7 @@
   #save-session {
     width: 100%;
     height: 50px;
-    border-top: 1px solid gray;
+    border-top: 1px solid rgb(201, 201, 201);
     text-align: center;
     color: gray;
     font-size: 2em;
@@ -68,6 +73,7 @@
     outline: none;
     color: gray;
     width: 70%;
+    margin: 5px;
   }
 
   #open-putaway {
@@ -75,7 +81,7 @@
     text-align: center;
     border-radius: 20px 0 0 20px;
     border: 1px dashed gray;
-    margin-left: 5px;
+    margin: 5px;
     padding: 2px;
     color: gray;
     cursor: pointer;
@@ -95,12 +101,39 @@
   #list::-webkit-scrollbar {
     display: none;
   }
+
+  #newtab-popup {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgb(190, 190, 190);
+    font-size: 2em;
+  }
+
+  #newtab-open-putaway {
+    color: gray;
+    font-size: 1.2em;
+    border: 1px dashed gray;
+    border-radius: 50px;
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  #newtab-open-putaway:hover {
+    background-color: #e6e6e6;
+  }
 </style>
 
 <div id="popup">
+  {#if !isNewTab}
   <div id="main">
     <div id="top">
-      <input type="text" placeholder="🔍 Search" bind:value={searchText} />
+      <input autofocus type="text" placeholder="🔍 Search" bind:value={searchText} />
       <div id="open-putaway">Open <br> PutAway</div>
     </div>
     <div id="list">
@@ -115,4 +148,17 @@
   <div id="save-session">
     ⭳Save Session
   </div>
+  {:else}
+  <div id="newtab-popup">
+    <div>
+      This is an Empty Tab
+    </div>
+    <div id="newtab-open-putaway">
+      Open PutAway
+    </div>
+    <div>
+      You cannot add this to a collection
+    </div>
+  </div>
+  {/if}
 </div>

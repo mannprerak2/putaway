@@ -45,12 +45,15 @@
     .popup-collection-tile {
         height: 50px;
         width: 100%;
-        border-bottom: 1px solid rgb(201, 201, 201);
+        /* border-bottom: 1px solid rgb(201, 201, 201); */
         color: gray;
-        padding: 2px;
+        padding-left: 15px;
+        box-sizing: border-box;
         font-size: 2em;
         line-height: 50px;
         cursor: pointer;
+        user-select: none;
+        font-weight: 600;
     }
 
     .popup-collection-tile:hover {
@@ -69,3 +72,4 @@
     {/if}
     {collection.title}
 </div>
+<hr style="border: 1px solid rgb(240, 240, 240); margin: 0; margin-left: 5px; margin-right: 5px;">
