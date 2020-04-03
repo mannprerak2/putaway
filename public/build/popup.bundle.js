@@ -687,19 +687,20 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[6] = list[i];
-    	child_ctx[8] = i;
+    	child_ctx[10] = list[i];
+    	child_ctx[12] = i;
     	return child_ctx;
     }
 
-    // (151:2) {:else}
-    function create_else_block(ctx) {
+    // (204:2) {:else}
+    function create_else_block_1(ctx) {
     	let div3;
     	let div0;
     	let t1;
     	let div1;
     	let t3;
     	let div2;
+    	let dispose;
 
     	const block = {
     		c: function create() {
@@ -712,14 +713,14 @@ var app = (function () {
     			t3 = space();
     			div2 = element("div");
     			div2.textContent = "You cannot add this to a collection";
-    			add_location(div0, file$1, 152, 4, 3212);
+    			add_location(div0, file$1, 205, 4, 4978);
     			attr_dev(div1, "id", "newtab-open-putaway");
     			attr_dev(div1, "class", "svelte-1wi8aqh");
-    			add_location(div1, file$1, 155, 4, 3260);
-    			add_location(div2, file$1, 158, 4, 3325);
+    			add_location(div1, file$1, 208, 4, 5026);
+    			add_location(div2, file$1, 211, 4, 5114);
     			attr_dev(div3, "id", "newtab-popup");
     			attr_dev(div3, "class", "svelte-1wi8aqh");
-    			add_location(div3, file$1, 151, 2, 3184);
+    			add_location(div3, file$1, 204, 2, 4950);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div3, anchor);
@@ -728,27 +729,29 @@ var app = (function () {
     			append_dev(div3, div1);
     			append_dev(div3, t3);
     			append_dev(div3, div2);
+    			dispose = listen_dev(div1, "click", /*openPutAway*/ ctx[7], false, false, false);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div3);
+    			dispose();
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block_1.name,
     		type: "else",
-    		source: "(151:2) {:else}",
+    		source: "(204:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (133:2) {#if !isNewTab}
+    // (182:2) {#if !isNewTab}
     function create_if_block$1(ctx) {
     	let div4;
     	let div1;
@@ -769,7 +772,7 @@ var app = (function () {
     	let current;
     	let dispose;
     	let each_value = /*allCollections*/ ctx[1];
-    	const get_key = ctx => /*collection*/ ctx[6].id;
+    	const get_key = ctx => /*collection*/ ctx[10].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -777,6 +780,14 @@ var app = (function () {
     		let key = get_key(child_ctx);
     		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
     	}
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*sessionSaved*/ ctx[5]) return create_if_block_1;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block = current_block_type(ctx);
 
     	const block = {
     		c: function create() {
@@ -799,30 +810,30 @@ var app = (function () {
     			div2 = element("div");
     			t5 = space();
     			div5 = element("div");
-    			div5.textContent = "⭳Save Session";
+    			if_block.c();
     			input.autofocus = true;
     			attr_dev(input, "type", "text");
     			attr_dev(input, "placeholder", "🔍 Search");
     			attr_dev(input, "class", "svelte-1wi8aqh");
-    			add_location(input, file$1, 135, 6, 2637);
-    			add_location(br, file$1, 136, 34, 2751);
+    			add_location(input, file$1, 184, 6, 4285);
+    			add_location(br, file$1, 185, 57, 4422);
     			attr_dev(div0, "id", "open-putaway");
     			attr_dev(div0, "class", "svelte-1wi8aqh");
-    			add_location(div0, file$1, 136, 6, 2723);
+    			add_location(div0, file$1, 185, 6, 4371);
     			attr_dev(div1, "id", "top");
     			attr_dev(div1, "class", "svelte-1wi8aqh");
-    			add_location(div1, file$1, 134, 4, 2616);
+    			add_location(div1, file$1, 183, 4, 4264);
     			set_style(div2, "height", "60px");
-    			add_location(div2, file$1, 144, 6, 3065);
+    			add_location(div2, file$1, 193, 6, 4736);
     			attr_dev(div3, "id", "list");
     			attr_dev(div3, "class", "svelte-1wi8aqh");
-    			add_location(div3, file$1, 138, 4, 2785);
+    			add_location(div3, file$1, 187, 4, 4456);
     			attr_dev(div4, "id", "main");
     			attr_dev(div4, "class", "svelte-1wi8aqh");
-    			add_location(div4, file$1, 133, 2, 2596);
+    			add_location(div4, file$1, 182, 2, 4244);
     			attr_dev(div5, "id", "save-session");
     			attr_dev(div5, "class", "svelte-1wi8aqh");
-    			add_location(div5, file$1, 147, 2, 3121);
+    			add_location(div5, file$1, 196, 2, 4792);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div4, anchor);
@@ -845,9 +856,15 @@ var app = (function () {
     			append_dev(div3, div2);
     			insert_dev(target, t5, anchor);
     			insert_dev(target, div5, anchor);
+    			if_block.m(div5, null);
     			current = true;
     			input.focus();
-    			dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[5]);
+
+    			dispose = [
+    				listen_dev(input, "input", /*input_input_handler*/ ctx[9]),
+    				listen_dev(div0, "click", /*openPutAway*/ ctx[7], false, false, false),
+    				listen_dev(div5, "click", /*saveSession*/ ctx[6], false, false, false)
+    			];
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*searchText*/ 1 && input.value !== /*searchText*/ ctx[0]) {
@@ -859,6 +876,16 @@ var app = (function () {
     			validate_each_keys(ctx, each_value, get_each_context, get_key);
     			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div3, outro_and_destroy_block, create_each_block, t4, get_each_context);
     			check_outros();
+
+    			if (current_block_type !== (current_block_type = select_block_type_1(ctx))) {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div5, null);
+    				}
+    			}
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -885,7 +912,8 @@ var app = (function () {
 
     			if (detaching) detach_dev(t5);
     			if (detaching) detach_dev(div5);
-    			dispose();
+    			if_block.d();
+    			run_all(dispose);
     		}
     	};
 
@@ -893,22 +921,22 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(133:2) {#if !isNewTab}",
+    		source: "(182:2) {#if !isNewTab}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (141:8) {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }
-    function create_if_block_1(ctx) {
+    // (190:8) {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }
+    function create_if_block_2(ctx) {
     	let current;
 
     	const collectiontilepopup = new CollectionTilePopup({
     			props: {
-    				collection: /*collection*/ ctx[6],
+    				collection: /*collection*/ ctx[10],
     				tab: /*tab*/ ctx[3],
-    				alreadySaved: /*map*/ ctx[2][/*collection*/ ctx[6].id]
+    				alreadySaved: /*map*/ ctx[2][/*collection*/ ctx[10].id]
     			},
     			$$inline: true
     		});
@@ -923,9 +951,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const collectiontilepopup_changes = {};
-    			if (dirty & /*allCollections*/ 2) collectiontilepopup_changes.collection = /*collection*/ ctx[6];
+    			if (dirty & /*allCollections*/ 2) collectiontilepopup_changes.collection = /*collection*/ ctx[10];
     			if (dirty & /*tab*/ 8) collectiontilepopup_changes.tab = /*tab*/ ctx[3];
-    			if (dirty & /*map, allCollections*/ 6) collectiontilepopup_changes.alreadySaved = /*map*/ ctx[2][/*collection*/ ctx[6].id];
+    			if (dirty & /*map, allCollections*/ 6) collectiontilepopup_changes.alreadySaved = /*map*/ ctx[2][/*collection*/ ctx[10].id];
     			collectiontilepopup.$set(collectiontilepopup_changes);
     		},
     		i: function intro(local) {
@@ -944,22 +972,22 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1.name,
+    		id: create_if_block_2.name,
     		type: "if",
-    		source: "(141:8) {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }",
+    		source: "(190:8) {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (140:6) {#each allCollections as collection,i (collection.id)}
+    // (189:6) {#each allCollections as collection,i (collection.id)}
     function create_each_block(key_1, ctx) {
     	let first;
-    	let show_if = /*collection*/ ctx[6].title.toLowerCase().includes(/*searchText*/ ctx[0].toLowerCase());
+    	let show_if = /*collection*/ ctx[10].title.toLowerCase().includes(/*searchText*/ ctx[0].toLowerCase());
     	let if_block_anchor;
     	let current;
-    	let if_block = show_if && create_if_block_1(ctx);
+    	let if_block = show_if && create_if_block_2(ctx);
 
     	const block = {
     		key: key_1,
@@ -977,14 +1005,14 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*allCollections, searchText*/ 3) show_if = /*collection*/ ctx[6].title.toLowerCase().includes(/*searchText*/ ctx[0].toLowerCase());
+    			if (dirty & /*allCollections, searchText*/ 3) show_if = /*collection*/ ctx[10].title.toLowerCase().includes(/*searchText*/ ctx[0].toLowerCase());
 
     			if (show_if) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     					transition_in(if_block, 1);
     				} else {
-    					if_block = create_if_block_1(ctx);
+    					if_block = create_if_block_2(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
@@ -1019,7 +1047,61 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(140:6) {#each allCollections as collection,i (collection.id)}",
+    		source: "(189:6) {#each allCollections as collection,i (collection.id)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (200:4) {:else}
+    function create_else_block(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("⭳Save Session");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(200:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (198:4) {#if sessionSaved}
+    function create_if_block_1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("✓Saved (click to undo)");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(198:4) {#if sessionSaved}",
     		ctx
     	});
 
@@ -1031,7 +1113,7 @@ var app = (function () {
     	let current_block_type_index;
     	let if_block;
     	let current;
-    	const if_block_creators = [create_if_block$1, create_else_block];
+    	const if_block_creators = [create_if_block$1, create_else_block_1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -1048,7 +1130,7 @@ var app = (function () {
     			if_block.c();
     			attr_dev(div, "id", "popup");
     			attr_dev(div, "class", "svelte-1wi8aqh");
-    			add_location(div, file$1, 131, 0, 2559);
+    			add_location(div, file$1, 180, 0, 4207);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1117,7 +1199,9 @@ var app = (function () {
 
     	let map = {};
     	let tab;
+    	let savedId;
     	let isNewTab = false;
+    	let sessionSaved = false;
 
     	onMount(() => {
     		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -1142,6 +1226,73 @@ var app = (function () {
     		});
     	});
 
+    	var saveSession = () => {
+    		if (sessionSaved) {
+    			chrome.bookmarks.removeTree(savedId);
+    			$$invalidate(5, sessionSaved = false);
+    		} else {
+    			var dt = new Date();
+
+    			let sessionName = `Session ${dt.getDate()}-${(dt.getMonth() + 1).toLocaleString("en-US", {
+				minimumIntegerDigits: 2,
+				useGrouping: false
+			})}-${dt.getFullYear()}, ${dt.getHours()}:${dt.getMinutes().toLocaleString("en-US", {
+				minimumIntegerDigits: 2,
+				useGrouping: false
+			})}:${dt.getSeconds().toLocaleString("en-US", {
+				minimumIntegerDigits: 2,
+				useGrouping: false
+			})}`;
+
+    			
+
+    			chrome.storage.local.get("pid", function (map) {
+    				chrome.bookmarks.create(
+    					{
+    						"parentId": map.pid,
+    						"title": sessionName,
+    						"index": 0
+    					},
+    					function (c) {
+    						chrome.tabs.query({ currentWindow: true }, tabs => {
+    							let allTabs = tabs.filter(function (tab) {
+    								return tab.url != "chrome://newtab/";
+    							});
+
+    							var count = allTabs.length;
+
+    							allTabs.forEach(tab => {
+    								chrome.bookmarks.create(
+    									{
+    										parentId: c.id,
+    										url: tab.url,
+    										title: tab.title + ":::::" + tab.favIconUrl
+    									},
+    									function (node) {
+    										count--;
+
+    										if (count == 0) {
+    											// reload tab to take effect
+    											savedId = c.id;
+
+    											$$invalidate(5, sessionSaved = true);
+    										}
+    									}
+    								);
+    							});
+    						});
+    					}
+    				);
+    			});
+    		}
+    	};
+
+    	var openPutAway = () => {
+    		chrome.tabs.create({
+    			url: chrome.extension.getURL("newtab.html")
+    		});
+    	};
+
     	function input_input_handler() {
     		searchText = this.value;
     		$$invalidate(0, searchText);
@@ -1156,10 +1307,25 @@ var app = (function () {
     		if ("allCollections" in $$props) $$invalidate(1, allCollections = $$props.allCollections);
     		if ("map" in $$props) $$invalidate(2, map = $$props.map);
     		if ("tab" in $$props) $$invalidate(3, tab = $$props.tab);
+    		if ("savedId" in $$props) savedId = $$props.savedId;
     		if ("isNewTab" in $$props) $$invalidate(4, isNewTab = $$props.isNewTab);
+    		if ("sessionSaved" in $$props) $$invalidate(5, sessionSaved = $$props.sessionSaved);
+    		if ("saveSession" in $$props) $$invalidate(6, saveSession = $$props.saveSession);
+    		if ("openPutAway" in $$props) $$invalidate(7, openPutAway = $$props.openPutAway);
     	};
 
-    	return [searchText, allCollections, map, tab, isNewTab, input_input_handler];
+    	return [
+    		searchText,
+    		allCollections,
+    		map,
+    		tab,
+    		isNewTab,
+    		sessionSaved,
+    		saveSession,
+    		openPutAway,
+    		savedId,
+    		input_input_handler
+    	];
     }
 
     class Popup extends SvelteComponentDev {

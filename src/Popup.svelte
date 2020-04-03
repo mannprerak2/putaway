@@ -6,8 +6,12 @@
   // array of BookmarkTreeNode
   let allCollections = [];
   let map = {};
+
   let tab;
+  let savedId;
   let isNewTab = false;
+  let sessionSaved = false;
+
   onMount(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       tab = tabs[0];
@@ -28,6 +32,51 @@
       }
     });
   });
+
+  var saveSession = () => {
+    if (sessionSaved) {
+      chrome.bookmarks.removeTree(savedId);
+      sessionSaved = false;
+    } else {
+      var dt = new Date();
+      let sessionName = `Session ${dt.getDate()}-${(dt.getMonth() + 1).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}-${dt.getFullYear()}, ${dt.getHours()}:${dt.getMinutes().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}:${dt.getSeconds().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}`;;
+
+      chrome.storage.local.get('pid', function (map) {
+        chrome.bookmarks.create({
+          'parentId': map.pid,
+          'title': sessionName,
+          'index': 0
+        }, function (c) {
+          chrome.tabs.query({
+            currentWindow: true,
+          }, (tabs) => {
+            let allTabs = tabs.filter(function (tab) {
+              return tab.url != 'chrome://newtab/';
+            });
+            var count = allTabs.length;
+            allTabs.forEach(tab => {
+              chrome.bookmarks.create({
+                parentId: c.id,
+                url: tab.url,
+                title: tab.title + ":::::" + tab.favIconUrl
+              }, function (node) {
+                count--;
+                if (count == 0) {
+                  // reload tab to take effect
+                  savedId = c.id;
+                  sessionSaved = true;
+                }
+              });
+            });
+          });
+        });
+      });
+    }
+  }
+
+  var openPutAway = () => {
+    chrome.tabs.create({ url: chrome.extension.getURL('newtab.html') });
+  }
 </script>
 
 <style>
@@ -134,7 +183,7 @@
   <div id="main">
     <div id="top">
       <input autofocus type="text" placeholder="🔍 Search" bind:value={searchText} />
-      <div id="open-putaway">Open <br> PutAway</div>
+      <div id="open-putaway" on:click={openPutAway}>Open <br> PutAway</div>
     </div>
     <div id="list">
       {#each allCollections as collection,i (collection.id)}
@@ -145,15 +194,19 @@
       <div style="height: 60px;"></div>
     </div>
   </div>
-  <div id="save-session">
+  <div id="save-session" on:click={saveSession}>
+    {#if sessionSaved}
+    ✓Saved (click to undo)
+    {:else}
     ⭳Save Session
+    {/if}
   </div>
   {:else}
   <div id="newtab-popup">
     <div>
       This is an Empty Tab
     </div>
-    <div id="newtab-open-putaway">
+    <div id="newtab-open-putaway" on:click={openPutAway}>
       Open PutAway
     </div>
     <div>
