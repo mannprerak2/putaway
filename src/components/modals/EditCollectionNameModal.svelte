@@ -1,21 +1,17 @@
 <script>
     import { getContext } from 'svelte';
 
-    var dt = new Date();
-    let collectionName = `Session ${dt.getDate()}-${(dt.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}-${dt.getFullYear()}, ${dt.getHours()}:${dt.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}:${dt.getSeconds().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}`;;
+    export let collection;
+
+    let collectionName = collection.title;
     let errorString = '';
+
 
     const { close } = getContext('simple-modal');
 
-    function createBookmarkFolder() {
-        chrome.storage.local.get('pid', function (map) {
-            chrome.bookmarks.create({
-                'parentId': map.pid,
-                'title': collectionName,
-                'index': 0
-            }, function (createdFolder) {
-                close(createdFolder);
-            });
+    function renameCollection() {
+        chrome.bookmarks.update(collection.id, { title: collectionName }, function (i) {
+            close(i.title);
         });
     }
 
@@ -23,9 +19,9 @@
         collectionName = collectionName.trim();
         if (collectionName.length > 0) {
             errorString = '';
-            createBookmarkFolder();
+            renameCollection();
         } else {
-            errorString = 'Enter a collection Name';
+            errorString = 'Collection name cannot be empty';
         }
     }
 
@@ -72,13 +68,13 @@
 <svelte:window on:keyup={handleKeyUp} />
 
 <main>
-    <h1>Collection Name -</h1>
+    <h1>Edit Collection Name -</h1>
 
     <!-- svelte-ignore a11y-autofocus -->
     <input bind:value={collectionName} type="text" onchange={inputFormatter(collectionName)} autofocus>
 
     <div class="modal-bottom-bar">
         <div style="padding: 10px; color: red;">{errorString}</div>
-        <button class="pointer" on:click={onClickCreate}>Save Session to Collection</button>
+        <button class="pointer" on:click={onClickCreate}>Save</button>
     </div>
 </main>

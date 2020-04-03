@@ -98,7 +98,7 @@
         <div style="font-size: 1.8em;">Open Tabs - {allTabs.length}</div>
         <div style="flex-grow:1;" />
         {#if allTabs.length>0}
-        <div class="rounded-button" style="font-size: 1em;" on:click={saveSession}>Save Session</div>
+        <div class="rounded-button pointer" style="font-size: 1em;" on:click={saveSession}>Save Session</div>
         {/if}
     </div>
 

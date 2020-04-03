@@ -33,15 +33,11 @@
         font-size: 16px;
         margin: 4px 2px;
     }
-
-    button:hover {
-        cursor: pointer;
-    }
 </style>
 
 <main>
     <div style="padding: 10px; font-size: 2em;">Are you sure you want to delete {collectionName} ?</div>
     <div class="modal-bottom-bar">
-        <button on:click={close}>Delete</button>
+        <button class="pointer" on:click={close}>Delete</button>
     </div>
 </main>

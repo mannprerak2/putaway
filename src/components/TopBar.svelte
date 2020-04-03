@@ -24,9 +24,9 @@
         <input type="text" placeholder="🔍 Search" bind:value={$searchText}/>
         <div style="flex-grow:1;"/>
         {#if darkTheme}
-        <div on:click={toggleTheme} style="font-size: 2em; cursor: pointer;">☽</div>
+        <div on:click={toggleTheme} class="pointer" style="font-size: 2em;">☽</div>
         {:else}
-        <div on:click={toggleTheme} style="font-size: 2em; cursor: pointer;">☀</div>
+        <div on:click={toggleTheme} class="pointer" style="font-size: 2em;">☀</div>
         {/if}
     </div>
 </main>

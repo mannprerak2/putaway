@@ -51,7 +51,6 @@
         box-sizing: border-box;
         font-size: 2em;
         line-height: 50px;
-        cursor: pointer;
         user-select: none;
         font-weight: 600;
     }
@@ -66,7 +65,7 @@
     }
 </style>
 
-<div class="popup-collection-tile" on:click={click}>
+<div class="popup-collection-tile pointer" on:click={click}>
     {#if savedInThis}
     <div class="save">✓</div>
     {/if}

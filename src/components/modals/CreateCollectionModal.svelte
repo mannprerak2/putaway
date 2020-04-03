@@ -66,10 +66,6 @@
         font-size: 16px;
         margin: 4px 2px;
     }
-
-    button:hover {
-        cursor: pointer;
-    }
 </style>
 
 <svelte:window on:keyup={handleKeyUp} />
@@ -82,6 +78,6 @@
 
     <div class="modal-bottom-bar">
         <div style="padding: 10px; color: red;">{errorString}</div>
-        <button on:click={onClickCreate}>Create Collection</button>
+        <button class="pointer" on:click={onClickCreate}>Create Collection</button>
     </div>
 </main>

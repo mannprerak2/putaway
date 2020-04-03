@@ -1,12 +1,15 @@
 <script>
     import { fade, fly } from 'svelte/transition';
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy, getContext } from 'svelte';
     import ItemTile from './ItemTile.svelte';
     import EmptyItemTile from './EmptyItemTile.svelte';
     import NoItemTileIndicator from './NoItemIndicatorTile.svelte';
     import { deo } from './../../stores/dropEventStore.js';
     import { searchText } from './../../stores/searchTextStore.js'
     import PopupMenu from './../PopupMenu.svelte';
+    import EditCollectionNameModal from './../modals/EditCollectionNameModal.svelte';
+    const { open } = getContext('simple-modal');
+
     let items = [];
 
     export let collection;
@@ -99,8 +102,8 @@
     }
 
     var openAllOfCollection = () => {
-        items.forEach((i)=>{
-            chrome.tabs.create({url:i.url});
+        items.forEach((i) => {
+            chrome.tabs.create({ url: i.url });
         });
     }
 
@@ -133,8 +136,16 @@
         });
     }
 
-    var popupItems = ["New Note", "Edit Name"];
-    var onClickPopupItem = (item, index) => {
+    var popupItems = ["🖉 Edit Name"];
+    var onClickPopupItem = async (item, index) => {
+        switch (index) {
+            case 0: // edit name
+                var c = await open(EditCollectionNameModal, { collection: collection });
+                collection.title = c;
+                break;
+            default:
+                break;
+        }
     }
 </script>
 <style>
@@ -183,10 +194,10 @@
             <div>{collection.title}</div>
             <div style="flex-grow:1;"/>
             {#if items.length>0}
-            <div id="open-all-tabs" class="rounded-button" on:click={openAllOfCollection}>Open {items.length} Tabs</div>
+            <div id="open-all-tabs" class="rounded-button pointer" on:click={openAllOfCollection}>Open {items.length} Tabs</div>
             &nbsp
             {/if}
-            <div on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em;">🗑️</div>
+            <div class="pointer" on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em;">🗑️</div>
             &nbsp
             <PopupMenu items={popupItems} onClickItem={onClickPopupItem} />
             <!-- <div style="font-size: 0.8em;">⋮</div> -->

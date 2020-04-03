@@ -3,7 +3,7 @@
 	--txt: rgb(243, 243, 243);
 	--outline-btn-border: white;
 	--outline-btn-hover: #3c3b4b;
-	--collection-separator: gray;
+	--collection-separator: rgb(66, 66, 66);
 	--drop-indicator: white;
 	--box-shadow: rgba(255, 255, 255, 0.3);
 }

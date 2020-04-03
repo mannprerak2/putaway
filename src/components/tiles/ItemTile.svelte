@@ -66,10 +66,6 @@
         background-color: gray;
     }
 
-    .close-icon:hover {
-        cursor: pointer;
-    }
-
     .text-concat {
         position: relative;
         display: inline-block;
@@ -89,7 +85,7 @@
     <div class="item" draggable="true" out:fade on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave}
         on:dragstart={handleDragStart} on:drop={handleDrop} on:click|preventDefault={(e)=>
         onClickItem(item,e)}>
-        <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onItemDelete(item,index)}></button>
+        <button class="close-icon pointer" on:click|preventDefault|stopPropagation={()=> onItemDelete(item,index)}></button>
 
         <div class="flex-row-container">
             <img alt=' ' src={item.title.split(":::::")[1]} height="20px" style="margin-right: 10px;" />

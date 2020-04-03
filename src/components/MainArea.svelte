@@ -98,10 +98,6 @@
         z-index: 2;
     }
 
-    .plus-icon:hover {
-        cursor: pointer;
-    }
-
     .no-collections-indicator {
         position: absolute;
         right: 0;
@@ -127,7 +123,7 @@
         </div>
     {/if}
 
-    <button class="plus-icon" on:click|preventDefault|stopPropagation={clickAddCollection}></button>
+    <button class="plus-icon pointer" on:click|preventDefault|stopPropagation={clickAddCollection}></button>
 
     <div class="scroll">
         {#each allCollections as collection,i (collection.id)}

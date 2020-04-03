@@ -107,7 +107,6 @@
     color: gray;
     font-size: 2em;
     line-height: 50px;
-    cursor: pointer;
   }
 
   #save-session:hover {
@@ -133,7 +132,6 @@
     margin: 5px;
     padding: 2px;
     color: gray;
-    cursor: pointer;
     font-size: 1.2em;
   }
 
@@ -170,7 +168,6 @@
     border-radius: 50px;
     padding: 10px;
     margin: 10px;
-    cursor: pointer;
   }
 
   #newtab-open-putaway:hover {
@@ -182,8 +179,9 @@
   {#if !isNewTab}
   <div id="main">
     <div id="top">
+      <!-- svelte-ignore a11y-autofocus -->
       <input autofocus type="text" placeholder="🔍 Search" bind:value={searchText} />
-      <div id="open-putaway" on:click={openPutAway}>Open <br> PutAway</div>
+      <div id="open-putaway" class="pointer" on:click={openPutAway}>Open <br> PutAway</div>
     </div>
     <div id="list">
       {#each allCollections as collection,i (collection.id)}
@@ -194,7 +192,7 @@
       <div style="height: 60px;"></div>
     </div>
   </div>
-  <div id="save-session" on:click={saveSession}>
+  <div id="save-session" class="pointer" on:click={saveSession}>
     {#if sessionSaved}
     ✓Saved (click to undo)
     {:else}
@@ -206,7 +204,7 @@
     <div>
       This is an Empty Tab
     </div>
-    <div id="newtab-open-putaway" on:click={openPutAway}>
+    <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
       Open PutAway
     </div>
     <div>

@@ -3,7 +3,7 @@
 	--txt: #333;
 	--outline-btn-border: gray;
 	--outline-btn-hover: #e6e6e6;
-	--collection-separator: gray;
+	--collection-separator: rgb(211, 211, 211);
 	--drop-indicator: black;
 	--box-shadow: rgba(0, 0, 0, 0.3);
 }

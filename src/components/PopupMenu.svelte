@@ -36,9 +36,13 @@
         text-decoration: none;
         display: block;
     }
+
+    .item:hover{
+        background-color: #d1d1d1;
+    }
 </style>
 
-<div class="dropdown">
+<div class="dropdown pointer">
     {#if show}
     <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>▲</div>
     <div class="dropdown-content">

@@ -49,8 +49,11 @@ button {
 	padding: 2px 5px;
 	font-size: 0.5em;
 	text-align: center;
-	cursor: pointer;
 }
 .rounded-button:hover {
 	background-color: var(--outline-btn-hover);
+}
+
+.pointer{
+	cursor: pointer;
 }
