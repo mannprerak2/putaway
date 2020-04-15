@@ -53,6 +53,7 @@
         line-height: 50px;
         user-select: none;
         font-weight: 600;
+        overflow: hidden;
     }
 
     .popup-collection-tile:hover {
@@ -65,7 +66,7 @@
     }
 </style>
 
-<div class="popup-collection-tile pointer" on:click={click}>
+<div class="popup-collection-tile pointer" title={collection.title} on:click={click}>
     {#if savedInThis}
     <div class="save">✓</div>
     {/if}
