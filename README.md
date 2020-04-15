@@ -1,5 +1,6 @@
+<img src="./public/images/logo128.png" align="right">
+
 # Put-Away 
-![PutAway](./public/images/logo.png)
 
 Save Tabs and Sessions as bookmarks.
 
@@ -9,6 +10,7 @@ and is safely stored in your own chrome bookmarks.
 
 ## Screenshots
 ![new-tab](./screenshots/new-tab.png)
+
 ![popup](./screenshots/popup.png)
 
 ## Setting Up
