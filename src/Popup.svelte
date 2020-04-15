@@ -201,14 +201,13 @@
   </div>
   {:else}
   <div id="newtab-popup">
-    <div>
-      This is an Empty Tab
-    </div>
+    <img alt="logo" src="images/logo128.png"/>
     <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
       Open PutAway
     </div>
     <div>
-      You cannot add this to a collection
+      This is an Empty Tab. <br>
+      You cannot add this to a collection.
     </div>
   </div>
   {/if}

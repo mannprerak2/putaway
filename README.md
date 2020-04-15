@@ -11,7 +11,10 @@ and is safely stored in your own chrome bookmarks.
 ## Screenshots
 ![new-tab](./screenshots/new-tab.png)
 
-![popup](./screenshots/popup.png)
+<div align="center">
+    <img src="./screenshots/popup-empty.png" width="200px">
+    <img src="./screenshots/popup.png" width="200px">
+</div>
 
 ## Setting Up
 1. **Clone** the repository to your local machine
