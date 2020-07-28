@@ -14,47 +14,53 @@
     // Called only if pid no longer points to the correct putaway folder.
     function refreshPidAndloadCollections(pid) {
         // store pid in local storage for use later
-        chrome.storage.local.set({ "pid": pid }, function () {
-            console.log('saved pid');
-        });
-        loadCollections(pid);
+        chrome.storage.local.set({ "pid": pid });
+        loadCollections(pid, false);
     }
 
-    function loadCollections(pid){
+    function loadCollections(pid, retry=true){
         chrome.bookmarks.getChildren(pid, function (children) {
-            // only folders
-            allCollections = children.filter((e) => e.url == null);
+            try{
+                if(console.log(chrome.runtime.lastError)){
+                    throw "Putaway folder pid invalidated, refreshing.";
+                }
+                // only folders
+                allCollections = children.filter((e) => e.url == null);
+            }catch(e){
+                if(retry){
+                    // pid is invalidated, add it again.
+                    const putAwayFolderName = 'PutAway';
+                    chrome.bookmarks.getTree(function (tree) {
+                        var otherBookmarksFolderId = tree[0].children[1].id;
+                        chrome.bookmarks.getChildren(otherBookmarksFolderId, function (children) {
+                            var putawayfolder = children.find((e) => e.title == putAwayFolderName);
+                            var pid;
+                            if (!putawayfolder) {
+                                // Folder doesn't exist, so we create one
+                                chrome.bookmarks.create({
+                                    'parentId': otherBookmarksFolderId,
+                                    'title': putAwayFolderName,
+                                }, function (newFolder) {
+                                    pid = newFolder.id;
+                                    refreshPidAndloadCollections(pid);
+                                });
+                            } else {
+                                pid = putawayfolder.id;
+                                refreshPidAndloadCollections(pid);
+                            }
+
+                        });
+                    });
+                }
+            }
         });
     }
     onMount(() => {
         chrome.storage.local.get('pid', function (res) {
-            try{
+            if(res.pid){
                 loadCollections(res.pid);
-            } catch(e){
-                // pid is invalidated, add it again.
-                chrome.bookmarks.getTree(function (tree) {
-                    var otherBookmarksFolderId = tree[0].children[1].id;
-                    chrome.bookmarks.getChildren(otherBookmarksFolderId, function (children) {
-                        var putawayfolder = children.find((e) => e.title == putAwayFolderName);
-                        var pid;
-                        if (!putawayfolder) {
-                            // Folder doesn't exist, so we create one
-                            chrome.bookmarks.create({
-                                'parentId': otherBookmarksFolderId,
-                                'title': putAwayFolderName,
-                            }, function (newFolder) {
-                                console.log("created folder: " + newFolder.title);
-                                pid = newFolder.id;
-                                refreshPidAndloadCollections(pid);
-                            });
-                        } else {
-                            console.log("PutAway already found");
-                            pid = putawayfolder.id;
-                            refreshPidAndloadCollections(pid);
-                        }
-
-                    });
-                });
+            }else{
+                loadCollections('-1');
             }
         });
     });
