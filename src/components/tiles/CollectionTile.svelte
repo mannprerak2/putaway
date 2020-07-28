@@ -127,12 +127,14 @@
         var rawData = e.dataTransfer.getData('text');
 
         var obj = JSON.parse(e.dataTransfer.getData("object"));
+        console.log('drop');
+        console.log(e);
         deo.set({
             source: rawData,
             target: "i" + dropIndex.toString(),
             sourceObj: obj,
             targetObj: collection,
-            ctrl: e.ctrlKey || e.metaKey
+            ctrl: e.ctrlKey || e.altKey
         });
     }
 
