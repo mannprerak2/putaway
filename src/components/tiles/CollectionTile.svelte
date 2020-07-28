@@ -97,7 +97,7 @@
     var onClickItem = (item, e) => {
         chrome.tabs.create({
             url: item.url,
-            active: !e.ctrlKey
+            active: !(e.ctrlKey || e.metaKey)
         });
     }
 
@@ -132,7 +132,7 @@
             target: "i" + dropIndex.toString(),
             sourceObj: obj,
             targetObj: collection,
-            ctrl: e.ctrlKey
+            ctrl: e.ctrlKey || e.metaKey
         });
     }
 

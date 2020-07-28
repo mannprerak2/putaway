@@ -11,12 +11,51 @@
     // array of BookmarkTreeNode
     let allCollections = [];
 
+    // Called only if pid no longer points to the correct putaway folder.
+    function refreshPidAndloadCollections(pid) {
+        // store pid in local storage for use later
+        chrome.storage.local.set({ "pid": pid }, function () {
+            console.log('saved pid');
+        });
+        loadCollections(pid);
+    }
+
+    function loadCollections(pid){
+        chrome.bookmarks.getChildren(pid, function (children) {
+            // only folders
+            allCollections = children.filter((e) => e.url == null);
+        });
+    }
     onMount(() => {
         chrome.storage.local.get('pid', function (res) {
-            chrome.bookmarks.getChildren(res.pid, function (children) {
-                // only folders
-                allCollections = children.filter((e) => e.url == null);
-            });
+            try{
+                loadCollections(res.pid);
+            } catch(e){
+                // pid is invalidated, add it again.
+                chrome.bookmarks.getTree(function (tree) {
+                    var otherBookmarksFolderId = tree[0].children[1].id;
+                    chrome.bookmarks.getChildren(otherBookmarksFolderId, function (children) {
+                        var putawayfolder = children.find((e) => e.title == putAwayFolderName);
+                        var pid;
+                        if (!putawayfolder) {
+                            // Folder doesn't exist, so we create one
+                            chrome.bookmarks.create({
+                                'parentId': otherBookmarksFolderId,
+                                'title': putAwayFolderName,
+                            }, function (newFolder) {
+                                console.log("created folder: " + newFolder.title);
+                                pid = newFolder.id;
+                                refreshPidAndloadCollections(pid);
+                            });
+                        } else {
+                            console.log("PutAway already found");
+                            pid = putawayfolder.id;
+                            refreshPidAndloadCollections(pid);
+                        }
+
+                    });
+                });
+            }
         });
     });
 
