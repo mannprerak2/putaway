@@ -13,6 +13,7 @@
     //font awseome icons
     import Fa from "sveltejs-fontawesome"
     import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt'
+    //import { faTrashAlt }  from '@fortawesome/free-regular-svg-icons/faTrashAlt'
     //font awesome icons
    
     let items = [];

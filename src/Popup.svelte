@@ -2,6 +2,13 @@
   import { onMount } from 'svelte';
   import CollectionTilePopup from './components/tiles/CollectionTilePopup.svelte'
 
+  //font awesome icons
+  import Fa from "sveltejs-fontawesome"
+  //import { faSave } from '@fortawesome/free-solid-svg-icons/faSave'
+  import { faSave }  from '@fortawesome/free-regular-svg-icons/faSave'
+  import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
+  //font awesome icons
+
   let searchText = "";
   // array of BookmarkTreeNode
   let allCollections = [];
@@ -104,7 +111,7 @@
     height: 50px;
     border-top: 1px solid rgb(201, 201, 201);
     text-align: center;
-    color: gray;
+    color: rgb(83, 81, 81);
     font-size: 2em;
     line-height: 50px;
   }
@@ -116,6 +123,7 @@
   input {
     border: 1px dashed gray;
     padding: 6px;
+    padding-left: 30px;
     border-radius: 0 20px 20px 0;
     font-size: 1.8em;
     outline: none;
@@ -173,6 +181,10 @@
   #newtab-open-putaway:hover {
     background-color: #e6e6e6;
   }
+  #search-logo{
+    position:absolute;
+    right: 16.8rem;
+  }
 </style>
 
 <div id="popup">
@@ -180,7 +192,12 @@
   <div id="main">
     <div id="top">
       <!-- svelte-ignore a11y-autofocus -->
-      <input autofocus type="text" placeholder="🔍 Search" bind:value={searchText} />
+      <input autofocus type="text" placeholder="Search" bind:value={searchText} />
+      <div id = "search-logo">
+        <Fa 
+        icon={faSearch}
+        size="2x" ></Fa>
+    </div>
       <div id="open-putaway" class="pointer" on:click={openPutAway}>Open <br> PutAway</div>
     </div>
     <div id="list">
@@ -196,7 +213,11 @@
     {#if sessionSaved}
     ✓Saved (click to undo)
     {:else}
-    ⭳Save Session
+    <Fa
+      icon = {faSave}
+      size = "sm"
+      style = "position:relative; top:3px"></Fa>
+    Save Session
     {/if}
   </div>
   {:else}
