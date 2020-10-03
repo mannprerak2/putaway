@@ -184,6 +184,7 @@
   #search-logo{
     position:absolute;
     right: 16.8rem;
+    opacity: 0.5;
   }
 </style>
 
@@ -216,7 +217,7 @@
     <Fa
       icon = {faSave}
       size = "sm"
-      style = "position:relative; top:3px"></Fa>
+      style = "position:relative; top:3px; opacity: 0.7;"></Fa>
     Save Session
     {/if}
   </div>

@@ -203,7 +203,7 @@
             <div id="open-all-tabs" class="rounded-button pointer" on:click={openAllOfCollection}>Open {items.length} Tabs</div>
             &nbsp
             {/if}
-            <div class="pointer" on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em; opacity:0.7">
+            <div class="pointer" on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em; opacity:0.6">
                 <Fa 
                     icon = {faTrashAlt}
                     size = "lg"></Fa>

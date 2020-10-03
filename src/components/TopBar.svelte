@@ -7,7 +7,7 @@
     import Fa from "sveltejs-fontawesome"
     import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
     //font awesome icons
-    
+
 </script>
 <style>
     input {
@@ -20,12 +20,12 @@
         font-size: 2.5em;
         outline: none;
         background-color: var(--bg);
-        color: var(--txt);
+        color: rgb(117, 117, 117);
     }
     .search-logo{
         position: absolute;
         left: 1rem;
-        opacity: 0.7;
+        opacity: 0.5;
         top:1.5rem;
         
     }
