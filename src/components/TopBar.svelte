@@ -1,9 +1,13 @@
 <script>
     import { searchText } from './../stores/searchTextStore.js'
-    import Fa from "sveltejs-fontawesome"
-    import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
     export let darkTheme;
     export let toggleTheme;
+
+    //font awesome icons
+    import Fa from "sveltejs-fontawesome"
+    import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
+    //font awesome icons
+    
 </script>
 <style>
     input {

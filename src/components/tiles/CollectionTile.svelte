@@ -9,7 +9,12 @@
     import PopupMenu from './../PopupMenu.svelte';
     import EditCollectionNameModal from './../modals/EditCollectionNameModal.svelte';
     const { open } = getContext('simple-modal');
-
+   
+    //font awseome icons
+    import Fa from "sveltejs-fontawesome"
+    import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt'
+    //font awesome icons
+   
     let items = [];
 
     export let collection;
@@ -197,7 +202,11 @@
             <div id="open-all-tabs" class="rounded-button pointer" on:click={openAllOfCollection}>Open {items.length} Tabs</div>
             &nbsp
             {/if}
-            <div class="pointer" on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em;">🗑️</div>
+            <div class="pointer" on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em; opacity:0.7">
+                <Fa 
+                    icon = {faTrashAlt}
+                    size = "lg"></Fa>
+            </div>
             &nbsp
             <PopupMenu items={popupItems} onClickItem={onClickPopupItem} />
             <!-- <div style="font-size: 0.8em;">⋮</div> -->
