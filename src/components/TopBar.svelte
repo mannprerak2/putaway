@@ -25,7 +25,7 @@
     .search-logo{
         position: absolute;
         left: 1rem;
-        opacity: 0.5;
+        opacity: var(--icon-opacity);
         top:1.5rem;
         
     }
@@ -37,7 +37,8 @@
         <div class = "search-logo">
             <Fa 
             icon={faSearch}
-            size="3x" ></Fa>
+            size="3x"
+            color=var(--icon-color)></Fa>
         </div>
         <div style="flex-grow:1;"/>
         {#if darkTheme}

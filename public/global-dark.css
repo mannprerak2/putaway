@@ -6,4 +6,6 @@
 	--collection-separator: rgb(66, 66, 66);
 	--drop-indicator: white;
 	--box-shadow: rgba(255, 255, 255, 0.3);
+	--icon-color: white;
+	--icon-opacity:0.8;
 }
