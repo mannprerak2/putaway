@@ -205,7 +205,7 @@
             <div class="pointer" on:click={()=>clickDeleteCollection(index)} style="font-size: 0.8em; opacity:var(--icon-opacity);">
                 <Fa 
                     icon = {faTrashAlt}
-                    size = "lg"
+                    size = "sm"
                     color = var(--icon-color)></Fa>
             </div>            
             &nbsp
