@@ -7,13 +7,6 @@
 </script>
 
 <style>
-    input {
-        width: 100%;
-        outline: none;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-
     .modal-bottom-bar {
         margin-top: 20px;
         display: flex;

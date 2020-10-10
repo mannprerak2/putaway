@@ -3,6 +3,7 @@
     import { fade, fly } from "svelte/transition";
     import CreateCollectionModal from "./modals/CreateCollectionModal.svelte";
     import DeleteCollectionModal from "./modals/DeleteCollectionModal.svelte";
+    import ShareCollectionModal from "./modals/ShareCollectionModal.svelte";
     import CollectionTile from "./tiles/CollectionTile.svelte";
     const { open } = getContext("simple-modal");
     import { deo } from "./../stores/dropEventStore.js";
@@ -126,6 +127,20 @@
             allCollections = allCollections;
         }
     };
+
+    var clickShareCollection = async (index, items) => {
+        var shareText = "";
+        items.forEach(item => {
+            shareText+=item.title.split(":::::")[0];
+            shareText+=" - "
+            shareText+=item.url;
+            shareText+="\n\n";
+        });
+        await open(ShareCollectionModal, {
+            collectionName: allCollections[index].title,
+            shareText: shareText
+        });
+    };
 </script>
 
 <style>
@@ -209,6 +224,7 @@
                 {collection}
                 index={i}
                 {onCollectionDrop}
+                {clickShareCollection}
                 {clickDeleteCollection} />
         {/each}
         <EmptyCollectionTile index={allCollections.length} {onCollectionDrop} />

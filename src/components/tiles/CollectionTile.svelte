@@ -13,7 +13,7 @@
     //font awseome icons
     import Fa from "sveltejs-fontawesome";
     import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
-    //import { faTrashAlt }  from '@fortawesome/free-regular-svg-icons/faTrashAlt'
+    import { faShareAlt } from "@fortawesome/free-solid-svg-icons/faShareAlt";
     //font awesome icons
     let items = [];
 
@@ -21,6 +21,7 @@
     export let onCollectionDrop;
     export let index;
     export let clickDeleteCollection;
+    export let clickShareCollection;
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
@@ -159,7 +160,7 @@
         });
     };
 
-    var popupItems = ["🖉 Edit Name"];
+    var popupItems = ["✎ Edit Name"];
     var onClickPopupItem = async (item, index) => {
         switch (index) {
             case 0: // edit name
@@ -241,6 +242,13 @@
             </div>
             &nbsp
         {/if}
+        <div
+            class="pointer"
+            on:click={() => clickShareCollection(index, items)}
+            style="font-size: 0.8em; opacity:var(--icon-opacity);">
+            <Fa icon={faShareAlt} size="sm" color="var(--icon-color)" />
+        </div>
+        &nbsp
         <div
             class="pointer"
             on:click={() => clickDeleteCollection(index)}
