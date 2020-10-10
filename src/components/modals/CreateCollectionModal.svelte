@@ -1,32 +1,35 @@
 <script>
-    import { getContext } from 'svelte';
+    import { getContext } from "svelte";
 
-    let collectionName = '';
-    let errorString = '';
+    let collectionName = "";
+    let errorString = "";
 
-    const { close } = getContext('simple-modal');
+    const { close } = getContext("simple-modal");
 
     function createBookmarkFolder() {
-        chrome.storage.local.get('pid', function (map) {
-            chrome.bookmarks.create({
-                'parentId': map.pid,
-                'title': collectionName,
-                'index': 0
-            }, function (createdFolder) {
-                close(createdFolder);
-            });
+        chrome.storage.local.get("pid", function (map) {
+            chrome.bookmarks.create(
+                {
+                    parentId: map.pid,
+                    title: collectionName,
+                    index: 0,
+                },
+                function (createdFolder) {
+                    close(createdFolder);
+                }
+            );
         });
     }
 
     var onClickCreate = () => {
         collectionName = collectionName.trim();
         if (collectionName.length > 0) {
-            errorString = '';
+            errorString = "";
             createBookmarkFolder();
         } else {
-            errorString = 'Enter a collection Name';
+            errorString = "Enter a collection Name";
         }
-    }
+    };
 
     function handleKeyUp(event) {
         // on press enter
@@ -36,9 +39,10 @@
     }
 
     function inputFormatter(str) {
-        collectionName = str.replace(/\s+/g, ' ');
+        collectionName = str.replace(/\s+/g, " ");
     }
 </script>
+
 <style>
     input {
         width: 100%;

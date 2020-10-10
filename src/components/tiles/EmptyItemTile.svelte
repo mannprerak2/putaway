@@ -5,26 +5,30 @@
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
-    }
+    };
     var onDragLeave = (e) => {
         dropLine = false;
-    }
+    };
 
     var handleDrop = (e) => {
         e.preventDefault();
         dropLine = false;
         onDrop(e, index);
-    }
+    };
 </script>
+
 <style>
 </style>
+
 <div class="flex-row-container" style="height: 100%;">
     {#if dropLine}
-        <div class="vl" style="border-color: var(--drop-indicator);"/>
+        <div class="vl" style="border-color: var(--drop-indicator);" />
     {:else}
-        <div class="vl" style="border-color: var(--bg);"/>
+        <div class="vl" style="border-color: var(--bg);" />
     {/if}
-    <div on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave} on:drop={handleDrop}
-        style="width: 200px; height: 100%; display: inline-block">
-    </div>
+    <div
+        on:dragover|preventDefault={onDragEnter}
+        on:dragleave={onDragLeave}
+        on:drop={handleDrop}
+        style="width: 200px; height: 100%; display: inline-block" />
 </div>

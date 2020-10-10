@@ -1,16 +1,14 @@
-<!--Base Modal Code taken from https://github.com/flekschas/svelte-simple-modal/blob/master/src/Modal.svelte -->
-<!-- 
-    Modified Methods 
- 1. Open - This method returns a promise which will return an 
+<!--
+    Modified Methods
+ 1. Open - This method returns a promise which will return an
            object when modal is closed (may be null)
- 2. Close - You can call this and pass an object which will be returned 
+ 2. Close - You can call this and pass an object which will be returned
            by the promise in open
 -->
-
 <script>
-    import { setContext as baseSetContext } from 'svelte';
-    import { fade } from 'svelte/transition';
-    export let key = 'simple-modal';
+    import { setContext as baseSetContext } from "svelte";
+    import { fade } from "svelte/transition";
+    export let key = "simple-modal";
     export let closeButton = true;
     export let closeOnEsc = true;
     export let closeOnOuterClick = true;
@@ -29,25 +27,35 @@
     let customStyleBg = {};
     let customStyleWindow = {};
     let customStyleContent = {};
-    const camelCaseToDash = str => str
-        .replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
-    const toCssString = (props) => Object.keys(props)
-        .reduce((str, key) => `${str}; ${camelCaseToDash(key)}: ${props[key]}`, '');
+    const camelCaseToDash = (str) =>
+        str.replace(/([a-zA-Z])(?=[A-Z])/g, "$1-").toLowerCase();
+    const toCssString = (props) =>
+        Object.keys(props).reduce(
+            (str, key) => `${str}; ${camelCaseToDash(key)}: ${props[key]}`,
+            ""
+        );
     $: cssBg = toCssString(Object.assign({}, styleBg, customStyleBg));
-    $: cssWindow = toCssString(Object.assign({}, styleWindow, customStyleWindow));
-    $: cssContent = toCssString(Object.assign({}, styleContent, customStyleContent));
-    
+    $: cssWindow = toCssString(
+        Object.assign({}, styleWindow, customStyleWindow)
+    );
+    $: cssContent = toCssString(
+        Object.assign({}, styleContent, customStyleContent)
+    );
+
     var resolver;
-    const open = (NewComponent, newProps = {}, style = { bg: {}, window: {}, content: {} }) => new Promise(
-        (resolve) => {
+    const open = (
+        NewComponent,
+        newProps = {},
+        style = { bg: {}, window: {}, content: {} }
+    ) =>
+        new Promise((resolve) => {
             resolver = resolve;
             Component = NewComponent;
             props = newProps;
             customStyleBg = style.bg || {};
             customStyleWindow = style.window || {};
             customStyleContent = style.content || {};
-        }
-    );
+        });
     const close = (objectToReturn) => {
         Component = null;
         props = null;
@@ -57,16 +65,15 @@
         resolver(objectToReturn);
     };
     const handleKeyup = ({ key }) => {
-        if (closeOnEsc && Component && key === 'Escape') {
+        if (closeOnEsc && Component && key === "Escape") {
             event.preventDefault();
             close();
         }
     };
     const handleOuterClick = (event) => {
         if (
-            closeOnOuterClick && (
-                event.target === background || event.target === wrap
-            )
+            closeOnOuterClick &&
+            (event.target === background || event.target === wrap)
         ) {
             event.preventDefault();
             close();
@@ -138,7 +145,7 @@
 
     .close:before,
     .close:after {
-        content: '';
+        content: "";
         display: block;
         box-sizing: border-box;
         position: absolute;
@@ -191,32 +198,38 @@
     }
 </style>
 
+<!--Base Modal Code taken from https://github.com/flekschas/svelte-simple-modal/blob/master/src/Modal.svelte -->
+<!--
+    Modified Methods
+ 1. Open - This method returns a promise which will return an
+           object when modal is closed (may be null)
+ 2. Close - You can call this and pass an object which will be returned
+           by the promise in open
+-->
 <svelte:window on:keyup={handleKeyup} />
 
 <div>
     {#if Component}
-      <div
-        class="bg"
-        on:click={handleOuterClick}
-        bind:this={background}
-        transition:transitionBg={transitionBgProps}
-        style={cssBg}
-      >
-        <div class="window-wrap" bind:this={wrap}>
-          <div
-            class="window"
-            transition:transitionWindow={transitionWindowProps}
-            style={cssWindow}
-          >
-            {#if closeButton}
-              <button on:click={close} class="close"></button>
-            {/if}
-            <div class="content" style={cssContent}>
-              <Component {...props}/>
+        <div
+            class="bg"
+            on:click={handleOuterClick}
+            bind:this={background}
+            transition:transitionBg={transitionBgProps}
+            style={cssBg}>
+            <div class="window-wrap" bind:this={wrap}>
+                <div
+                    class="window"
+                    transition:transitionWindow={transitionWindowProps}
+                    style={cssWindow}>
+                    {#if closeButton}
+                        <button on:click={close} class="close" />
+                    {/if}
+                    <div class="content" style={cssContent}>
+                        <Component {...props} />
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     {/if}
-    <slot></slot>
-  </div>
+    <slot />
+</div>

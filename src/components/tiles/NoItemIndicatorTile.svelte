@@ -4,17 +4,18 @@
     let indicator = false;
     var onDragEnter = (e) => {
         indicator = true;
-    }
+    };
     var onDragLeave = (e) => {
         indicator = false;
-    }
+    };
 
     var handleDrop = (e) => {
         e.preventDefault();
         indicator = false;
         onDrop(e, index);
-    }
+    };
 </script>
+
 <style>
     .no-items-indicator {
         position: absolute;
@@ -31,14 +32,22 @@
         font-size: 1em;
     }
 </style>
+
 {#if indicator}
-    <div class="no-items-indicator" on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave}
-        on:drop={handleDrop} style="border: 1px dashed gray;">
+    <div
+        class="no-items-indicator"
+        on:dragover|preventDefault={onDragEnter}
+        on:dragleave={onDragLeave}
+        on:drop={handleDrop}
+        style="border: 1px dashed gray;">
         <h1>Drop to Add</h1>
     </div>
 {:else}
-    <div class="no-items-indicator" on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave}
-    on:drop={handleDrop}>
+    <div
+        class="no-items-indicator"
+        on:dragover|preventDefault={onDragEnter}
+        on:dragleave={onDragLeave}
+        on:drop={handleDrop}>
         <h3>Drag 'n' Drop tabs to add to 'em this collection</h3>
     </div>
 {/if}

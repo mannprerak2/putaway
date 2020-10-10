@@ -1,12 +1,12 @@
 <script>
-  import { onMount } from 'svelte';
-  import CollectionTilePopup from './components/tiles/CollectionTilePopup.svelte'
+  import { onMount } from "svelte";
+  import CollectionTilePopup from "./components/tiles/CollectionTilePopup.svelte";
 
   //font awesome icons
-  import Fa from "sveltejs-fontawesome"
+  import Fa from "sveltejs-fontawesome";
   //import { faSave } from '@fortawesome/free-solid-svg-icons/faSave'
-  import { faSave }  from '@fortawesome/free-regular-svg-icons/faSave'
-  import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
+  import { faSave } from "@fortawesome/free-regular-svg-icons/faSave";
+  import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
   //font awesome icons
 
   let searchText = "";
@@ -22,13 +22,13 @@
   onMount(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       tab = tabs[0];
-      if (tab.url != 'chrome://newtab/') {
+      if (tab.url != "chrome://newtab/") {
         chrome.bookmarks.search({ url: tab.url }, function (bms) {
-          bms.forEach(b => {
+          bms.forEach((b) => {
             map[b.parentId] = true;
           });
         });
-        chrome.storage.local.get('pid', function (res) {
+        chrome.storage.local.get("pid", function (res) {
           chrome.bookmarks.getChildren(res.pid, function (children) {
             // only folders
             allCollections = children.filter((e) => e.url == null);
@@ -46,44 +46,68 @@
       sessionSaved = false;
     } else {
       var dt = new Date();
-      let sessionName = `Session ${dt.getDate()}-${(dt.getMonth() + 1).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}-${dt.getFullYear()}, ${dt.getHours()}:${dt.getMinutes().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}:${dt.getSeconds().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}`;;
+      let sessionName = `Session ${dt.getDate()}-${(
+        dt.getMonth() + 1
+      ).toLocaleString("en-US", {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      })}-${dt.getFullYear()}, ${dt.getHours()}:${dt
+        .getMinutes()
+        .toLocaleString("en-US", {
+          minimumIntegerDigits: 2,
+          useGrouping: false,
+        })}:${dt
+        .getSeconds()
+        .toLocaleString("en-US", {
+          minimumIntegerDigits: 2,
+          useGrouping: false,
+        })}`;
 
-      chrome.storage.local.get('pid', function (map) {
-        chrome.bookmarks.create({
-          'parentId': map.pid,
-          'title': sessionName,
-          'index': 0
-        }, function (c) {
-          chrome.tabs.query({
-            currentWindow: true,
-          }, (tabs) => {
-            let allTabs = tabs.filter(function (tab) {
-              return tab.url != 'chrome://newtab/';
-            });
-            var count = allTabs.length;
-            allTabs.forEach(tab => {
-              chrome.bookmarks.create({
-                parentId: c.id,
-                url: tab.url,
-                title: tab.title + ":::::" + tab.favIconUrl
-              }, function (node) {
-                count--;
-                if (count == 0) {
-                  // reload tab to take effect
-                  savedId = c.id;
-                  sessionSaved = true;
-                }
-              });
-            });
-          });
-        });
+      chrome.storage.local.get("pid", function (map) {
+        chrome.bookmarks.create(
+          {
+            parentId: map.pid,
+            title: sessionName,
+            index: 0,
+          },
+          function (c) {
+            chrome.tabs.query(
+              {
+                currentWindow: true,
+              },
+              (tabs) => {
+                let allTabs = tabs.filter(function (tab) {
+                  return tab.url != "chrome://newtab/";
+                });
+                var count = allTabs.length;
+                allTabs.forEach((tab) => {
+                  chrome.bookmarks.create(
+                    {
+                      parentId: c.id,
+                      url: tab.url,
+                      title: tab.title + ":::::" + tab.favIconUrl,
+                    },
+                    function (node) {
+                      count--;
+                      if (count == 0) {
+                        // reload tab to take effect
+                        savedId = c.id;
+                        sessionSaved = true;
+                      }
+                    }
+                  );
+                });
+              }
+            );
+          }
+        );
       });
     }
-  }
+  };
 
   var openPutAway = () => {
-    chrome.tabs.create({ url: chrome.extension.getURL('newtab.html') });
-  }
+    chrome.tabs.create({ url: chrome.extension.getURL("newtab.html") });
+  };
 </script>
 
 <style>
@@ -181,8 +205,8 @@
   #newtab-open-putaway:hover {
     background-color: #e6e6e6;
   }
-  #search-logo{
-    position:absolute;
+  #search-logo {
+    position: absolute;
     right: 16.8rem;
     opacity: 0.5;
   }
@@ -190,47 +214,55 @@
 
 <div id="popup">
   {#if !isNewTab}
-  <div id="main">
-    <div id="top">
-      <!-- svelte-ignore a11y-autofocus -->
-      <input autofocus type="text" placeholder="Search" bind:value={searchText} />
-      <div id = "search-logo">
-        <Fa 
-        icon={faSearch}
-        size="2x" ></Fa>
+    <div id="main">
+      <div id="top">
+        <!-- svelte-ignore a11y-autofocus -->
+        <input autofocus type="text" placeholder="Search" bind:value={searchText} />
+        <div id="search-logo">
+          <Fa icon={faSearch} size="2x" />
+        </div>
+        <div id="open-putaway" class="pointer" on:click={openPutAway}>
+          Open
+          <br />
+          PutAway
+        </div>
+      </div>
+      <div id="list">
+        {#each allCollections as collection, i (collection.id)}
+          {#if collection.title
+            .toLowerCase()
+            .includes(searchText.toLowerCase())}
+            <CollectionTilePopup
+              {collection}
+              {tab}
+              alreadySaved={map[collection.id]} />
+          {/if}
+        {/each}
+        <div style="height: 60px;" />
+      </div>
     </div>
-      <div id="open-putaway" class="pointer" on:click={openPutAway}>Open <br> PutAway</div>
+    <div id="save-session" class="pointer" on:click={saveSession}>
+      {#if sessionSaved}
+        ✓Saved (click to undo)
+      {:else}
+        <Fa
+          icon={faSave}
+          size="sm"
+          style="position:relative; top:3px; opacity: 0.7;" />
+        Save Session
+      {/if}
     </div>
-    <div id="list">
-      {#each allCollections as collection,i (collection.id)}
-        {#if (collection.title.toLowerCase().includes(searchText.toLowerCase())) }
-          <CollectionTilePopup {collection} {tab} alreadySaved={map[collection.id]}/>
-        {/if}
-      {/each}
-      <div style="height: 60px;"></div>
-    </div>
-  </div>
-  <div id="save-session" class="pointer" on:click={saveSession}>
-    {#if sessionSaved}
-    ✓Saved (click to undo)
-    {:else}
-    <Fa
-      icon = {faSave}
-      size = "sm"
-      style = "position:relative; top:3px; opacity: 0.7;"></Fa>
-    Save Session
-    {/if}
-  </div>
   {:else}
-  <div id="newtab-popup">
-    <img alt="logo" src="images/logo128.png"/>
-    <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
-      Open PutAway
+    <div id="newtab-popup">
+      <img alt="logo" src="images/logo128.png" />
+      <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
+        Open PutAway
+      </div>
+      <div>
+        This is an Empty Tab.
+        <br />
+        You cannot add this to a collection.
+      </div>
     </div>
-    <div>
-      This is an Empty Tab. <br>
-      You cannot add this to a collection.
-    </div>
-  </div>
   {/if}
 </div>

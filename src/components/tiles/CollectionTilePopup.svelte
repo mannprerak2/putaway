@@ -21,26 +21,28 @@
             } else {
                 // remove all bookmarks in this with url of this tab
                 chrome.bookmarks.search({ url: tab.url }, function (bms) {
-                    bms.forEach(b => {
+                    bms.forEach((b) => {
                         chrome.bookmarks.remove(b.id);
                     });
                 });
             }
         }
-    }
+    };
 
     function saveTabToBookmark(tab) {
         chrome.bookmarks.create(
             {
                 parentId: collection.id,
                 url: tab.url,
-                title: tab.title + ":::::" + tab.favIconUrl
-            }, function (node) {
+                title: tab.title + ":::::" + tab.favIconUrl,
+            },
+            function (node) {
                 bm = node;
             }
         );
     }
 </script>
+
 <style>
     .popup-collection-tile {
         height: 50px;
@@ -66,10 +68,14 @@
     }
 </style>
 
-<div class="popup-collection-tile pointer" title={collection.title} on:click={click}>
+<div
+    class="popup-collection-tile pointer"
+    title={collection.title}
+    on:click={click}>
     {#if savedInThis}
-    <div class="save">✓</div>
+        <div class="save">✓</div>
     {/if}
     {collection.title}
 </div>
-<hr style="border: 1px solid rgb(240, 240, 240); margin: 0; margin-left: 5px; margin-right: 5px;">
+<hr
+    style="border: 1px solid rgb(240, 240, 240); margin: 0; margin-left: 5px; margin-right: 5px;" />

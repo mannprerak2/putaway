@@ -1,29 +1,32 @@
 <script>
-    import { getContext } from 'svelte';
+    import { getContext } from "svelte";
 
     export let collection;
 
     let collectionName = collection.title;
-    let errorString = '';
+    let errorString = "";
 
-
-    const { close } = getContext('simple-modal');
+    const { close } = getContext("simple-modal");
 
     function renameCollection() {
-        chrome.bookmarks.update(collection.id, { title: collectionName }, function (i) {
-            close(i.title);
-        });
+        chrome.bookmarks.update(
+            collection.id,
+            { title: collectionName },
+            function (i) {
+                close(i.title);
+            }
+        );
     }
 
     var onClickCreate = () => {
         collectionName = collectionName.trim();
         if (collectionName.length > 0) {
-            errorString = '';
+            errorString = "";
             renameCollection();
         } else {
-            errorString = 'Collection name cannot be empty';
+            errorString = "Collection name cannot be empty";
         }
-    }
+    };
 
     function handleKeyUp(event) {
         // on press enter
@@ -33,9 +36,10 @@
     }
 
     function inputFormatter(str) {
-        collectionName = str.replace(/\s+/g, ' ');
+        collectionName = str.replace(/\s+/g, " ");
     }
 </script>
+
 <style>
     input {
         width: 100%;

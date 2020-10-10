@@ -1,5 +1,5 @@
 <script>
-    import { fade } from 'svelte/transition';
+    import { fade } from "svelte/transition";
 
     export let index;
     export let item;
@@ -9,24 +9,23 @@
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
-    }
+    };
     var onDragLeave = (e) => {
         dropLine = false;
-    }
+    };
 
     var handleDragStart = (e) => {
-        e.dataTransfer
-            .setData("text", "i" + index.toString());
-        e.dataTransfer
-            .setData("object", JSON.stringify(item));
-    }
+        e.dataTransfer.setData("text", "i" + index.toString());
+        e.dataTransfer.setData("object", JSON.stringify(item));
+    };
 
     var handleDrop = (e) => {
         e.preventDefault();
         dropLine = false;
         onDrop(e, index);
-    }
+    };
 </script>
+
 <style>
     .item {
         /* box-shadow: 1px 2px var(--box-shadow); */
@@ -62,7 +61,17 @@
         border-style: solid;
         border-color: gray;
         border-radius: 100%;
-        background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%), -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%);
+        background: -webkit-linear-gradient(
+                -45deg,
+                transparent 0%,
+                transparent 46%,
+                white 46%,
+                white 56%,
+                transparent 56%,
+                transparent 100%
+            ),
+            -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white
+                        46%, white 56%, transparent 56%, transparent 100%);
         background-color: gray;
     }
 
@@ -76,21 +85,34 @@
         font-size: 1.2em;
     }
 </style>
+
 <div class="flex-row-container" style="height: 100%;">
     {#if dropLine}
-        <div class="vl" style="border-color: var(--drop-indicator);"/>
+        <div class="vl" style="border-color: var(--drop-indicator);" />
     {:else}
-        <div class="vl" style="border-color: var(--bg);"/>
+        <div class="vl" style="border-color: var(--bg);" />
     {/if}
-    <div class="item" draggable="true" out:fade on:dragover|preventDefault={onDragEnter} on:dragleave={onDragLeave}
-        on:dragstart={handleDragStart} on:drop={handleDrop} on:click|preventDefault={(e)=>
-        onClickItem(item,e)}>
-        <button class="close-icon pointer" on:click|preventDefault|stopPropagation={()=> onItemDelete(item,index)}></button>
+    <div
+        class="item"
+        draggable="true"
+        out:fade
+        on:dragover|preventDefault={onDragEnter}
+        on:dragleave={onDragLeave}
+        on:dragstart={handleDragStart}
+        on:drop={handleDrop}
+        on:click|preventDefault={(e) => onClickItem(item, e)}>
+        <button
+            class="close-icon pointer"
+            on:click|preventDefault|stopPropagation={() => onItemDelete(item, index)} />
 
         <div class="flex-row-container">
-            <img alt=' ' src={item.title.split(":::::")[1]} height="20px" style="margin-right: 10px;" />
+            <img
+                alt=" "
+                src={item.title.split(':::::')[1]}
+                height="20px"
+                style="margin-right: 10px;" />
 
-            <div class="text-concat" title={item.title.split(":::::")[0]}>
+            <div class="text-concat" title={item.title.split(':::::')[0]}>
                 {item.title.split(':::::')[0]}
             </div>
         </div>

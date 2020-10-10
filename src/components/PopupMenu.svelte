@@ -6,11 +6,12 @@
 
     var click = (e) => {
         show = !show;
-    }
+    };
     var hidePopup = (e) => {
         show = false;
-    }
+    };
 </script>
+
 <style>
     /* The container <div> - needed to position the dropdown content */
     .dropdown {
@@ -37,20 +38,27 @@
         display: block;
     }
 
-    .item:hover{
+    .item:hover {
         background-color: #d1d1d1;
     }
 </style>
 
 <div class="dropdown pointer">
     {#if show}
-    <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>▲</div>
-    <div class="dropdown-content">
-        {#each items as item,index}
-        <div class="item" on:click={()=>{show=false;onClickItem(item,index)}}>{item}</div>
-        {/each}
-    </div>
+        <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>▲</div>
+        <div class="dropdown-content">
+            {#each items as item, index}
+                <div
+                    class="item"
+                    on:click={() => {
+                        show = false;
+                        onClickItem(item, index);
+                    }}>
+                    {item}
+                </div>
+            {/each}
+        </div>
     {:else}
-    <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>⋮</div>
+        <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>⋮</div>
     {/if}
 </div>

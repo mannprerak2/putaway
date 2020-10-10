@@ -2,30 +2,23 @@
   import TopBar from "./components/TopBar.svelte";
   import MainArea from "./components/MainArea.svelte";
   import OpenTabsBar from "./components/OpenTabsBar.svelte";
-  import Modal from './components/Modal.svelte';
-  import { setDarkTheme, getDarkTheme } from './services/storage.js';
-  import { onMount } from 'svelte';
+  import Modal from "./components/Modal.svelte";
+  import { setDarkTheme, getDarkTheme } from "./services/storage.js";
+  import { onMount } from "svelte";
 
   let darkTheme = false;
   var toggleTheme = () => {
     darkTheme = !darkTheme;
     setDarkTheme(darkTheme);
-  }
+  };
 
   onMount(() => {
     getDarkTheme(function (v) {
       darkTheme = v;
     });
   });
-
 </script>
-<svelte:head>
-  {#if darkTheme}
-    <link rel="stylesheet" href="global-dark.css">
-  {:else}
-    <link rel="stylesheet" href="global-light.css">
-  {/if}
-</svelte:head>
+
 <style>
   .container-table {
     display: table;
@@ -66,13 +59,20 @@
     height: 100%;
   }
 </style>
+
+<svelte:head>
+  {#if darkTheme}
+    <link rel="stylesheet" href="global-dark.css" />
+  {:else}
+    <link rel="stylesheet" href="global-light.css" />
+  {/if}
+</svelte:head>
 <Modal closeButton={false}>
   <div class="container-table">
-
     <div id="left-free-area">
       <div id="top-bar">
         <div id="top-bar-container">
-          <TopBar {darkTheme} {toggleTheme}/>
+          <TopBar {darkTheme} {toggleTheme} />
         </div>
       </div>
       <div id="main-free-area">
@@ -83,6 +83,5 @@
     <div id="right-fixed-bar">
       <OpenTabsBar />
     </div>
-
   </div>
 </Modal>

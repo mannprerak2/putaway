@@ -1,5 +1,5 @@
 <script>
-    import { fade, fly } from 'svelte/transition';
+    import { fade, fly } from "svelte/transition";
 
     export let tab;
     export let index;
@@ -9,24 +9,23 @@
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
-    }
+    };
     var onDragLeave = (e) => {
         dropLine = false;
-    }
+    };
 
     var handleDragStart = (e) => {
-        e.dataTransfer
-            .setData("text", "t" + index.toString());
-        e.dataTransfer
-            .setData("object", JSON.stringify(tab));
-    }
+        e.dataTransfer.setData("text", "t" + index.toString());
+        e.dataTransfer.setData("object", JSON.stringify(tab));
+    };
 
     var handleDrop = (e) => {
         e.preventDefault();
         dropLine = false;
         onDrop(e, index);
-    }
+    };
 </script>
+
 <style>
     .card {
         /* box-shadow: 1px 2px var(--box-shadow); */
@@ -62,7 +61,17 @@
         border-style: solid;
         border-color: gray;
         border-radius: 100%;
-        background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%), -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white 46%, white 56%, transparent 56%, transparent 100%);
+        background: -webkit-linear-gradient(
+                -45deg,
+                transparent 0%,
+                transparent 46%,
+                white 46%,
+                white 56%,
+                transparent 56%,
+                transparent 100%
+            ),
+            -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white
+                        46%, white 56%, transparent 56%, transparent 100%);
         background-color: gray;
     }
 
@@ -75,27 +84,33 @@
         line-height: 1em;
     }
 </style>
-<div in:fly="{{ x: 500, duration: 400 }}" out:fade>
+
+<div in:fly={{ x: 500, duration: 400 }} out:fade>
     {#if dropLine}
-        <hr style="border: 1px solid var(--drop-indicator);">
+        <hr style="border: 1px solid var(--drop-indicator);" />
     {:else}
-        <hr style="border: 1px solid var(--bg);">
+        <hr style="border: 1px solid var(--bg);" />
     {/if}
-    <div class="card" draggable="true" 
+    <div
+        class="card"
+        draggable="true"
         on:dragover|preventDefault={onDragEnter}
         on:dragleave={onDragLeave}
         on:dragstart={handleDragStart}
         on:drop={handleDrop}
-        on:click|preventDefault={()=>
-        onClickTabCard(tab)}>
-        <button class="close-icon" on:click|preventDefault|stopPropagation={()=> onTabTileClose(tab,index)}></button>
+        on:click|preventDefault={() => onClickTabCard(tab)}>
+        <button
+            class="close-icon"
+            on:click|preventDefault|stopPropagation={() => onTabTileClose(tab, index)} />
 
         <div class="flex-row-container">
-            <img alt=' ' src={tab.favIconUrl} height="20px" style="margin-right: 10px;" />
+            <img
+                alt=" "
+                src={tab.favIconUrl}
+                height="20px"
+                style="margin-right: 10px;" />
 
-            <div class="text-concat">
-                {tab.title}
-            </div>
+            <div class="text-concat">{tab.title}</div>
         </div>
     </div>
 </div>
