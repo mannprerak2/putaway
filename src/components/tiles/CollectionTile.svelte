@@ -7,7 +7,8 @@
     import { deo } from "./../../stores/dropEventStore.js";
     import { searchText } from "./../../stores/searchTextStore.js";
     import PopupMenu from "./../PopupMenu.svelte";
-    import EditCollectionNameModal from "./../modals/EditCollectionNameModal.svelte";
+    import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
+    import EditItemModal from "../modals/EditItemModal.svelte";
     const { open } = getContext("simple-modal");
 
     //font awseome icons
@@ -124,6 +125,16 @@
         });
     };
 
+    var onClickItemEdit = async (item, i) => {
+        var c = await open(EditItemModal, {
+            item: item,
+        });
+        if (c != null) {
+            items[i].title = c;
+            items = items;
+        }
+    };
+
     var openAllOfCollection = () => {
         items.forEach((i) => {
             chrome.tabs.create({ url: i.url });
@@ -167,7 +178,7 @@
                 var c = await open(EditCollectionNameModal, {
                     collection: collection,
                 });
-                collection.title = c;
+                if (c != null) collection.title = c;
                 break;
             default:
                 break;
@@ -265,7 +276,7 @@
             {:else}
                 {#each items as item,index (item.id)}
                     {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }
-                        <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop}/>
+                        <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop} {onClickItemEdit}/>
                     {/if}
                 {/each}
                 <EmptyItemTile index={items.length} {onDrop}/>

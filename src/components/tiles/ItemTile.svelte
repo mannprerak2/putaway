@@ -5,6 +5,7 @@
     export let item;
     export let onItemDelete;
     export let onClickItem;
+    export let onClickItemEdit;
     export let onDrop;
     let dropLine = false;
     var onDragEnter = (e) => {
@@ -44,6 +45,10 @@
     .close-icon {
         display: none;
     }
+
+    .edit-icon {
+        display: none;
+    }
     .item:hover {
         background-color: var(--outline-btn-hover);
     }
@@ -75,6 +80,23 @@
         background-color: gray;
     }
 
+    .item:hover .edit-icon {
+        position: absolute;
+        right: -16px;
+        margin-right: 10px;
+        top: 0;
+        display: block;
+        box-sizing: border-box;
+        width: 16px;
+        height: 16px;
+        border-width: 3px;
+        border-style: solid;
+        border-color: gray;
+        border-radius: 100%;
+        background-color: gray;
+        transform: scaleX(-1);
+    }
+
     .text-concat {
         position: relative;
         display: inline-block;
@@ -104,6 +126,11 @@
         <button
             class="close-icon pointer"
             on:click|preventDefault|stopPropagation={() => onItemDelete(item, index)} />
+        <button
+            class="edit-icon pointer"
+            on:click|preventDefault|stopPropagation={() => onClickItemEdit(item, index)}>
+            <div style="color:white; margin-left: -5px; margin-top: -4px;">✎</div>
+        </button>
 
         <div class="flex-row-container">
             <img
