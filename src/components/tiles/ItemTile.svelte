@@ -1,6 +1,12 @@
 <script>
     import { fade } from "svelte/transition";
 
+    // FontAwesome icons.
+    import Fa from "sveltejs-fontawesome";
+    import { faPenAlt } from "@fortawesome/free-solid-svg-icons/faPenAlt";
+    import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
+
+
     export let index;
     export let item;
     export let onItemDelete;
@@ -66,17 +72,6 @@
         border-style: solid;
         border-color: gray;
         border-radius: 100%;
-        background: -webkit-linear-gradient(
-                -45deg,
-                transparent 0%,
-                transparent 46%,
-                white 46%,
-                white 56%,
-                transparent 56%,
-                transparent 100%
-            ),
-            -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white
-                        46%, white 56%, transparent 56%, transparent 100%);
         background-color: gray;
     }
 
@@ -94,7 +89,6 @@
         border-color: gray;
         border-radius: 100%;
         background-color: gray;
-        transform: scaleX(-1);
     }
 
     .text-concat {
@@ -125,11 +119,17 @@
         on:click|preventDefault={(e) => onClickItem(item, e)}>
         <button
             class="close-icon pointer"
-            on:click|preventDefault|stopPropagation={() => onItemDelete(item, index)} />
+            on:click|preventDefault|stopPropagation={() => onItemDelete(item, index)} >
+            <div style="color:white; margin-left: -4px; margin-top: -2px;">
+                <Fa icon={faTimes} size="sm" color="white" />
+            </div>
+        </button>
         <button
             class="edit-icon pointer"
             on:click|preventDefault|stopPropagation={() => onClickItemEdit(item, index)}>
-            <div style="color:white; margin-left: -5px; margin-top: -4px;">✎</div>
+            <div style="color:white; margin-left: -5px; margin-top: -3px; transform: scale(0.8);">
+                <Fa icon={faPenAlt} size="sm" color="white" />
+            </div>
         </button>
 
         <div class="flex-row-container">
