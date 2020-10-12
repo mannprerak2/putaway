@@ -13,12 +13,17 @@ So, all of your data is accessible from anywhere,
 and is safely stored in your own chrome bookmarks.
 
 ## Screenshots
-![new-tab](./screenshots/new-tab.png)
+##### New Tab - Light
+<img src="./screenshots/new-tab.png" alt="Light Theme">
 
-<div align="center">
-    <img src="./screenshots/popup-empty.png" width="200px">
-    <img src="./screenshots/popup.png" width="200px">
-</div>
+##### New Tab - Dark
+<img src="./screenshots/new-tab-dark.png" alt="Dark Theme">
+
+##### Extension Popup
+<table>
+    <td><img src="./screenshots/popup-empty.png" width="200px"></td>
+    <td><img src="./screenshots/popup.png" width="200px"></td>
+</table>
 
 ## Installing
 You can add this [extension from the Chrome Web Store](https://chrome.google.com/webstore/detail/putaway-tab-management/fkfhaaminmefilpjiapgokmlbjfokafa/).
