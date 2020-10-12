@@ -110,6 +110,7 @@
     {/if}
     <div
         class="item"
+        style="background-color: {item.title.split(":::::")[2]};"
         draggable="true"
         out:fade
         on:dragover|preventDefault={onDragEnter}

@@ -80,7 +80,7 @@
 
 <svelte:window on:keyup={handleKeyUp} />
 
-<main>
+<main style="background-color: {itemColor}">
     <h1>Edit Item -</h1>
 
     <label><strong>Name</strong></label>
@@ -98,4 +98,15 @@
         <div style="padding: 10px; color: red;">{errorString}</div>
         <button class="pointer" on:click={onClickCreate}>Update</button>
     </div>
+    <label><strong>Color</strong></label>
+    &nbsp
+    <select bind:value={itemColor} name="colors">
+        <option value="">None</option>
+        <option value="#ff000022">Red</option>
+        <option value="#00ff0022">Green</option>
+        <option value="#0000ff22">Blue</option>
+        <option value="#ffff0022">Yellow</option>
+        <option value="#ff00ff22">Purple</option>
+        <option value="#00ffff22">Cyan</option>
+      </select>
 </main>
