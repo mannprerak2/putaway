@@ -6,7 +6,6 @@
     import NoItemTileIndicator from "./NoItemIndicatorTile.svelte";
     import { deo } from "./../../stores/dropEventStore.js";
     import { searchText } from "./../../stores/searchTextStore.js";
-    import PopupMenu from "./../PopupMenu.svelte";
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
     import EditItemModal from "../modals/EditItemModal.svelte";
     const { open } = getContext("simple-modal");
@@ -15,6 +14,7 @@
     import Fa from "sveltejs-fontawesome";
     import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
     import { faShareAlt } from "@fortawesome/free-solid-svg-icons/faShareAlt";
+    import { faEdit } from "@fortawesome/free-solid-svg-icons/faEdit";
     //font awesome icons
     let items = [];
 
@@ -171,19 +171,12 @@
         });
     };
 
-    var popupItems = ["✎ Edit Name"];
-    var onClickPopupItem = async (item, index) => {
-        switch (index) {
-            case 0: // edit name
-                var c = await open(EditCollectionNameModal, {
-                    collection: collection,
-                });
-                if (c != null) collection.title = c;
-                break;
-            default:
-                break;
-        }
-    };
+    var openEditCollectionNameModal = async() => {
+        var c = await open(EditCollectionNameModal, {
+            collection: collection,
+        });
+        if (c != null) collection.title = c;
+    }
 </script>
 
 <style>
@@ -267,7 +260,13 @@
             <Fa icon={faTrashAlt} size="sm" color="var(--icon-color)" />
         </div>
         &nbsp
-        <PopupMenu items={popupItems} onClickItem={onClickPopupItem} />
+        <div
+            class="pointer"
+            on:click={openEditCollectionNameModal}
+            style= "font-size: 0.8em; opacity:var(--icon-opacity);"
+            alt= "✎ Edit Name">
+            <Fa icon={faEdit} size="sm" color="var(--icon-color)" />
+        </div>
         <!-- <div style="font-size: 0.8em;">⋮</div> -->
     </div>
     <div class="item-area">
