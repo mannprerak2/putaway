@@ -41,4 +41,8 @@ OR
 2. **Enable '_Developer Mode_'** on your Chrome(ium) browser at 'chrome://extensions/'
 3. **Select '_Load unpacked_'** button and point it to the `public` folder.
 
+## Contributing/Developing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ##### (Made with SvelteJS)

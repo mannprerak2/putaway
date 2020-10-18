@@ -1,11 +1,12 @@
 ## How to Contribute
 
-1.  Fork this repo
+1.  Fork this repo, run `npm install`
 2.  Create your feature branch (`git checkout -b my-new-feature`)
 3.  Commit your changes (`git commit -am 'useful commit message'`)
 4.  Push to the branch (`git push origin my-new-feature`)
 5.  Start a Pull Request
 
+> Always run `npm run build` before pushing changes to a PR. This ensure the `public` folder is up to date with the latest extension code.
 
 ## Project Structure
 - `public` - Contains the Extension files.
@@ -20,3 +21,10 @@ The three root level files are in src, called `NewTab.svelte`, `Popup.svelte` an
 2. **Enable '_Developer Mode_'** on your Chrome(ium) browser at 'chrome://extensions/'
 3. **Select '_Load unpacked_'** button and point it to the `public` folder
 4. Experiment
+
+## Running Scripts
+- `npm run build` - builds all the extension files to `public` folder.
+- `npm run dev-newtab` - Watches and rebuilds the new tab page to `public` folder on changes
+- `npm run dev-popup` - Watches and rebuilds the popup section to `public` folder on changes
+- `npm run dev-options` - Watches and rebuilds the options page to `public` folder on changes
+- `npm run dev-all` - Watches and rebuilds the complete extension to `public` folder on changes (Will be slower).
