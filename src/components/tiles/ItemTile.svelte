@@ -117,6 +117,7 @@
         on:dragleave={onDragLeave}
         on:dragstart={handleDragStart}
         on:drop={handleDrop}
+        on:auxclick|preventDefault={(e) => onClickItem(item, e, true)}
         on:click|preventDefault={(e) => onClickItem(item, e)}>
         <button
             class="close-icon pointer"

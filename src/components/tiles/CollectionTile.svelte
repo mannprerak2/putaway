@@ -121,7 +121,7 @@
     var onClickItem = (item, e) => {
         chrome.tabs.create({
             url: item.url,
-            active: !(e.ctrlKey || e.metaKey),
+            active: !(e.ctrlKey || e.metaKey || e.button==1),
         });
     };
 
