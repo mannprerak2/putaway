@@ -177,6 +177,27 @@
         });
         if (c != null) collection.title = c;
     }
+
+    var matchSearch = (item, text) => {
+        return item.title.toLowerCase().includes(text.toLowerCase()) || item.url.toLowerCase().includes(text.toLowerCase())
+    }
+
+    var hasSearchMatch = true;
+    searchText.subscribe(val =>{
+        let setTo = true;
+        if(val.length>0){
+            setTo = false;
+            for(let i=0;i<items.length; i++){
+                const item = items[i];
+                if(matchSearch(item, val)){
+                    setTo = true;
+                    break;
+                }
+            }
+        }
+        hasSearchMatch = setTo;
+    });
+
 </script>
 
 <style>
@@ -215,6 +236,7 @@
     }
 </style>
 
+{#if $searchText.length==0 || hasSearchMatch}
 <div
     class="collection"
     in:fade={{ duration: 500 }}
@@ -274,7 +296,7 @@
                 <NoItemTileIndicator index={items.length} {onDrop}/>
             {:else}
                 {#each items as item,index (item.id)}
-                    {#if (item.title.toLowerCase().includes($searchText.toLowerCase()) || item.url.toLowerCase().includes($searchText.toLowerCase())) }
+                    {#if (matchSearch(item, $searchText)) }
                         <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop} {onClickItemEdit}/>
                     {/if}
                 {/each}
@@ -282,3 +304,4 @@
             {/if}
         </div>
 </div>
+{/if}

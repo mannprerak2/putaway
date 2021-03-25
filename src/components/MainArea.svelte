@@ -1,6 +1,5 @@
 <script>
     import { onMount, onDestroy, getContext } from "svelte";
-    import { fade, fly } from "svelte/transition";
     import CreateCollectionModal from "./modals/CreateCollectionModal.svelte";
     import DeleteCollectionModal from "./modals/DeleteCollectionModal.svelte";
     import ShareCollectionModal from "./modals/ShareCollectionModal.svelte";
@@ -208,9 +207,9 @@
 <main style="position: relative;">
     {#if allCollections.length == 0}
         <div class="no-collections-indicator">
-            <h3>No Collections, Click '</h3>
+            <h3 style="color: var(--txt);">No Collections, Click '</h3>
             <button class="plus-icon-dummy" />
-            <h3>' To create one</h3>
+            <h3 style="color: var(--txt);">' To create one</h3>
         </div>
     {/if}
 
