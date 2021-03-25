@@ -48,6 +48,6 @@
         on:dragover|preventDefault={onDragEnter}
         on:dragleave={onDragLeave}
         on:drop={handleDrop}>
-        <h3>Drag 'n' Drop tabs to add to 'em this collection</h3>
+        <h3 style="color: var(--txt);">Drag 'n' Drop tabs to add to 'em this collection</h3>
     </div>
 {/if}
