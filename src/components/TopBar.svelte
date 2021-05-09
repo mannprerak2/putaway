@@ -1,5 +1,6 @@
 <script>
-    import { searchText } from "./../stores/searchTextStore.js";
+    import { searchText, archiveOnly } from "../stores/stores.js";
+    import { onDestroy } from "svelte";
     export let darkTheme;
     export let toggleTheme;
 
@@ -10,6 +11,18 @@
     import { faMoon } from "@fortawesome/free-solid-svg-icons/faMoon";
     import { faTimesCircle } from "@fortawesome/free-solid-svg-icons/faTimesCircle";
     //font awesome icons
+
+    let archive;
+	const unsubscribe = archiveOnly.subscribe(value => {
+		archive = value;
+	});
+    var toggleArchive = () => {
+        archive = !archive
+        archiveOnly.set(archive)
+        searchText.set("")
+    };
+
+    onDestroy(unsubscribe);
 </script>
 
 <style>
@@ -54,6 +67,25 @@
             {/if}
         </div>
         <div style="flex-grow:1;" />
+        {#if archive}
+        <div
+            id="view-archive-button"
+            class="rounded-button pointer"
+            style="font-size: 1.5em; background-color: #00ff0022"
+            on:click={toggleArchive}>
+            Archive
+        </div>
+        {:else}
+        <div
+            id="view-archive-button"
+            class="rounded-button pointer"
+            style="font-size: 1.5em;"
+            on:click={toggleArchive}>
+            Archive
+        </div>
+        {/if}
+
+        &nbsp
         {#if darkTheme}
             <div on:click={toggleTheme} class="pointer" style="font-size: 2em;">
                 <Fa icon={faSun} size="sm" color="var(--icon-color)" />

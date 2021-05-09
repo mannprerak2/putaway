@@ -2,7 +2,7 @@
     import { onMount, onDestroy, getContext } from "svelte";
     import TabTile from "./tiles/TabTile.svelte";
     import EmptyTabTile from "./tiles/EmptyTabTile.svelte";
-    import { deo } from "./../stores/dropEventStore.js";
+    import { deo } from "./../stores/stores.js";
     const { open } = getContext("simple-modal");
     import SaveSessionModal from "./modals/SaveSessionModal.svelte";
 

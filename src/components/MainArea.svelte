@@ -1,24 +1,63 @@
 <script>
-    import { onMount, onDestroy, getContext } from "svelte";
+    import { onDestroy, getContext } from "svelte";
     import CreateCollectionModal from "./modals/CreateCollectionModal.svelte";
     import DeleteCollectionModal from "./modals/DeleteCollectionModal.svelte";
     import ShareCollectionModal from "./modals/ShareCollectionModal.svelte";
+    import ArchiveCollectionModal from "./modals/ArchiveCollectionModal.svelte";
     import CollectionTile from "./tiles/CollectionTile.svelte";
     const { open } = getContext("simple-modal");
-    import { deo } from "./../stores/dropEventStore.js";
+    import { deo, archiveOnly } from "./../stores/stores.js";
     import EmptyCollectionTile from "./tiles/EmptyCollectionTile.svelte";
+
+    // Gets ID of folder inside Other Bookmarks and creates one if it doesn't
+    // exist.
+    function getIDforFolder(folderName, callback) {
+        chrome.bookmarks.getTree(function (tree) {
+            var otherBookmarksFolderId = tree[0].children[1].id;
+            chrome.bookmarks.getChildren(
+                otherBookmarksFolderId,
+                function (children) {
+                    var putawayfolder = children.find(
+                        (e) => e.title == folderName
+                    );
+                    var pid;
+                    if (!putawayfolder) {
+                        // Folder doesn't exist, so we create one
+                        chrome.bookmarks.create(
+                            {
+                                parentId: otherBookmarksFolderId,
+                                title: folderName,
+                            },
+                            function (newFolder) {
+                                pid = newFolder.id;
+                                callback(pid);
+                            }
+                        );
+                    } else {
+                        pid = putawayfolder.id;
+                        callback(pid);
+                    }
+                }
+            );
+        });
+    }
 
     // array of BookmarkTreeNode
     let allCollections = [];
 
     // Called only if pid no longer points to the correct putaway folder.
-    function refreshPidAndloadCollections(pid) {
+    function refreshPidAndloadCollections(pid, pidVar) {
         // store pid in local storage for use later
-        chrome.storage.local.set({ pid: pid });
+        chrome.storage.local.set({ [pidVar]: pid });
         loadCollections(pid, false);
     }
 
-    function loadCollections(pid, retry = true) {
+    function loadCollections(
+        pid,
+        retry = true,
+        folderName = "PutAway",
+        pidVar = "pid"
+    ) {
         chrome.bookmarks.getChildren(pid, function (children) {
             try {
                 if (console.log(chrome.runtime.lastError)) {
@@ -29,47 +68,33 @@
             } catch (e) {
                 if (retry) {
                     // pid is invalidated, add it again.
-                    const putAwayFolderName = "PutAway";
-                    chrome.bookmarks.getTree(function (tree) {
-                        var otherBookmarksFolderId = tree[0].children[1].id;
-                        chrome.bookmarks.getChildren(
-                            otherBookmarksFolderId,
-                            function (children) {
-                                var putawayfolder = children.find(
-                                    (e) => e.title == putAwayFolderName
-                                );
-                                var pid;
-                                if (!putawayfolder) {
-                                    // Folder doesn't exist, so we create one
-                                    chrome.bookmarks.create(
-                                        {
-                                            parentId: otherBookmarksFolderId,
-                                            title: putAwayFolderName,
-                                        },
-                                        function (newFolder) {
-                                            pid = newFolder.id;
-                                            refreshPidAndloadCollections(pid);
-                                        }
-                                    );
-                                } else {
-                                    pid = putawayfolder.id;
-                                    refreshPidAndloadCollections(pid);
-                                }
-                            }
-                        );
+                    getIDforFolder(folderName, (pid) => {
+                        refreshPidAndloadCollections(pid, pidVar);
                     });
                 }
             }
         });
     }
-    onMount(() => {
-        chrome.storage.local.get("pid", function (res) {
-            if (res.pid) {
-                loadCollections(res.pid);
-            } else {
-                loadCollections("-1");
-            }
-        });
+    const unsubsribeArc = archiveOnly.subscribe((value) => {
+        console.log("archiveOnly");
+        console.log(value);
+        if (value) {
+            chrome.storage.local.get("paid", function (res) {
+                if (res.paid) {
+                    loadCollections(res.paid, true, "PutAway Archives", "paid");
+                } else {
+                    loadCollections("-1", true, "PutAway Archives", "paid");
+                }
+            });
+        } else {
+            chrome.storage.local.get("pid", function (res) {
+                if (res.pid) {
+                    loadCollections(res.pid);
+                } else {
+                    loadCollections("-1");
+                }
+            });
+        }
     });
 
     var clickAddCollection = async () => {
@@ -114,7 +139,11 @@
             allCollections = allCollections;
         }
     });
-    onDestroy(unsubsribe);
+
+    onDestroy(() => {
+        unsubsribeArc();
+        unsubsribe();
+    });
 
     var clickDeleteCollection = async (index) => {
         var c = await open(DeleteCollectionModal, {
@@ -129,18 +158,64 @@
 
     var clickShareCollection = async (index, items) => {
         var shareText = "";
-        items.forEach(item => {
-            shareText+=item.title.split(":::::")[0];
-            shareText+=" - "
-            shareText+=item.url;
-            shareText+="\n\n";
+        items.forEach((item) => {
+            shareText += item.title.split(":::::")[0];
+            shareText += " - ";
+            shareText += item.url;
+            shareText += "\n\n";
         });
         await open(ShareCollectionModal, {
             collectionName: allCollections[index].title,
-            shareText: shareText
+            shareText: shareText,
         });
     };
+
+    var clickArchiveCollection = async (index) => {
+        var c = await open(ArchiveCollectionModal, {
+            collection: allCollections[index],
+            toArchive: !$archiveOnly,
+        });
+        if (c) {
+            let folder = $archiveOnly ? "PutAway" : "PutAway Archives";
+            getIDforFolder(folder, (pid) => {
+                chrome.bookmarks.move(allCollections[index].id, {
+                    parentId: pid,
+                });
+                allCollections.splice(index, 1);
+                allCollections = allCollections;
+            });
+        }
+    };
 </script>
+
+<main style="position: relative;">
+    {#if allCollections.length == 0}
+        <div class="no-collections-indicator">
+            <h3 style="color: var(--txt);">No Collections, Click '</h3>
+            <button class="plus-icon-dummy" />
+            <h3 style="color: var(--txt);">' To create one</h3>
+        </div>
+    {/if}
+
+    <button
+        class="plus-icon pointer"
+        on:click|preventDefault|stopPropagation={clickAddCollection}
+    />
+
+    <div class="scroll">
+        {#each allCollections as collection, i (collection.id)}
+            <CollectionTile
+                {collection}
+                index={i}
+                {onCollectionDrop}
+                {clickShareCollection}
+                {clickDeleteCollection}
+                {clickArchiveCollection}
+            />
+        {/each}
+        <EmptyCollectionTile index={allCollections.length} {onCollectionDrop} />
+    </div>
+</main>
 
 <style>
     .plus-icon-dummy {
@@ -203,29 +278,3 @@
         justify-content: center;
     }
 </style>
-
-<main style="position: relative;">
-    {#if allCollections.length == 0}
-        <div class="no-collections-indicator">
-            <h3 style="color: var(--txt);">No Collections, Click '</h3>
-            <button class="plus-icon-dummy" />
-            <h3 style="color: var(--txt);">' To create one</h3>
-        </div>
-    {/if}
-
-    <button
-        class="plus-icon pointer"
-        on:click|preventDefault|stopPropagation={clickAddCollection} />
-
-    <div class="scroll">
-        {#each allCollections as collection, i (collection.id)}
-            <CollectionTile
-                {collection}
-                index={i}
-                {onCollectionDrop}
-                {clickShareCollection}
-                {clickDeleteCollection} />
-        {/each}
-        <EmptyCollectionTile index={allCollections.length} {onCollectionDrop} />
-    </div>
-</main>
