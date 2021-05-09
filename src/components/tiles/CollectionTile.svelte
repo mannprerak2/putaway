@@ -1,11 +1,11 @@
 <script>
-    import { fade, fly } from "svelte/transition";
+    import { fade } from "svelte/transition";
     import { onMount, onDestroy, getContext } from "svelte";
     import ItemTile from "./ItemTile.svelte";
     import EmptyItemTile from "./EmptyItemTile.svelte";
     import NoItemTileIndicator from "./NoItemIndicatorTile.svelte";
-    import { deo } from "./../../stores/dropEventStore.js";
-    import { searchText } from "./../../stores/searchTextStore.js";
+    import { deo } from "./../../stores/stores.js";
+    import { searchText } from "../../stores/stores.js";
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
     import EditItemModal from "../modals/EditItemModal.svelte";
     const { open } = getContext("simple-modal");
@@ -15,6 +15,7 @@
     import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
     import { faShareAlt } from "@fortawesome/free-solid-svg-icons/faShareAlt";
     import { faEdit } from "@fortawesome/free-solid-svg-icons/faEdit";
+    import { faArchive } from "@fortawesome/free-solid-svg-icons/faArchive";
     //font awesome icons
     let items = [];
 
@@ -23,6 +24,7 @@
     export let index;
     export let clickDeleteCollection;
     export let clickShareCollection;
+    export let clickArchiveCollection;
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
@@ -286,8 +288,16 @@
             class="pointer"
             on:click={openEditCollectionNameModal}
             style= "font-size: 0.8em; opacity:var(--icon-opacity);"
-            alt= "✎ Edit Name">
+            alt= "Edit Name">
             <Fa icon={faEdit} size="sm" color="var(--icon-color)" />
+        </div>
+        &nbsp
+        <div
+            class="pointer"
+            on:click={() => clickArchiveCollection(index)}
+            style= "font-size: 0.8em; opacity:var(--icon-opacity);"
+            alt= "Archive">
+            <Fa icon={faArchive} size="sm" color="var(--icon-color)" />
         </div>
         <!-- <div style="font-size: 0.8em;">⋮</div> -->
     </div>

@@ -1,9 +1,8 @@
 import { writable } from 'svelte/store';
 
-export const deo = writable({
-    source: "null",
-    target: "null"
-});
+export const searchText = writable("");
+export const archiveOnly = writable(false)
+
 // schema of this object
 /*
 {
@@ -13,3 +12,7 @@ export const deo = writable({
     targetObj: json of target
 }
 */
+export const deo = writable({
+    source: "null",
+    target: "null"
+});
