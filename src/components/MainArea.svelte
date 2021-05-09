@@ -9,6 +9,9 @@
     import { deo, archiveOnly } from "./../stores/stores.js";
     import EmptyCollectionTile from "./tiles/EmptyCollectionTile.svelte";
 
+    import Fa from "sveltejs-fontawesome";
+    import { faArchive } from "@fortawesome/free-solid-svg-icons/faArchive";
+
     // Gets ID of folder inside Other Bookmarks and creates one if it doesn't
     // exist.
     function getIDforFolder(folderName, callback) {
@@ -191,17 +194,30 @@
 <main style="position: relative;">
     {#if allCollections.length == 0}
         <div class="no-collections-indicator">
-            <h3 style="color: var(--txt);">No Collections, Click '</h3>
-            <button class="plus-icon-dummy" />
-            <h3 style="color: var(--txt);">' To create one</h3>
+            {#if !$archiveOnly}
+                <h3 style="color: var(--txt);">No Collections, Click '</h3>
+                <button class="plus-icon-dummy" />
+                <h3 style="color: var(--txt);">' To create one</h3>
+            {:else}
+                <h3 style="color: var(--txt);">No Archives, Click '</h3>
+                <div
+                    class="pointer"
+                    style="font-size: 2em; opacity:var(--icon-opacity);"
+                    alt="Archive"
+                >
+                    <Fa icon={faArchive} size="sm" color="var(--icon-color)" />
+                </div>
+                <h3 style="color: var(--txt);">' To archive a collections.</h3>
+            {/if}
         </div>
     {/if}
 
-    <button
-        class="plus-icon pointer"
-        on:click|preventDefault|stopPropagation={clickAddCollection}
-    />
-
+    {#if !$archiveOnly}
+        <button
+            class="plus-icon pointer"
+            on:click|preventDefault|stopPropagation={clickAddCollection}
+        />
+    {/if}
     <div class="scroll">
         {#each allCollections as collection, i (collection.id)}
             <CollectionTile
