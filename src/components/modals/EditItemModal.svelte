@@ -83,13 +83,13 @@
 <main style="background-color: {itemColor}">
     <h1>Edit Item -</h1>
 
-    <label><strong>Name</strong></label>
+    <strong>Name</strong>
     <input
         bind:value={itemName}
         type="text"
         onchange={inputFormatter(itemName)} />
     <br><br>
-    <label><strong>Icon Url</strong></label>
+    <strong>Icon Url</strong>
     <input
         bind:value={itemFavIconLink}
         type="text"/>
@@ -98,7 +98,7 @@
         <div style="padding: 10px; color: red;">{errorString}</div>
         <button class="pointer" on:click={onClickCreate}>Update</button>
     </div>
-    <label><strong>Color</strong></label>
+    <strong>Color</strong>
     &nbsp
     <select bind:value={itemColor} name="colors">
         <option value="">None</option>

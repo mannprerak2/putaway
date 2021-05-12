@@ -1,6 +1,7 @@
 <script>
     import { searchText, archiveOnly } from "../stores/stores.js";
     import { onDestroy } from "svelte";
+    import Quicklinks from "./QuickLinks.svelte";
     export let darkTheme;
     export let toggleTheme;
 
@@ -52,7 +53,7 @@
 <main>
     <div class="flex-row-container">
         <div class="search-div flex-row-container">
-            <input type="text" placeholder="Search" bind:value={$searchText} />
+            <input type="text" placeholder="Search" bind:value={$searchText} style="width: 150px"/>
             <div class="search-logo">
                 <Fa icon={faSearch} size="2x" color="var(--icon-color)" />
             </div>
@@ -66,6 +67,7 @@
             </div>
             {/if}
         </div>
+        <Quicklinks/>
         <div style="flex-grow:1;" />
         {#if archive}
         <div
