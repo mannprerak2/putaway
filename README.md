@@ -13,6 +13,7 @@ Save Tabs and Sessions as Chrome bookmarks.
 - Efforlesly move and search items across collections.
 - Share collection links as text.
 - Color coding of items with light and dark themes.
+- Archive collections, Add Quicklinks.
 
 All the tabs and collections are stored in a Seperate folder - `Other Bookmarks/ Put Away`
 So, all of your data is accessible from anywhere,

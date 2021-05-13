@@ -1,5 +1,6 @@
 <script>
     import { onMount, getContext } from "svelte";
+    import { fade } from "svelte/transition";
     const { open } = getContext("simple-modal");
     import EditQuickLinksModal from "./modals/EditQuickLinksModal.svelte";
 
@@ -29,15 +30,18 @@
     }
 </script>
 
-<div class="dashbox-div flex-row-container">
+<div class="dashbox-div flex-row-container" in:fade>
     {#if quickLinks.length > 0}
         {#each quickLinks as ql}
             <img
                 alt=" "
+                title={ql.url}
                 class="pointer"
                 src={ql.icon}
                 height="26px"
+                width="26px"
                 style="padding: 5px"
+                in:fade
                 on:click={() => onClickLink(ql)}
             />
         {/each}
