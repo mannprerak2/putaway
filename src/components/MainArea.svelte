@@ -79,7 +79,6 @@
         });
     }
     const unsubsribeArc = archiveOnly.subscribe((value) => {
-        console.log("archiveOnly");
         console.log(value);
         if (value) {
             chrome.storage.local.get("paid", function (res) {

@@ -6,6 +6,7 @@
   import Fa from "sveltejs-fontawesome";
   //import { faSave } from '@fortawesome/free-solid-svg-icons/faSave'
   import { faSave } from "@fortawesome/free-regular-svg-icons/faSave";
+  import { faImage } from "@fortawesome/free-regular-svg-icons/faImage";
   import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
   //font awesome icons
 
@@ -18,6 +19,7 @@
   let savedId;
   let isNewTab = false;
   let sessionSaved = false;
+  let quickLinkSaved = false;
 
   onMount(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -56,12 +58,10 @@
         .toLocaleString("en-US", {
           minimumIntegerDigits: 2,
           useGrouping: false,
-        })}:${dt
-        .getSeconds()
-        .toLocaleString("en-US", {
-          minimumIntegerDigits: 2,
-          useGrouping: false,
-        })}`;
+        })}:${dt.getSeconds().toLocaleString("en-US", {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      })}`;
 
       chrome.storage.local.get("pid", function (map) {
         chrome.bookmarks.create(
@@ -105,10 +105,113 @@
     }
   };
 
+  var saveQuickLink = () => {
+    chrome.storage.sync.get("quickLinks", async (v) => {
+      let quickLinks = [];
+      if (v.quickLinks) {
+        quickLinks = v.quickLinks;
+      }
+
+      if (quickLinkSaved) {
+        quickLinks.pop();
+      } else {
+        quickLinks.push({
+          icon: tab.favIconUrl,
+          url: tab.url,
+        });
+      }
+
+      chrome.storage.sync.set({ quickLinks: quickLinks });
+      quickLinkSaved = !quickLinkSaved;
+    });
+  };
+
   var openPutAway = () => {
     chrome.tabs.create({ url: chrome.extension.getURL("newtab.html") });
   };
 </script>
+
+<div id="popup">
+  {#if !isNewTab}
+    <div id="main">
+      <div id="top">
+        <!-- svelte-ignore a11y-autofocus -->
+        <input
+          autofocus
+          type="text"
+          placeholder="Search"
+          bind:value={searchText}
+        />
+        <div id="search-logo">
+          <Fa icon={faSearch} size="2x" />
+        </div>
+        <div id="open-putaway" class="pointer" on:click={openPutAway}>
+          Open
+          <br />
+          PutAway
+        </div>
+      </div>
+      <div id="list">
+        {#each allCollections as collection, i (collection.id)}
+          {#if collection.title
+            .toLowerCase()
+            .includes(searchText.toLowerCase())}
+            <CollectionTilePopup
+              {collection}
+              {tab}
+              alreadySaved={map[collection.id]}
+            />
+          {/if}
+        {/each}
+        <div style="height: 60px;" />
+      </div>
+    </div>
+    <div
+      id="save-session"
+      class="pointer big-popup-button"
+      on:click={saveSession}
+    >
+      {#if sessionSaved}
+        ✓Saved (click to undo)
+      {:else}
+        <Fa
+          icon={faSave}
+          size="sm"
+          style="position:relative; top:3px; opacity: 0.7;"
+        />
+        Save Session
+      {/if}
+    </div>
+    <div
+      id="save-quicklink"
+      class="pointer big-popup-button"
+      on:click={saveQuickLink}
+    >
+      {#if quickLinkSaved}
+        ✓Saved (click to undo)
+      {:else}
+        <Fa
+          icon={faImage}
+          size="sm"
+          style="position:relative; top:3px; opacity: 0.7;"
+        />
+        Save Quick Link
+      {/if}
+    </div>
+  {:else}
+    <div id="newtab-popup">
+      <img alt="logo" src="images/logo128.png" />
+      <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
+        Open PutAway
+      </div>
+      <div>
+        This is an Empty Tab.
+        <br />
+        You cannot add this to a collection.
+      </div>
+    </div>
+  {/if}
+</div>
 
 <style>
   #popup {
@@ -130,7 +233,7 @@
     height: 50px;
   }
 
-  #save-session {
+  .big-popup-button {
     width: 100%;
     height: 50px;
     border-top: 1px solid rgb(201, 201, 201);
@@ -140,7 +243,7 @@
     line-height: 50px;
   }
 
-  #save-session:hover {
+  .big-popup-button:hover {
     background-color: #e6e6e6;
   }
 
@@ -211,58 +314,3 @@
     opacity: 0.5;
   }
 </style>
-
-<div id="popup">
-  {#if !isNewTab}
-    <div id="main">
-      <div id="top">
-        <!-- svelte-ignore a11y-autofocus -->
-        <input autofocus type="text" placeholder="Search" bind:value={searchText} />
-        <div id="search-logo">
-          <Fa icon={faSearch} size="2x" />
-        </div>
-        <div id="open-putaway" class="pointer" on:click={openPutAway}>
-          Open
-          <br />
-          PutAway
-        </div>
-      </div>
-      <div id="list">
-        {#each allCollections as collection, i (collection.id)}
-          {#if collection.title
-            .toLowerCase()
-            .includes(searchText.toLowerCase())}
-            <CollectionTilePopup
-              {collection}
-              {tab}
-              alreadySaved={map[collection.id]} />
-          {/if}
-        {/each}
-        <div style="height: 60px;" />
-      </div>
-    </div>
-    <div id="save-session" class="pointer" on:click={saveSession}>
-      {#if sessionSaved}
-        ✓Saved (click to undo)
-      {:else}
-        <Fa
-          icon={faSave}
-          size="sm"
-          style="position:relative; top:3px; opacity: 0.7;" />
-        Save Session
-      {/if}
-    </div>
-  {:else}
-    <div id="newtab-popup">
-      <img alt="logo" src="images/logo128.png" />
-      <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
-        Open PutAway
-      </div>
-      <div>
-        This is an Empty Tab.
-        <br />
-        You cannot add this to a collection.
-      </div>
-    </div>
-  {/if}
-</div>
