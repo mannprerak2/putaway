@@ -1,4 +1,5 @@
 <script>
+    import { saveTabHook } from "../../services/hooks.js";
     export let collection;
     export let tab;
     export let alreadySaved;
@@ -30,6 +31,7 @@
     };
 
     function saveTabToBookmark(tab) {
+        saveTabHook(tab)
         chrome.bookmarks.create(
             {
                 parentId: collection.id,

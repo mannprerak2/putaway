@@ -144,6 +144,7 @@
     };
 
     function saveTabToBookmark(tab, dropIndex) {
+        saveTabHook(tab)
         chrome.bookmarks.create(
             {
                 parentId: collection.id,

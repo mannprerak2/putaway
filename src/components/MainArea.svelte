@@ -63,7 +63,8 @@
     ) {
         chrome.bookmarks.getChildren(pid, function (children) {
             try {
-                if (console.log(chrome.runtime.lastError)) {
+                if (chrome.runtime.lastError) {
+                    console.log('Putaway folder pid invalidated, refreshing.')
                     throw "Putaway folder pid invalidated, refreshing.";
                 }
                 // only folders
@@ -79,7 +80,6 @@
         });
     }
     const unsubsribeArc = archiveOnly.subscribe((value) => {
-        console.log(value);
         if (value) {
             chrome.storage.local.get("paid", function (res) {
                 if (res.paid) {
