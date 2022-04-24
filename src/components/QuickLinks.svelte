@@ -1,4 +1,5 @@
 <script>
+    import Tooltip from './common/tooltip/Tooltip.svelte'
     import { onMount, getContext } from "svelte";
     import { fade } from "svelte/transition";
     const { open } = getContext("simple-modal");
@@ -33,17 +34,17 @@
 <div class="dashbox-div flex-row-container" in:fade>
     {#if quickLinks.length > 0}
         {#each quickLinks as ql}
-            <img
-                alt=" "
-                title={ql.url}
-                class="pointer"
-                src={ql.icon}
-                height="26px"
-                width="26px"
-                style="padding: 5px"
-                in:fade
-                on:click={() => onClickLink(ql)}
-            />
+            <Tooltip title={ql.url}>
+                <img
+                    alt=" "
+                    class="pointer"
+                    src={ql.icon}
+                    height="26px"
+                    width="26px"
+                    style="padding: 5px"
+                    in:fade
+                    on:click={() => onClickLink(ql)}/>
+            </Tooltip>
         {/each}
     {:else}
         <div style="font-size: 2.5em; color: gray">Quick Links</div>

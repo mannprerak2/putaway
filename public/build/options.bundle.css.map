@@ -2,7 +2,7 @@
   "version": 3,
   "file": "options.bundle.css",
   "sources": [
-    "Options.svelte"
+    "../../Options.svelte"
   ],
   "sourcesContent": [
     "<script>\n  export let name;\n</script>\n\n<style>\n  main {\n    text-align: center;\n    padding: 1em;\n    max-width: 240px;\n    margin: 0 auto;\n  }\n\n  h1 {\n    color: #ff3e00;\n    text-transform: uppercase;\n    font-size: 4em;\n    font-weight: 100;\n  }\n\n  @media (min-width: 640px) {\n    main {\n      max-width: none;\n    }\n  }\n</style>\n\n<main>\n  <h1>Options {name}!</h1>\n</main>\n"

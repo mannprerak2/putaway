@@ -2,7 +2,7 @@
     "name": "PutAway Tab Management",
     "version": "0.4.0",
     "description": "Manage your tabs easily",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "permissions": [
         "bookmarks",
         "tabs",
@@ -12,7 +12,7 @@
         "newtab": "newtab.html"
     },
     "options_page": "options.html",
-    "browser_action": {
+    "action": {
         "default_popup": "popup.html",
         "default_icon": {
             "16": "images/logo16.png",
