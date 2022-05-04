@@ -1,6 +1,6 @@
 {
     "name": "PutAway Tab Management",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "Manage your tabs easily",
     "manifest_version": 3,
     "permissions": [

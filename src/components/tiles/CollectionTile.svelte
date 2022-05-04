@@ -4,6 +4,7 @@
     import ItemTile from "./ItemTile.svelte";
     import EmptyItemTile from "./EmptyItemTile.svelte";
     import NoItemTileIndicator from "./NoItemIndicatorTile.svelte";
+    import { saveTabHook } from "../../services/hooks.js"
     import { deo } from "./../../stores/stores.js";
     import { searchText } from "../../stores/stores.js";
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
