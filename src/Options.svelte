@@ -1,5 +1,4 @@
 <script>
-  export let name;
 </script>
 
 <style>
@@ -25,5 +24,5 @@
 </style>
 
 <main>
-  <h1>Options {name}!</h1>
+  <h1>Options World!</h1>
 </main>

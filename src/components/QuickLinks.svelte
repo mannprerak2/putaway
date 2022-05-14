@@ -49,14 +49,16 @@
     {:else}
         <div style="font-size: 2.5em; color: gray">Quick Links</div>
     {/if}
-    <div class="pointer" on:click={onClickEditQuickLink}>
-        <Fa
-            icon={faPenAlt}
-            size=1.5em
-            color="var(--icon-color)"
-            style="margin-left: 5px"
-        />
-    </div>
+    <Tooltip title="Edit">
+        <div class="pointer" on:click={onClickEditQuickLink}>
+            <Fa
+                icon={faPenAlt}
+                size=1.5em
+                color="var(--icon-color)"
+                style="margin-left: 5px"
+            />
+        </div>
+    </Tooltip>
 </div>
 
 <style>

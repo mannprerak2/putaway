@@ -9,6 +9,7 @@
     import { searchText } from "../../stores/stores.js";
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
     import EditItemModal from "../modals/EditItemModal.svelte";
+    import Tooltip from '../common/tooltip/Tooltip.svelte'
     const { open } = getContext("simple-modal");
 
     //font awseome icons
@@ -272,35 +273,43 @@
             </div>
             &nbsp
         {/if}
-        <div
-            class="pointer"
-            on:click={() => clickShareCollection(index, items)}
-            style="font-size: 0.8em; opacity:var(--icon-opacity);">
-            <Fa icon={faShareAlt} size="sm" color="var(--icon-color)" />
-        </div>
+        <Tooltip title="Share" ypos="-50" fontsize="0.5em">
+            <div
+                class="pointer"
+                on:click={() => clickShareCollection(index, items)}
+                style="font-size: 0.8em; opacity:var(--icon-opacity);">
+                <Fa icon={faShareAlt} size="sm" color="var(--icon-color)" />
+            </div>
+        </Tooltip>
         &nbsp
-        <div
-            class="pointer"
-            on:click={() => clickDeleteCollection(index)}
-            style="font-size: 0.8em; opacity:var(--icon-opacity);">
-            <Fa icon={faTrashAlt} size="sm" color="var(--icon-color)" />
-        </div>
+        <Tooltip title="Delete" ypos="-50" fontsize="0.5em">
+            <div
+                class="pointer"
+                on:click={() => clickDeleteCollection(index)}
+                style="font-size: 0.8em; opacity:var(--icon-opacity);">
+                <Fa icon={faTrashAlt} size="sm" color="var(--icon-color)" />
+            </div>
+        </Tooltip>
         &nbsp
-        <div
-            class="pointer"
-            on:click={openEditCollectionNameModal}
-            style= "font-size: 0.8em; opacity:var(--icon-opacity);"
-            alt= "Edit Name">
-            <Fa icon={faEdit} size="sm" color="var(--icon-color)" />
-        </div>
+        <Tooltip title="Edit" ypos="-50" fontsize="0.5em">
+            <div
+                class="pointer"
+                on:click={openEditCollectionNameModal}
+                style= "font-size: 0.8em; opacity:var(--icon-opacity);"
+                alt= "Edit Name">
+                <Fa icon={faEdit} size="sm" color="var(--icon-color)" />
+            </div>
+        </Tooltip>
         &nbsp
-        <div
-            class="pointer"
-            on:click={() => clickArchiveCollection(index)}
-            style= "font-size: 0.8em; opacity:var(--icon-opacity);"
-            alt= "Archive">
-            <Fa icon={faArchive} size="sm" color="var(--icon-color)" />
-        </div>
+        <Tooltip title="Archive" ypos="-50" fontsize="0.5em">
+            <div
+                class="pointer"
+                on:click={() => clickArchiveCollection(index)}
+                style= "font-size: 0.8em; opacity:var(--icon-opacity);"
+                alt= "Archive">
+                <Fa icon={faArchive} size="sm" color="var(--icon-color)" />
+            </div>
+        </Tooltip>
         <!-- <div style="font-size: 0.8em;">⋮</div> -->
     </div>
     <div class="item-area">

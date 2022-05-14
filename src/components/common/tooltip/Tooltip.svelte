@@ -1,6 +1,9 @@
 <script>
     import { fade } from "svelte/transition";
 	export let title = '';
+	export let xpos = "0";
+	export let ypos = "25";
+	export let fontsize = "1em";
 	let truncatedTitle = ''
 	let isHovered = false;
 	let x;
@@ -13,12 +16,12 @@
 			truncatedTitle = title
 		}
 		isHovered = true;
-		x = event.pageX;
-		y = event.pageY + 25;
+		x = event.pageX + parseInt(xpos);
+		y = event.pageY + parseInt(ypos);
 	}
 	function mouseMove(event) {
-		x = event.pageX;
-		y = event.pageY + 25;
+		x = event.pageX + parseInt(xpos);
+		y = event.pageY + parseInt(ypos);
 	}
 	function mouseLeave() {
 		isHovered = false;
@@ -44,5 +47,5 @@
 </div>
 
 {#if isHovered}
-	<div in:fade style="top: {y}px; left: {x}px;" class="tooltip">{truncatedTitle}</div>
+	<div in:fade style="top: {y}px; left: {x}px; font-size: {fontsize};" class="tooltip">{truncatedTitle}</div>
 {/if}

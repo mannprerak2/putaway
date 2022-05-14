@@ -1,5 +1,6 @@
 <script>
     import { fade } from "svelte/transition";
+    import Tooltip from '../common/tooltip/Tooltip.svelte'
 
     // FontAwesome icons.
     import Fa from "sveltejs-fontawesome";
@@ -126,13 +127,13 @@
                 <Fa icon={faTimes} size="sm" color="white" />
             </div>
         </button>
-        <button
-            class="edit-icon pointer"
-            on:click|preventDefault|stopPropagation={() => onClickItemEdit(item, index)}>
-            <div style="color:white; margin-left: -5px; margin-top: -3px; transform: scale(0.8);">
-                <Fa icon={faPenAlt} size="sm" color="white" />
-            </div>
-        </button>
+            <button
+                class="edit-icon pointer"
+                on:click|preventDefault|stopPropagation={() => onClickItemEdit(item, index)}>
+                <div style="color:white; margin-left: -5px; margin-top: -3px; transform: scale(0.8);">
+                    <Fa icon={faPenAlt} size="sm" color="white" />
+                </div>
+            </button>
 
         <div class="flex-row-container">
             <img
