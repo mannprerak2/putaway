@@ -1,28 +1,122 @@
 <script>
+  import Modal from "./components/Modal.svelte";
+  import { setDarkTheme, getDarkTheme } from "./services/storage.js";
+  import GeneralOptions from "./option_pages/GeneralOptions.svelte";
+  import { onMount } from "svelte";
+  let pageReady = false;
+  let settingPages = [
+    {
+      name: 'General',
+      fullName: 'General Settings'
+    },
+    {
+      name: 'Misc',
+      fullName: 'Miscellaneous Settings'
+    }
+  ]
+  let currentSettingPage = 0;
+  var changePage = (idx) => {
+    currentSettingPage = idx;
+  }
+
+  // Theme settings.
+  let darkTheme = false;
+  var changeTheme = (v) => {
+    darkTheme = v;
+    setDarkTheme(darkTheme);
+  };
+
+  // Global settings.
+  let globalSettings = {};
+  onMount(async () => {
+    getDarkTheme(function (v) {
+      darkTheme = v;
+      chrome.storage.sync.get("globalSettings", function (v) {
+          globalSettings = v.globalSettings
+          pageReady = true;
+      });
+    });
+  });
+  var setGlobalSettings = (globalSettings) => {
+    chrome.storage.sync.set({globalSettings: globalSettings});
+  }
 </script>
 
 <style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
+  .container-table {
+    display: table;
+    width: 100vw;
+    height: 100vh;
   }
 
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
+  #left-side-bar {
+    width: 20vw;
+    display: table-cell;
+    overflow: hidden;
+    height: 100%;
+    border-right: 1px solid gray;
+    padding: 10px;
   }
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
+  .left-side-tile{
+    font-size: 2em;
+    width: 100%;
+    word-wrap: break-word;
+    padding: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+
+  #right-panel {
+    display: table-cell;
+    width: auto;
+    height: 100%;
+    padding: 10px;
   }
 </style>
 
-<main>
-  <h1>Options World!</h1>
-</main>
+<svelte:head>
+  {#if darkTheme}
+    <link rel="stylesheet" href="global-dark.css" />
+  {:else}
+    <link rel="stylesheet" href="global-light.css" />
+  {/if}
+</svelte:head>
+{#if pageReady}
+  <Modal closeButton={false}>
+    <div class="container-table">
+      <div id="left-side-bar">
+        <div class="flex-collumn-container">
+          <!-- Header -->
+          <div class="flex-row-container" style="margin-bottom: 20px;">
+            <img alt="logo" src="images/logo32.png" />
+            &nbsp &nbsp
+            <h1>PutAway</h1>
+          </div>
+          <!-- Setting options -->
+          {#each settingPages as page,index (page.name)}
+          {#if index==currentSettingPage}
+            <div class="left-side-tile" style="background-color: #00ff0022">
+              {page.name}
+            </div>
+            {:else}
+            <div class="left-side-tile" on:click={()=>changePage(index)}>
+              {page.name}
+            </div>
+            {/if}
+          {/each}
+        </div>
+      </div>
+      <div id="right-panel">
+        <h1 style="font-size: 3em;"><u>{settingPages[currentSettingPage].fullName}</u></h1>
+        <div style="overflow-x: hidden; overflow-y: auto; scrollbar-width: 0; height: 95vh;">
+        {#if settingPages[currentSettingPage].name == "General"}
+          <GeneralOptions {darkTheme} {changeTheme} {globalSettings} {setGlobalSettings}/>
+        {/if}
+      </div>
+      </div>
+    </div>
+  </Modal>
+{:else}
+<div></div>
+{/if}

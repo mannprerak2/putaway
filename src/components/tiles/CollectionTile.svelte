@@ -4,7 +4,7 @@
     import ItemTile from "./ItemTile.svelte";
     import EmptyItemTile from "./EmptyItemTile.svelte";
     import NoItemTileIndicator from "./NoItemIndicatorTile.svelte";
-    import { saveTabHook } from "../../services/hooks.js"
+    import { saveTabHook, useTabGroupInOpenAllTabs } from "../../services/hooks.js"
     import { deo } from "./../../stores/stores.js";
     import { searchText } from "../../stores/stores.js";
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
@@ -139,10 +139,46 @@
         }
     };
 
-    var openAllOfCollection = () => {
-        items.forEach((i) => {
-            chrome.tabs.create({ url: i.url });
-        });
+    var openAllOfCollection = (collectionName) => {
+        let tabOpenType = useTabGroupInOpenAllTabs()
+        if (tabOpenType == 'openTabGroup') {
+            if (items.length < 1) return
+            chrome.tabs.create(
+                {url: items[0].url},
+                (tab) => {
+                    chrome.tabs.group(
+                        {tabIds: [tab.id]},
+                        (groupId) => {
+                            for (var i=1;i<items.length;i++){
+                                chrome.tabs.create(
+                                    {url: items[i].url},
+                                    (tab)=>{
+                                        chrome.tabs.group(
+                                            {tabIds: [tab.id], groupId: groupId}
+                                        )
+                                    }
+                                )
+                            }
+                            chrome.tabGroups.update(
+                                groupId,
+                                {title: collectionName}
+                            )
+                        }
+                    )
+                }
+            )
+        } else if (tabOpenType == 'openTabWindow'){
+            chrome.windows.create({}, (window) => {
+                items.forEach((i) => {
+                    chrome.tabs.create({ url: i.url, windowId: window.id });
+                });
+            })
+        }
+        else {
+            items.forEach((i) => {
+                chrome.tabs.create({ url: i.url });
+            });
+        }
     };
 
     function saveTabToBookmark(tab, dropIndex) {
@@ -266,7 +302,7 @@
             <div
                 id="open-all-tabs"
                 class="rounded-button pointer"
-                on:click={openAllOfCollection}>
+                on:click={()=>openAllOfCollection(collection.title)}>
                 Open
                 {items.length}
                 Tabs

@@ -22,3 +22,8 @@ export function saveTabHook(tab){
         }catch(e){}
     }
 }
+
+export function useTabGroupInOpenAllTabs() {
+    if (!globalSettings || !globalSettings.useTabGroupInOpenAllTabs) return 'open'
+    return globalSettings.useTabGroupInOpenAllTabs
+}
