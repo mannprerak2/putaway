@@ -2,6 +2,7 @@
   import Modal from "./components/Modal.svelte";
   import { setDarkTheme, getDarkTheme } from "./services/storage.js";
   import GeneralOptions from "./option_pages/GeneralOptions.svelte";
+  import SaveHookOptions from "./option_pages/SaveHookOptions.svelte";
   import { onMount } from "svelte";
   let pageReady = false;
   let settingPages = [
@@ -10,8 +11,8 @@
       fullName: 'General Settings'
     },
     {
-      name: 'Misc',
-      fullName: 'Miscellaneous Settings'
+      name: 'Save Hooks',
+      fullName: 'Hooks Settings'
     }
   ]
   let currentSettingPage = 0;
@@ -112,6 +113,8 @@
         <div style="overflow-x: hidden; overflow-y: auto; scrollbar-width: 0; height: 95vh;">
         {#if settingPages[currentSettingPage].name == "General"}
           <GeneralOptions {darkTheme} {changeTheme} {globalSettings} {setGlobalSettings}/>
+        {:else if settingPages[currentSettingPage].name == "Save Hooks"}
+          <SaveHookOptions {globalSettings} {setGlobalSettings}/>
         {/if}
       </div>
       </div>
