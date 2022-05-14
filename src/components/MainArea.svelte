@@ -122,8 +122,8 @@
 
     const unsubsribe = deo.subscribe((obj) => {
         if (obj.source[0] == "c" && obj.target[0] == "c") {
-            var dragIndex = parseInt(obj.source.substr(1));
-            var dropIndex = parseInt(obj.target.substr(1));
+            var dragIndex = parseInt(obj.source.substring(1));
+            var dropIndex = parseInt(obj.target.substring(1));
             // move allCollections from dragIndex to dropIndex
             if (dragIndex >= dropIndex) {
                 chrome.bookmarks.move(allCollections[dragIndex].id, {

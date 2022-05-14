@@ -61,8 +61,8 @@
             // target is collection (not item)
             // source is item (not collection)
 
-            var dragIndex = parseInt(obj.source.substr(1));
-            var dropIndex = parseInt(obj.target.substr(1));
+            var dragIndex = parseInt(obj.source.substring(1));
+            var dropIndex = parseInt(obj.target.substring(1));
 
             // when moving item within the same collection
             if (
@@ -108,7 +108,7 @@
         ) {
             saveTabToBookmark(
                 obj.sourceObj,
-                parseInt(obj.target.substr(1)),
+                parseInt(obj.target.substring(1)),
                 !obj.ctrl
             );
         }

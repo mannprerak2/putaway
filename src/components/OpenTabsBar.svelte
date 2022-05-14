@@ -27,12 +27,12 @@
                 if (obj.ctrl != null && !obj.ctrl) {
                     //  only delete tab if ctrl wasn't held by user
                     chrome.tabs.remove(obj.sourceObj.id);
-                    allTabs.splice(parseInt(obj.source.substr(1)), 1);
+                    allTabs.splice(parseInt(obj.source.substring(1)), 1);
                     allTabs = allTabs;
                 }
             } else if (obj.target[0] == "t") {
-                var dragIndex = parseInt(obj.source.substr(1));
-                var dropIndex = parseInt(obj.target.substr(1));
+                var dragIndex = parseInt(obj.source.substring(1));
+                var dropIndex = parseInt(obj.target.substring(1));
                 // move tabs from dragIndex to dropIndex
                 if (dragIndex >= dropIndex) {
                     chrome.tabs.move(obj.sourceObj.id, { index: dropIndex });

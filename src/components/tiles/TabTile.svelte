@@ -78,7 +78,7 @@
     .text-concat {
         position: relative;
         display: inline-block;
-        word-wrap: break-word;
+        word-break: break-all;
         overflow: hidden;
         max-height: 2em;
         line-height: 1em;
