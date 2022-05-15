@@ -63,3 +63,19 @@ button {
 .pointer{
 	cursor: pointer;
 }
+
+.save-button {
+	background-color: gray;
+    border-radius: 10px;
+    color: white;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+}
+
+.settings-section-padding{
+	padding-top: 20px;
+}

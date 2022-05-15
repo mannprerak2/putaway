@@ -1,6 +1,6 @@
 <script>
     import { fade } from "svelte/transition";
-    import Tooltip from '../common/tooltip/Tooltip.svelte'
+    import { getItemTileWidth } from '../../services/hooks.js'
 
     // FontAwesome icons.
     import Fa from "sveltejs-fontawesome";
@@ -14,6 +14,7 @@
     export let onClickItem;
     export let onClickItemEdit;
     export let onDrop;
+    let tileWidth = getItemTileWidth();
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
@@ -111,7 +112,7 @@
     {/if}
     <div
         class="item"
-        style="background-color: {item.title.split(":::::")[2]};"
+        style="background-color: {item.title.split(":::::")[2]}; width: {tileWidth}em"
         draggable="true"
         out:fade
         on:dragover|preventDefault={onDragEnter}

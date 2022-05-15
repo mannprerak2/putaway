@@ -1,6 +1,7 @@
 <script>
   import Modal from "./components/Modal.svelte";
   import { setDarkTheme, getDarkTheme } from "./services/storage.js";
+  import { loadGlobalSettings } from "./services/hooks.js"
   import GeneralOptions from "./option_pages/GeneralOptions.svelte";
   import SaveHookOptions from "./option_pages/SaveHookOptions.svelte";
   import { onMount } from "svelte";
@@ -32,11 +33,9 @@
   onMount(async () => {
     getDarkTheme(function (v) {
       darkTheme = v;
-      chrome.storage.sync.get("globalSettings", function (v) {
-          globalSettings = v.globalSettings
-          pageReady = true;
-      });
     });
+    globalSettings = await loadGlobalSettings()
+    pageReady = true
   });
   var setGlobalSettings = (globalSettings) => {
     chrome.storage.sync.set({globalSettings: globalSettings});

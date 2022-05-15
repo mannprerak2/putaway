@@ -1,8 +1,9 @@
 let globalSettings;
 
-chrome.storage.sync.get("globalSettings", function (v) {
-    globalSettings = v.globalSettings
-});
+export async function loadGlobalSettings() {
+    globalSettings = (await chrome.storage.sync.get("globalSettings")).globalSettings
+    return globalSettings
+}
 
 export function saveTabHook(tab){
     if (!globalSettings) return
@@ -12,6 +13,7 @@ export function saveTabHook(tab){
         try{
             let matcher = globalSettings.saveTabHookTitleMatcher
             let groups = tab.title.match(matcher)
+            console.log(groups)
             if (groups.length < 2) return
             let renamer = globalSettings.saveTabHookTitleRenamer
             // Replace groups if in renamer.
@@ -26,4 +28,14 @@ export function saveTabHook(tab){
 export function useTabGroupInOpenAllTabs() {
     if (!globalSettings || !globalSettings.useTabGroupInOpenAllTabs) return 'open'
     return globalSettings.useTabGroupInOpenAllTabs
+}
+
+export function getItemTileWidth() {
+    if (!globalSettings || !globalSettings.itemTileWidth) return 15;
+    return globalSettings.itemTileWidth
+}
+
+export function getOpenTabsBarWidth() {
+    if (!globalSettings || !globalSettings.openTabsBarWidth) return 20;
+    return globalSettings.openTabsBarWidth
 }
