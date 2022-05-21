@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import CollectionTilePopup from "./components/tiles/CollectionTilePopup.svelte";
+  import { loadGlobalSettings } from "./services/hooks.js"
 
   //font awesome icons
   import Fa from "sveltejs-fontawesome";
@@ -40,6 +41,7 @@
         isNewTab = true;
       }
     });
+    loadGlobalSettings()
   });
 
   var saveSession = () => {
