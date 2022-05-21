@@ -1,7 +1,7 @@
 let globalSettings;
 
 export async function loadGlobalSettings() {
-    globalSettings = (await chrome.storage.sync.get("globalSettings")).globalSettings
+    globalSettings = (await chrome.storage.sync.get("globalSettings")).globalSettings || {}
     return globalSettings
 }
 

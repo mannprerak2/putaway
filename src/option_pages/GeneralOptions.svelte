@@ -1,4 +1,7 @@
 <script>
+    import { getItemTileWidth, getOpenTabsBarWidth } from "../services/hooks";
+
+
     export let darkTheme;
     export let changeTheme;
 
@@ -9,14 +12,13 @@
         globalSettings.useTabGroupInOpenAllTabs = val;
         setGlobalSettings(globalSettings);
     }
-
-    let temporaryItemTileWidth = globalSettings.itemTileWidth || 15;
+    let temporaryItemTileWidth = getItemTileWidth()
     var setItemTileWidth = () => {
         globalSettings.itemTileWidth = temporaryItemTileWidth;
         setGlobalSettings(globalSettings);
     }
 
-    let temporaryOpenTabsBarWidth = globalSettings.openTabsBarWidth || 20;
+    let temporaryOpenTabsBarWidth = getOpenTabsBarWidth()
     var setOpenTabsBarWidth = () => {
         globalSettings.openTabsBarWidth = temporaryOpenTabsBarWidth;
         setGlobalSettings(globalSettings);
