@@ -139,6 +139,7 @@
         <div class="flex-row-container">
             <img
                 alt=" "
+                border="0"
                 src={item.title.split(':::::')[1]}
                 height="20px"
                 style="margin-right: 10px;" />

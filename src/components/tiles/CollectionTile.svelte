@@ -4,7 +4,7 @@
     import ItemTile from "./ItemTile.svelte";
     import EmptyItemTile from "./EmptyItemTile.svelte";
     import NoItemTileIndicator from "./NoItemIndicatorTile.svelte";
-    import { saveTabHook, useTabGroupInOpenAllTabs } from "../../services/hooks.js"
+    import { saveTabHook, useTabGroupInOpenAllTabs, getOpenTabsBarWidth } from "../../services/hooks.js"
     import { deo } from "./../../stores/stores.js";
     import { searchText } from "../../stores/stores.js";
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
@@ -27,6 +27,8 @@
     export let clickDeleteCollection;
     export let clickShareCollection;
     export let clickArchiveCollection;
+
+    let itemAreaWidth = 97 - getOpenTabsBarWidth();
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
@@ -260,8 +262,6 @@
     .item-area {
         /*Item Height Marker*/
         height: 5em;
-        /* needs to be 77vw as opentabsbar has 20vw */
-        width: 77vw;
         overflow-x: scroll;
         overflow-y: hidden;
         scrollbar-width: 0;
@@ -348,7 +348,7 @@
         </Tooltip>
         <!-- <div style="font-size: 0.8em;">⋮</div> -->
     </div>
-    <div class="item-area">
+    <div class="item-area" style="width: {itemAreaWidth}vw">
             {#if items.length==0}
                 <NoItemTileIndicator index={items.length} {onDrop}/>
             {:else}
