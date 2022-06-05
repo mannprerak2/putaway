@@ -129,7 +129,7 @@
   };
 
   var openPutAway = () => {
-    chrome.tabs.create({ url: chrome.extension.getURL("newtab.html") });
+    chrome.tabs.create({ url: chrome.runtime.getURL("newtab.html") });
   };
 </script>
 
