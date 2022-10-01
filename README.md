@@ -4,6 +4,8 @@
 
 Save Tabs and Sessions as Chrome bookmarks.
 
+<a href="https://chrome.google.com/webstore/detail/putaway-tab-management/fkfhaaminmefilpjiapgokmlbjfokafa/"><img src="./images/chrome-webstore.png"></a>
+
 [![Made with Svelte](https://img.shields.io/static/v1?label=Made%20with&message=SvelteJS&color=red&logo=svelte)](https://svelte.dev/)
 [![Stars](https://img.shields.io/github/stars/mannprerak2/putaway?logo=github&style=flat&color=green)](https://github.com/mannprerak2/nearby_connections)
 [![Forks](https://img.shields.io/github/forks/mannprerak2/putaway?logo=github&style=flat&color=purple)](https://github.com/mannprerak2/nearby_connections)
@@ -21,20 +23,20 @@ and is safely stored in your own chrome bookmarks.
 
 ## Screenshots
 ##### New Tab - Light
-<img src="./screenshots/new-tab.png" alt="Light Theme">
-
-##### New Tab - Settings
-<img src="./screenshots/settings.png" alt="Light Theme">
+<img src="./images/new-tab.png" alt="Light Theme">
 
 ##### Extension Popup
 <table>
-    <td><img src="./screenshots/popup-empty.png" width="200px"></td>
+    <td><img src="./images/popup-empty.png" width="200px"></td>
     <td>&nbsp</td>
-    <td><img src="./screenshots/popup.png" width="200px"></td>
+    <td><img src="./images/popup.png" width="200px"></td>
 </table>
 
+##### Settings
+<img src="./images/settings.png" alt="Settings Page">
+
 ##### New Tab - Dark
-<img src="./screenshots/new-tab-dark.png" alt="Dark Theme">
+<img src="./images/new-tab-dark.png" alt="Dark Theme">
 
 ## Installing
 You can add this [extension from the Chrome Web Store](https://chrome.google.com/webstore/detail/putaway-tab-management/fkfhaaminmefilpjiapgokmlbjfokafa/).
