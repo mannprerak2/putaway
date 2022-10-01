@@ -23,8 +23,8 @@ and is safely stored in your own chrome bookmarks.
 ##### New Tab - Light
 <img src="./screenshots/new-tab.png" alt="Light Theme">
 
-##### New Tab - Dark
-<img src="./screenshots/new-tab-dark.png" alt="Dark Theme">
+##### New Tab - Settings
+<img src="./screenshots/settings.png" alt="Light Theme">
 
 ##### Extension Popup
 <table>
@@ -32,6 +32,9 @@ and is safely stored in your own chrome bookmarks.
     <td>&nbsp</td>
     <td><img src="./screenshots/popup.png" width="200px"></td>
 </table>
+
+##### New Tab - Dark
+<img src="./screenshots/new-tab-dark.png" alt="Dark Theme">
 
 ## Installing
 You can add this [extension from the Chrome Web Store](https://chrome.google.com/webstore/detail/putaway-tab-management/fkfhaaminmefilpjiapgokmlbjfokafa/).
