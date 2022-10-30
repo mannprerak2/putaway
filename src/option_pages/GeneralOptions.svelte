@@ -31,34 +31,45 @@
     <h1>Theme</h1>
     <div class="flex-row-container">
         {#if darkTheme}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>changeTheme(false)}>Light</div>
             &nbsp &nbsp
             <div class="rounded-button pointer" style="font-size: 1.2em; background-color: #00ff0022;">Dark</div>
         {:else}
             <div class="rounded-button pointer" style="font-size: 1.2em; background-color: #00ff0022;">Light</div>
             &nbsp &nbsp
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>changeTheme(true)}>Dark</div>
         {/if}
     </div>
     <h1 class="settings-section-padding">Collection - Open all tabs</h1>
     <div class="flex-row-container">
         {#if globalSettings.useTabGroupInOpenAllTabs == "openTabGroup"}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em; background-color: #00ff0022;" on:click={()=>setUseTabGroupInOpenAllTabs('openTabGroup')}>Open in Tab Group</div>
             &nbsp &nbsp
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>setUseTabGroupInOpenAllTabs('open')}>Open in Current Window</div>
             &nbsp &nbsp
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>setUseTabGroupInOpenAllTabs('openTabWindow')}>Open in New Window</div>
         {:else if globalSettings.useTabGroupInOpenAllTabs == "openTabWindow"}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>setUseTabGroupInOpenAllTabs('openTabGroup')}>Open in Tab Group</div>
             &nbsp &nbsp
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>setUseTabGroupInOpenAllTabs('open')}>Open in Current Window</div>
             &nbsp &nbsp
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em; background-color: #00ff0022;" on:click={()=>setUseTabGroupInOpenAllTabs('openTabWindow')}>Open in New Window</div>
         {:else}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>setUseTabGroupInOpenAllTabs('openTabGroup')}>Open in Tab Group</div>
             &nbsp &nbsp
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em; background-color: #00ff0022;" on:click={()=>setUseTabGroupInOpenAllTabs('open')}>Open in Current Window</div>
             &nbsp &nbsp
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="rounded-button pointer" style="font-size: 1.2em;" on:click={()=>setUseTabGroupInOpenAllTabs('openTabWindow')}>Open in New Window</div>
         {/if}
     </div>

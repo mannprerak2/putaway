@@ -110,6 +110,7 @@
         <div style="font-size: 1.8em;">Open Tabs - {allTabs.length}</div>
         <div style="flex-grow:1;" />
         {#if allTabs.length > 0}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="rounded-button pointer"
                 style="font-size: 1em;"

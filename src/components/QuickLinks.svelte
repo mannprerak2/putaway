@@ -35,6 +35,7 @@
     {#if quickLinks.length > 0}
         {#each quickLinks as ql}
             <Tooltip title={ql.url}>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <img
                     alt=" "
                     class="pointer"
@@ -50,6 +51,7 @@
         <div style="font-size: 2.5em; color: gray">Quick Links</div>
     {/if}
     <Tooltip title="Edit">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div class="pointer" on:click={onClickEditQuickLink}>
             <Fa
                 icon={faPenAlt}

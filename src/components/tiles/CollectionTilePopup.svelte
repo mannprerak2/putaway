@@ -70,6 +70,7 @@
     }
 </style>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
     class="popup-collection-tile pointer"
     title={collection.title}

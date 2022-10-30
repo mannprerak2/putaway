@@ -40,11 +40,13 @@
             <input bind:value={ql.url} type="text" />
             <strong style="margin-left: 5px">ICON: </strong>
             <input bind:value={ql.icon} type="text" />
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="pointer" on:click={() => deleteLink(index)}>
                 <Fa icon={faTimesCircle} size="2x" style="margin-left: 5px" />
             </div>
         </div>
     {/each}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div id="add-quick-link" class="pointer flex-row-container" on:click={addQuickLink} style="font-size: 2em; margin-right:30%; margin-left: 30%; margin-top: 5px; border: 1px dashed gray; border-radius: 30px; justify-content: space-evenly;">
         Add new link
     </div>

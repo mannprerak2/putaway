@@ -110,6 +110,7 @@
     {:else}
         <div class="vl" style="border-color: var(--bg);" />
     {/if}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
         class="item"
         style="background-color: {item.title.split(":::::")[2]}; width: {tileWidth}em"

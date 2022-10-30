@@ -299,6 +299,7 @@
         <div>{collection.title}</div>
         <div style="flex-grow:1;" />
         {#if items.length > 0}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 id="open-all-tabs"
                 class="rounded-button pointer"
@@ -310,6 +311,7 @@
             &nbsp
         {/if}
         <Tooltip title="Share" ypos="-50" fontsize="0.5em">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
                 on:click={() => clickShareCollection(index, items)}
@@ -319,6 +321,7 @@
         </Tooltip>
         &nbsp
         <Tooltip title="Delete" ypos="-50" fontsize="0.5em">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
                 on:click={() => clickDeleteCollection(index)}
@@ -328,6 +331,7 @@
         </Tooltip>
         &nbsp
         <Tooltip title="Edit" ypos="-50" fontsize="0.5em">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
                 on:click={openEditCollectionNameModal}
@@ -338,6 +342,7 @@
         </Tooltip>
         &nbsp
         <Tooltip title="Archive" ypos="-50" fontsize="0.5em">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
                 on:click={() => clickArchiveCollection(index)}

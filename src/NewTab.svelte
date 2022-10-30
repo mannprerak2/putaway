@@ -15,6 +15,9 @@
 
   let pageReady = false;
   let openTabsBarWidth = getOpenTabsBarWidth();
+
+  let mainAreaReloadKey = 0;
+  let openTabsBarReloadKey = 0;
   onMount(async () => {
     getDarkTheme(function (v) {
       darkTheme = v;
@@ -83,12 +86,16 @@
           </div>
         </div>
         <div id="main-free-area">
-          <MainArea />
+            {#key mainAreaReloadKey}
+              <MainArea />
+            {/key}
         </div>
       </div>
 
       <div id="right-fixed-bar" style="width: {openTabsBarWidth}vw">
-        <OpenTabsBar />
+        {#key openTabsBarReloadKey}
+          <OpenTabsBar />
+        {/key}
       </div>
     </div>
   </Modal>
