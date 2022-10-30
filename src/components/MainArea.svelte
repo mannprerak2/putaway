@@ -9,6 +9,8 @@
     import { deo, archiveOnly } from "./../stores/stores.js";
     import EmptyCollectionTile from "./tiles/EmptyCollectionTile.svelte";
 
+    import { setlastNewTabOperationTimeNow } from "../services/hooks.js";
+
     import Fa from "sveltejs-fontawesome";
     import { faArchive } from "@fortawesome/free-solid-svg-icons/faArchive";
 
@@ -126,12 +128,14 @@
             var dropIndex = parseInt(obj.target.substring(1));
             // move allCollections from dragIndex to dropIndex
             if (dragIndex >= dropIndex) {
+                setlastNewTabOperationTimeNow();
                 chrome.bookmarks.move(allCollections[dragIndex].id, {
                     index: dropIndex,
                 });
                 allCollections.splice(dropIndex, 0, allCollections[dragIndex]);
                 allCollections.splice(dragIndex + 1, 1);
             } else {
+                setlastNewTabOperationTimeNow();
                 chrome.bookmarks.move(allCollections[dragIndex].id, {
                     index: dropIndex,
                 });
@@ -152,6 +156,7 @@
             collectionName: allCollections[index].title,
         });
         if (c) {
+            setlastNewTabOperationTimeNow();
             chrome.bookmarks.removeTree(allCollections[index].id);
             allCollections.splice(index, 1);
             allCollections = allCollections;

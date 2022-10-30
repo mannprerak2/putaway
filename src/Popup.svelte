@@ -147,6 +147,7 @@
         <div id="search-logo">
           <Fa icon={faSearch} size="2x" />
         </div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div id="open-putaway" class="pointer" on:click={openPutAway}>
           Open
           <br />
@@ -168,6 +169,7 @@
         <div style="height: 60px;" />
       </div>
     </div>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       id="save-session"
       class="pointer big-popup-button"
@@ -184,6 +186,7 @@
         Save Session
       {/if}
     </div>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       id="save-quicklink"
       class="pointer big-popup-button"
@@ -203,6 +206,7 @@
   {:else}
     <div id="newtab-popup">
       <img alt="logo" src="images/logo128.png" />
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
         Open PutAway
       </div>

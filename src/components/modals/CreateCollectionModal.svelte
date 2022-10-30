@@ -1,5 +1,6 @@
 <script>
     import { getContext } from "svelte";
+    import {setlastNewTabOperationTimeNow} from "../../services/hooks.js"
 
     let collectionName = "";
     let errorString = "";
@@ -8,6 +9,7 @@
 
     function createBookmarkFolder() {
         chrome.storage.local.get("pid", function (map) {
+            setlastNewTabOperationTimeNow();
             chrome.bookmarks.create(
                 {
                     parentId: map.pid,

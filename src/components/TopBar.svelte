@@ -63,6 +63,7 @@
                 <Fa icon={faSearch} size="2x" color="var(--icon-color)" />
             </div>
             {#if $searchText.length>0}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div on:click={()=>{$searchText=""}} class="pointer" style="font-size: 2em;">
                     <Fa icon={faTimesCircle} size="sm" color="var(--icon-color)" />
                 </div>
@@ -76,6 +77,7 @@
         <div style="flex-grow:1;" />
         <Tooltip title="Toggle Archived Collections">
             {#if archive}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 id="view-archive-button"
                 class="rounded-button pointer"
@@ -84,6 +86,7 @@
                 Archive
             </div>
             {:else}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 id="view-archive-button"
                 class="rounded-button pointer"
@@ -97,10 +100,12 @@
         &nbsp
         <Tooltip title="Toggle Theme">
             {#if darkTheme}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div on:click={toggleTheme} class="pointer" style="font-size: 2em;">
                     <Fa icon={faSun} size="sm" color="var(--icon-color)" />
                 </div>
             {:else}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div on:click={toggleTheme} class="pointer" style="font-size: 2em;">
                     <Fa icon={faMoon} size="sm" color="var(--icon-color)" />
                 </div>
@@ -108,6 +113,7 @@
         </Tooltip>
         &nbsp &nbsp
         <Tooltip title="Open Settings">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div on:click={openOptionsPage} class="pointer" style="font-size: 2em;">
                 <Fa icon={faCog} size="sm" color="var(--icon-color)" />
             </div>

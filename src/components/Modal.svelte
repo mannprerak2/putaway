@@ -210,6 +210,7 @@
 
 <div>
     {#if Component}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
             class="bg"
             on:click={handleOuterClick}

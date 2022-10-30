@@ -91,6 +91,7 @@
     {:else}
         <hr style="border: 1px solid var(--bg);" />
     {/if}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
         class="card"
         draggable="true"
