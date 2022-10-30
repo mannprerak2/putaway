@@ -1,6 +1,6 @@
 <script>
-    import { getItemTileWidth, getOpenTabsBarWidth } from "../services/hooks";
-
+    import { getItemTileWidth, getOpenTabsBarWidth,
+        getReloadBookmarkSectionOnChange, getReloadOpenTabsSectionOnChange } from "../services/hooks.js";
 
     export let darkTheme;
     export let changeTheme;
@@ -21,6 +21,18 @@
     let temporaryOpenTabsBarWidth = getOpenTabsBarWidth()
     var setOpenTabsBarWidth = () => {
         globalSettings.openTabsBarWidth = temporaryOpenTabsBarWidth;
+        setGlobalSettings(globalSettings);
+    }
+
+    let reloadBookmarkSectionOnChange = getReloadBookmarkSectionOnChange();
+    var setReloadBookmarkSectionOnChange = () => {
+        globalSettings.reloadBookmarkSectionOnChange = reloadBookmarkSectionOnChange;
+        setGlobalSettings(globalSettings);
+    }
+
+    let reloadOpenTabsSectionOnChange = getReloadOpenTabsSectionOnChange();
+    var setReloadOpenTabsSectionOnChange = () => {
+        globalSettings.reloadOpenTabsSectionOnChange = reloadOpenTabsSectionOnChange;
         setGlobalSettings(globalSettings);
     }
 </script>
@@ -87,4 +99,12 @@
         <button class="pointer save-button" on:click={setOpenTabsBarWidth}>Save</button>
     </div>
     <div style="width: {temporaryOpenTabsBarWidth}vw; word-break: break-all; border: 1px solid var(--box-shadow); padding: 3px; ">This is how it'll look</div>
+    <div class="flex-row-container">
+        <h1>Reload Collections on Bookmark updates</h1>
+        <input id="aaaa" type="checkbox" class="large-checkbox" style="background-color: aqua;" bind:checked={reloadBookmarkSectionOnChange} on:change={setReloadBookmarkSectionOnChange}/>
+    </div>
+    <div class="flex-row-container">
+        <h1>Reload Open-Tabs section on Tab updates</h1>
+        <input id="aaaa" type="checkbox" class="large-checkbox" bind:checked={reloadOpenTabsSectionOnChange} on:change={setReloadOpenTabsSectionOnChange}/>
+    </div>
 </div>

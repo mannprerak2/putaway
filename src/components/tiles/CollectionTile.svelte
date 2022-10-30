@@ -10,6 +10,7 @@
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
     import EditItemModal from "../modals/EditItemModal.svelte";
     import Tooltip from '../common/tooltip/Tooltip.svelte'
+    import {setlastNewTabOperationTimeNow} from "../../services/hooks.js";
     const { open } = getContext("simple-modal");
 
     //font awseome icons
@@ -74,12 +75,14 @@
             ) {
                 // move items from dragIndex to dropIndex
                 if (dragIndex >= dropIndex) {
+                    setlastNewTabOperationTimeNow();
                     chrome.bookmarks.move(obj.sourceObj.id, {
                         index: dropIndex,
                     });
                     items.splice(dropIndex, 0, obj.sourceObj);
                     items.splice(dragIndex + 1, 1);
                 } else {
+                    setlastNewTabOperationTimeNow();
                     chrome.bookmarks.move(obj.sourceObj.id, {
                         index: dropIndex,
                     });
@@ -90,6 +93,7 @@
             // when moving item to a different collection
             else if (obj.sourceObj.parentId == collection.id) {
                 // source is responsible for movement of bookmark
+                setlastNewTabOperationTimeNow();
                 chrome.bookmarks.move(obj.sourceObj.id, {
                     index: dropIndex,
                     parentId: obj.targetObj.id,
@@ -121,6 +125,7 @@
     var onItemDelete = (item, i) => {
         items.splice(i, 1);
         items = items;
+        setlastNewTabOperationTimeNow();
         chrome.bookmarks.remove(item.id);
     };
 
@@ -184,6 +189,7 @@
     };
 
     function saveTabToBookmark(tab, dropIndex) {
+        setlastNewTabOperationTimeNow();
         saveTabHook(tab)
         chrome.bookmarks.create(
             {

@@ -39,3 +39,24 @@ export function getOpenTabsBarWidth() {
     if (!globalSettings || !globalSettings.openTabsBarWidth) return 20;
     return globalSettings.openTabsBarWidth
 }
+
+export function getReloadBookmarkSectionOnChange() {
+    if (!globalSettings || globalSettings.reloadBookmarkSectionOnChange === undefined) return true;
+    return globalSettings.reloadBookmarkSectionOnChange
+}
+
+export function getReloadOpenTabsSectionOnChange() {
+    if (!globalSettings || globalSettings.reloadOpenTabsSectionOnChange === undefined) return true;
+    return globalSettings.reloadOpenTabsSectionOnChange
+}
+
+// This is set when we create/move/update/delete via the new tab page only.
+let lastNewTabOperationTime = Date.now();
+
+export function getlastNewTabOperationTimeNowDiffMs() {
+    return Date.now() - lastNewTabOperationTime;
+}
+
+export function setlastNewTabOperationTimeNow() {
+    lastNewTabOperationTime = Date.now();
+}

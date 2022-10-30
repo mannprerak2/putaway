@@ -3,6 +3,7 @@
     import TabTile from "./tiles/TabTile.svelte";
     import EmptyTabTile from "./tiles/EmptyTabTile.svelte";
     import { deo } from "./../stores/stores.js";
+    import {setlastNewTabOperationTimeNow} from '../services/hooks.js';
     const { open } = getContext("simple-modal");
     import SaveSessionModal from "./modals/SaveSessionModal.svelte";
 
@@ -26,6 +27,7 @@
             if (obj.target[0] == "i") {
                 if (obj.ctrl != null && !obj.ctrl) {
                     //  only delete tab if ctrl wasn't held by user
+                    setlastNewTabOperationTimeNow();
                     chrome.tabs.remove(obj.sourceObj.id);
                     allTabs.splice(parseInt(obj.source.substring(1)), 1);
                     allTabs = allTabs;
@@ -35,10 +37,12 @@
                 var dropIndex = parseInt(obj.target.substring(1));
                 // move tabs from dragIndex to dropIndex
                 if (dragIndex >= dropIndex) {
+                    setlastNewTabOperationTimeNow();
                     chrome.tabs.move(obj.sourceObj.id, { index: dropIndex });
                     allTabs.splice(dropIndex, 0, obj.sourceObj);
                     allTabs.splice(dragIndex + 1, 1);
                 } else {
+                    setlastNewTabOperationTimeNow();
                     chrome.tabs.move(obj.sourceObj.id, {
                         index: dropIndex - 1,
                     });
@@ -58,6 +62,7 @@
     var onTabTileClose = (tab, i) => {
         allTabs.splice(i, 1);
         allTabs = allTabs;
+        setlastNewTabOperationTimeNow();
         chrome.tabs.remove(tab.id);
     };
 
@@ -77,6 +82,7 @@
         var c = await open(SaveSessionModal);
         if (c) {
             var count = allTabs.length;
+            setlastNewTabOperationTimeNow();
             allTabs.forEach((tab) => {
                 chrome.bookmarks.create(
                     {

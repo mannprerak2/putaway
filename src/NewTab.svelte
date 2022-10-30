@@ -5,7 +5,9 @@
   import Modal from "./components/Modal.svelte";
   import { setDarkTheme, getDarkTheme } from "./services/storage.js";
   import { onMount } from "svelte";
-  import { loadGlobalSettings, getOpenTabsBarWidth } from './services/hooks.js'
+  import { loadGlobalSettings, getOpenTabsBarWidth,
+    getReloadBookmarkSectionOnChange, getReloadOpenTabsSectionOnChange,
+    getlastNewTabOperationTimeNowDiffMs} from './services/hooks.js'
 
   let darkTheme = false;
   var toggleTheme = () => {
@@ -18,6 +20,17 @@
 
   let mainAreaReloadKey = 0;
   let openTabsBarReloadKey = 0;
+
+  let mainAreaReloadKeyUpdate = () => {
+    if (getlastNewTabOperationTimeNowDiffMs() < 2000) return;
+    mainAreaReloadKey+=1;
+  }
+
+  let openTabsBarReloadKeyUpdate = () => {
+    if (getlastNewTabOperationTimeNowDiffMs() < 2000) return;
+    openTabsBarReloadKey+=1;
+  }
+
   onMount(async () => {
     getDarkTheme(function (v) {
       darkTheme = v;
@@ -25,6 +38,17 @@
     await loadGlobalSettings();
     openTabsBarWidth = getOpenTabsBarWidth();
     pageReady = true
+    if(getReloadBookmarkSectionOnChange()){
+      chrome.bookmarks.onCreated.addListener((id, bookmark) => {mainAreaReloadKeyUpdate()});
+      chrome.bookmarks.onMoved.addListener((id, moveInfo) => {mainAreaReloadKeyUpdate()});
+      chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {mainAreaReloadKeyUpdate()});
+    }
+    if(getReloadOpenTabsSectionOnChange()){
+      chrome.tabs.onCreated.addListener((tab) => {openTabsBarReloadKeyUpdate()});
+      chrome.tabs.onMoved.addListener((id, moveInfo) => {openTabsBarReloadKeyUpdate()});
+      chrome.tabs.onUpdated.addListener((id, info) => {if (info.status === 'complete') openTabsBarReloadKeyUpdate()});
+      chrome.tabs.onRemoved.addListener((id, removeInfo) => {openTabsBarReloadKeyUpdate()});
+    }
   });
 </script>
 
