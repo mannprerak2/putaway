@@ -11,16 +11,16 @@
   import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
   //font awesome icons
 
-  let searchText = "";
+  let searchText = $state("");
   // array of BookmarkTreeNode
-  let allCollections = [];
-  let map = {};
+  let allCollections = $state([]);
+  let map = $state({});
 
-  let tab;
-  let savedId;
-  let isNewTab = false;
-  let sessionSaved = false;
-  let quickLinkSaved = false;
+  let tab = $state(undefined);
+  let savedId = $state(undefined);
+  let isNewTab = $state(false);
+  let sessionSaved = $state(false);
+  let quickLinkSaved = $state(false);
 
   onMount(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -44,7 +44,7 @@
     loadGlobalSettings()
   });
 
-  var saveSession = () => {
+  const saveSession = () => {
     if (sessionSaved) {
       chrome.bookmarks.removeTree(savedId);
       sessionSaved = false;
@@ -107,7 +107,7 @@
     }
   };
 
-  var saveQuickLink = () => {
+  const saveQuickLink = () => {
     chrome.storage.sync.get("quickLinks", async (v) => {
       let quickLinks = [];
       if (v.quickLinks) {
@@ -128,7 +128,7 @@
     });
   };
 
-  var openPutAway = () => {
+  const openPutAway = () => {
     chrome.tabs.create({ url: chrome.runtime.getURL("newtab.html") });
   };
 </script>
@@ -137,7 +137,7 @@
   {#if !isNewTab}
     <div id="main">
       <div id="top">
-        <!-- svelte-ignore a11y-autofocus -->
+        <!-- svelte-ignore a11y_autofocus -->
         <input
           autofocus
           type="text"
@@ -147,8 +147,7 @@
         <div id="search-logo">
           <Fa icon={faSearch} size="2x" />
         </div>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div id="open-putaway" class="pointer" on:click={openPutAway}>
+        <div id="open-putaway" class="pointer" onclick={openPutAway}>
           Open
           <br />
           PutAway
@@ -169,11 +168,10 @@
         <div style="height: 60px;" />
       </div>
     </div>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       id="save-session"
       class="pointer big-popup-button"
-      on:click={saveSession}
+      onclick={saveSession}
     >
       {#if sessionSaved}
         ✓Saved (click to undo)
@@ -186,11 +184,10 @@
         Save Session
       {/if}
     </div>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       id="save-quicklink"
       class="pointer big-popup-button"
-      on:click={saveQuickLink}
+      onclick={saveQuickLink}
     >
       {#if quickLinkSaved}
         ✓Saved (click to undo)
@@ -206,8 +203,7 @@
   {:else}
     <div id="newtab-popup">
       <img alt="logo" src="images/logo128.png" />
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div id="newtab-open-putaway" class="pointer" on:click={openPutAway}>
+      <div id="newtab-open-putaway" class="pointer" onclick={openPutAway}>
         Open PutAway
       </div>
       <div>

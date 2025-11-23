@@ -116,22 +116,37 @@
         style="background-color: {item.title.split(":::::")[2]}; width: {tileWidth}em"
         draggable="true"
         out:fade
-        on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave}
-        on:dragstart={handleDragStart}
-        on:drop={handleDrop}
-        on:auxclick|preventDefault={(e) => onClickItem(item, e, true)}
-        on:click|preventDefault={(e) => onClickItem(item, e)}>
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={onDragEnter}
+        ondragleave={onDragLeave}
+        ondragstart={handleDragStart}
+        ondrop={handleDrop}
+        onauxclick={(e) => {
+            e.preventDefault();
+            onClickItem(item, e, true)
+        }}
+        onclick={(e) => {
+            e.preventDefault();
+            onClickItem(item, e)
+        }}>
         <button
             class="close-icon pointer"
-            on:click|preventDefault|stopPropagation={() => onItemDelete(item, index)} >
+            onclick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onItemDelete(item, index)
+            }} >
             <div style="color:white; margin-left: -4px; margin-top: -2px;">
                 <Fa icon={faTimes} size="sm" color="white" />
             </div>
         </button>
             <button
                 class="edit-icon pointer"
-                on:click|preventDefault|stopPropagation={() => onClickItemEdit(item, index)}>
+                onclick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onClickItemEdit(item, index)
+                }}>
                 <div style="color:white; margin-left: -5px; margin-top: -3px; transform: scale(0.8);">
                     <Fa icon={faPenAlt} size="sm" color="white" />
                 </div>

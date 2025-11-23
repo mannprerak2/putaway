@@ -98,7 +98,7 @@
 
     <div class="modal-bottom-bar">
         <div style="padding: 10px; color: red;">{errorString}</div>
-        <button class="pointer" on:click={onClickCreate}>Save Session to
+        <button class="pointer" onclick={onClickCreate}>Save Session to
             Collection</button>
     </div>
 </main>

@@ -36,18 +36,20 @@
 {#if indicator}
     <div
         class="no-items-indicator"
-        on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave}
-        on:drop={handleDrop}
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={onDragEnter}
+        ondragleave={onDragLeave}
+        ondrop={handleDrop}
         style="border: 1px dashed gray;">
         <h1>Drop to Add</h1>
     </div>
 {:else}
     <div
         class="no-items-indicator"
-        on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave}
-        on:drop={handleDrop}>
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={onDragEnter}
+        ondragleave={onDragLeave}
+        ondrop={handleDrop}>
         <h3 style="color: var(--txt);">Drag-n-Drop tabs here OR save them via the Extension Popup</h3>
     </div>
 {/if}

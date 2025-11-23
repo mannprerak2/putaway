@@ -61,6 +61,6 @@
     <textarea id="share-text-input" bind:value={shareText} type="text"/>
 
     <div class="modal-bottom-bar">
-        <button class="pointer" on:click={copyTextAndClose}>Copy Text</button>
+        <button class="pointer" onclick={copyTextAndClose}>Copy Text</button>
     </div>
 </main>

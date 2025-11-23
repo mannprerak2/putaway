@@ -45,12 +45,12 @@
 
 <div class="dropdown pointer">
     {#if show}
-        <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>▲</div>
+        <div class="dropbtn" style="font-size: 0.8em;" onclick={click}>▲</div>
         <div class="dropdown-content">
             {#each items as item, index}
                 <div
                     class="item"
-                    on:click={() => {
+                    onclick={(e) => {
                         show = false;
                         onClickItem(item, index);
                     }}>
@@ -59,6 +59,6 @@
             {/each}
         </div>
     {:else}
-        <div class="dropbtn" style="font-size: 0.8em;" on:click={click}>⋮</div>
+        <div class="dropbtn" style="font-size: 0.8em;" onclick={click}>⋮</div>
     {/if}
 </div>

@@ -64,7 +64,7 @@
             </div>
             {#if $searchText.length>0}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={()=>{$searchText=""}} class="pointer" style="font-size: 2em;">
+                <div onclick={(e)=>{$searchText=""}} class="pointer" style="font-size: 2em;">
                     <Fa icon={faTimesCircle} size="sm" color="var(--icon-color)" />
                 </div>
             {:else}
@@ -82,7 +82,7 @@
                 id="view-archive-button"
                 class="rounded-button pointer"
                 style="font-size: 1.5em; background-color: #00ff0022"
-                on:click={toggleArchive}>
+                onclick={toggleArchive}>
                 Archive
             </div>
             {:else}
@@ -91,7 +91,7 @@
                 id="view-archive-button"
                 class="rounded-button pointer"
                 style="font-size: 1.5em;"
-                on:click={toggleArchive}>
+                onclick={toggleArchive}>
                 Archive
             </div>
             {/if}
@@ -101,12 +101,12 @@
         <Tooltip title="Toggle Theme">
             {#if darkTheme}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={toggleTheme} class="pointer" style="font-size: 2em;">
+                <div onclick={toggleTheme} class="pointer" style="font-size: 2em;">
                     <Fa icon={faSun} size="sm" color="var(--icon-color)" />
                 </div>
             {:else}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={toggleTheme} class="pointer" style="font-size: 2em;">
+                <div onclick={toggleTheme} class="pointer" style="font-size: 2em;">
                     <Fa icon={faMoon} size="sm" color="var(--icon-color)" />
                 </div>
             {/if}
@@ -114,7 +114,7 @@
         &nbsp &nbsp
         <Tooltip title="Open Settings">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div on:click={openOptionsPage} class="pointer" style="font-size: 2em;">
+            <div onclick={openOptionsPage} class="pointer" style="font-size: 2em;">
                 <Fa icon={faCog} size="sm" color="var(--icon-color)" />
             </div>
         </Tooltip>

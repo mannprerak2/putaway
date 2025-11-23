@@ -44,7 +44,7 @@
                     width="26px"
                     style="padding: 5px"
                     in:fade
-                    on:click={() => onClickLink(ql)}/>
+                    onclick={(e) => onClickLink(ql)}/>
             </Tooltip>
         {/each}
     {:else}
@@ -52,7 +52,7 @@
     {/if}
     <Tooltip title="Edit">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="pointer" on:click={onClickEditQuickLink}>
+        <div class="pointer" onclick={onClickEditQuickLink}>
             <Fa
                 icon={faPenAlt}
                 size=1.5em

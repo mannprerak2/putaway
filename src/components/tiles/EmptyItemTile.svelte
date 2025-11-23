@@ -27,8 +27,9 @@
         <div class="vl" style="border-color: var(--bg);" />
     {/if}
     <div
-        on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave}
-        on:drop={handleDrop}
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={onDragEnter}
+        ondragleave={onDragLeave}
+        ondrop={handleDrop}
         style="width: 200px; height: 100%; display: inline-block" />
 </div>

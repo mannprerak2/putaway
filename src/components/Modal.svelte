@@ -213,7 +213,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
             class="bg"
-            on:click={handleOuterClick}
+            onclick={handleOuterClick}
             bind:this={background}
             transition:transitionBg={transitionBgProps}
             style={cssBg}>
@@ -223,7 +223,7 @@
                     transition:transitionWindow={transitionWindowProps}
                     style={cssWindow}>
                     {#if closeButton}
-                        <button on:click={close} class="close" />
+                        <button onclick={close} class="close" />
                     {/if}
                     <div class="content" style={cssContent}>
                         <svelte:component this={Component} {...props}/>

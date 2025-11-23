@@ -9,24 +9,23 @@
     getReloadBookmarkSectionOnChange, getReloadOpenTabsSectionOnChange,
     getlastNewTabOperationTimeNowDiffMs} from './services/hooks.js'
 
-  let darkTheme = false;
-  var toggleTheme = () => {
+  let darkTheme = $state(false);
+  let pageReady = $state(false);
+  let openTabsBarWidth = $state(getOpenTabsBarWidth());
+  let mainAreaReloadKey = $state(0);
+  let openTabsBarReloadKey = $state(0);
+
+  const toggleTheme = () => {
     darkTheme = !darkTheme;
     setDarkTheme(darkTheme);
   };
 
-  let pageReady = false;
-  let openTabsBarWidth = getOpenTabsBarWidth();
-
-  let mainAreaReloadKey = 0;
-  let openTabsBarReloadKey = 0;
-
-  let mainAreaReloadKeyUpdate = () => {
+  const mainAreaReloadKeyUpdate = () => {
     if (getlastNewTabOperationTimeNowDiffMs() < 2000) return;
     mainAreaReloadKey+=1;
   }
 
-  let openTabsBarReloadKeyUpdate = () => {
+  const openTabsBarReloadKeyUpdate = () => {
     if (getlastNewTabOperationTimeNowDiffMs() < 2000) return;
     openTabsBarReloadKey+=1;
   }

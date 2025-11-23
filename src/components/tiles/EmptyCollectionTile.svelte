@@ -27,8 +27,9 @@
         <hr style="border: 1px solid var(--bg);" />
     {/if}
     <div
-        on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave}
-        on:drop={handleDrop}
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={onDragEnter}
+        ondragleave={onDragLeave}
+        ondrop={handleDrop}
         style="height: 200px;" />
 </div>

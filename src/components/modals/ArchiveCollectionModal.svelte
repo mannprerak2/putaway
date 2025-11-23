@@ -18,7 +18,7 @@
         ?
     </div>
     <div class="modal-bottom-bar">
-        <button class="pointer" on:click={close}>Yes</button>
+        <button class="pointer" onclick={close}>Yes</button>
     </div>
 </main>
 

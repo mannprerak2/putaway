@@ -288,7 +288,7 @@
     class="collection"
     in:fade={{ duration: 500 }}
     out:fade
-    on:dragover|preventDefault>
+    ondragover={(e) => e.preventDefault()}>
     {#if dropLine}
         <hr style="border: 1px solid var(--drop-indicator);" />
     {:else}
@@ -298,10 +298,11 @@
         class="tile-top-bar"
         draggable="true"
         out:fade
-        on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave}
-        on:dragstart={handleDragStart}
-        on:drop={handleDrop}>
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={onDragEnter}
+        ondragleave={onDragLeave}
+        ondragstart={handleDragStart}
+        ondrop={handleDrop}>
         <div>{collection.title}</div>
         <div style="flex-grow:1;" />
         {#if items.length > 0}
@@ -309,7 +310,7 @@
             <div
                 id="open-all-tabs"
                 class="rounded-button pointer"
-                on:click={()=>openAllOfCollection(collection.title)}>
+                onclick={(e)=>openAllOfCollection(collection.title)}>
                 Open
                 {items.length}
                 Tabs
@@ -320,7 +321,7 @@
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
-                on:click={() => clickShareCollection(index, items)}
+                onclick={(e) => clickShareCollection(index, items)}
                 style="font-size: 0.8em; opacity:var(--icon-opacity);">
                 <Fa icon={faShareAlt} size="sm" color="var(--icon-color)" />
             </div>
@@ -330,7 +331,7 @@
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
-                on:click={() => clickDeleteCollection(index)}
+                onclick={(e) => clickDeleteCollection(index)}
                 style="font-size: 0.8em; opacity:var(--icon-opacity);">
                 <Fa icon={faTrashAlt} size="sm" color="var(--icon-color)" />
             </div>
@@ -340,7 +341,7 @@
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
-                on:click={openEditCollectionNameModal}
+                onclick={openEditCollectionNameModal}
                 style= "font-size: 0.8em; opacity:var(--icon-opacity);"
                 alt= "Edit Name">
                 <Fa icon={faEdit} size="sm" color="var(--icon-color)" />
@@ -351,7 +352,7 @@
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
                 class="pointer"
-                on:click={() => clickArchiveCollection(index)}
+                onclick={(e) => clickArchiveCollection(index)}
                 style= "font-size: 0.8em; opacity:var(--icon-opacity);"
                 alt= "Archive">
                 <Fa icon={faArchive} size="sm" color="var(--icon-color)" />

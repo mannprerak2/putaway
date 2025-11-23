@@ -79,6 +79,6 @@
 
     <div class="modal-bottom-bar">
         <div style="padding: 10px; color: red;">{errorString}</div>
-        <button class="pointer" on:click={onClickCreate}>Save</button>
+        <button class="pointer" onclick={onClickCreate}>Save</button>
     </div>
 </main>

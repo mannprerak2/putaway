@@ -35,6 +35,6 @@
         ?
     </div>
     <div class="modal-bottom-bar">
-        <button class="pointer" on:click={close}>Delete</button>
+        <button class="pointer" onclick={close}>Delete</button>
     </div>
 </main>

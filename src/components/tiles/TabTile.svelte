@@ -95,14 +95,22 @@
     <div
         class="card"
         draggable="true"
-        on:dragover|preventDefault={onDragEnter}
-        on:dragleave={onDragLeave}
-        on:dragstart={handleDragStart}
-        on:drop={handleDrop}
-        on:click|preventDefault={() => onClickTabCard(tab)}>
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={onDragEnter}
+        ondragleave={onDragLeave}
+        ondragstart={handleDragStart}
+        ondrop={handleDrop}
+        onclick={(e) => {
+            e.preventDefault();
+            onClickTabCard(tab);
+        }}>
         <button
             class="close-icon"
-            on:click|preventDefault|stopPropagation={() => onTabTileClose(tab, index)} />
+            onclick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onTabTileClose(tab, index)
+            }} />
 
         <div class="flex-row-container">
             <img

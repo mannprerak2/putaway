@@ -101,7 +101,7 @@
             </div>
             {:else}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class="left-side-tile" on:click={()=>changePage(index)}>
+            <div class="left-side-tile" onclick={(e)=>changePage(index)}>
               {page.name}
             </div>
             {/if}

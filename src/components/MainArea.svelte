@@ -48,7 +48,7 @@
     }
 
     // array of BookmarkTreeNode
-    let allCollections = [];
+    let allCollections = $state([]);
 
     // Called only if pid no longer points to the correct putaway folder.
     function refreshPidAndloadCollections(pid, pidVar) {
@@ -101,7 +101,7 @@
         }
     });
 
-    var clickAddCollection = async () => {
+    const clickAddCollection = async () => {
         var c = await open(CreateCollectionModal);
         if (c) {
             // add to list at its index
@@ -110,7 +110,7 @@
         }
     };
 
-    var onCollectionDrop = (e, dropIndex) => {
+    const onCollectionDrop = (e, dropIndex) => {
         e.preventDefault();
         var rawData = e.dataTransfer.getData("text");
 
@@ -151,7 +151,7 @@
         unsubsribe();
     });
 
-    var clickDeleteCollection = async (index) => {
+    const clickDeleteCollection = async (index) => {
         var c = await open(DeleteCollectionModal, {
             collectionName: allCollections[index].title,
         });
@@ -163,7 +163,7 @@
         }
     };
 
-    var clickShareCollection = async (index, items) => {
+    const clickShareCollection = async (index, items) => {
         var shareText = "";
         items.forEach((item) => {
             shareText += item.title.split(":::::")[0];
@@ -177,7 +177,7 @@
         });
     };
 
-    var clickArchiveCollection = async (index) => {
+    const clickArchiveCollection = async (index) => {
         var c = await open(ArchiveCollectionModal, {
             collection: allCollections[index],
             toArchive: !$archiveOnly,
@@ -219,7 +219,7 @@
     {#if !$archiveOnly}
         <button
             class="plus-icon pointer"
-            on:click|preventDefault|stopPropagation={clickAddCollection}
+            onclick={clickAddCollection}
         />
     {/if}
     <div class="scroll">

@@ -74,7 +74,7 @@
 <div
     class="popup-collection-tile pointer"
     title={collection.title}
-    on:click={click}>
+    onclick={click}>
     {#if savedInThis}
         <div class="save">✓</div>
     {/if}

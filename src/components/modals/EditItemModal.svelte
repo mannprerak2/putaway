@@ -96,7 +96,7 @@
     <br><br>
     <div class="modal-bottom-bar">
         <div style="padding: 10px; color: red;">{errorString}</div>
-        <button class="pointer" on:click={onClickCreate}>Update</button>
+        <button class="pointer" onclick={onClickCreate}>Update</button>
     </div>
     <strong>Color</strong>
     &nbsp

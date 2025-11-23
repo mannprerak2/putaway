@@ -120,7 +120,7 @@
             <div
                 class="rounded-button pointer"
                 style="font-size: 1em;"
-                on:click={saveSession}>
+                onclick={saveSession}>
                 Save Session
             </div>
         {/if}
