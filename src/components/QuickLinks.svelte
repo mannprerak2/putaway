@@ -1,28 +1,140 @@
 <script>
     import Tooltip from './common/tooltip/Tooltip.svelte'
-    import { onMount, getContext } from "svelte";
+    import { onMount, onDestroy, getContext } from "svelte";
     import { fade } from "svelte/transition";
     const { open } = getContext("simple-modal");
-    import EditQuickLinksModal from "./modals/EditQuickLinksModal.svelte";
+    import SelectQuickLinksCollectionModal from "./modals/SelectQuickLinksCollectionModal.svelte";
 
     // FontAwesome icons.
     import Fa from "sveltejs-fontawesome";
     import { faPenAlt } from "@fortawesome/free-solid-svg-icons/faPenAlt";
+    import { faGlobe } from "@fortawesome/free-solid-svg-icons/faGlobe";
 
-    let quickLinks = [];
-    onMount(() => {
-        chrome.storage.sync.get("quickLinks", function (v) {
-            if (v.quickLinks) {
-                quickLinks = v.quickLinks;
+    let quickLinks = $state([]);
+    let quickLinksFolderId = $state("");
+
+    function loadQuickLinks() {
+        chrome.storage.sync.get("globalSettings", function (res) {
+            let globalSettings = res.globalSettings || {};
+            quickLinksFolderId = globalSettings.quickLinksFolderId || "";
+            if (quickLinksFolderId) {
+                chrome.bookmarks.getChildren(quickLinksFolderId, function (children) {
+                    if (chrome.runtime.lastError) {
+                        // Folder was likely deleted
+                        quickLinksFolderId = "";
+                        quickLinks = [];
+                        return;
+                    }
+                    quickLinks = children.filter(e => e.url != null).map(e => {
+                        let parts = e.title.split(":::::");
+                        return {
+                            id: e.id,
+                            title: parts[0],
+                            icon: parts[1] || "favicon.png",
+                            url: e.url,
+                            imageFailed: false
+                        };
+                    });
+                });
+            } else {
+                quickLinks = [];
             }
         });
+    }
+
+    function checkAndMigrateLegacyQuickLinks() {
+        chrome.storage.sync.get(["globalSettings", "quickLinks"], function (res) {
+            let globalSettings = res.globalSettings || {};
+            if (globalSettings.quickLinksFolderId) return;
+
+            let legacyQuickLinks = res.quickLinks;
+            if (legacyQuickLinks && legacyQuickLinks.length > 0) {
+                const proceedWithPid = (pid) => {
+                    chrome.bookmarks.create({
+                        parentId: pid,
+                        title: "Quick Links",
+                        index: 0
+                    }, function (newFolder) {
+                        globalSettings.quickLinksFolderId = newFolder.id;
+                        chrome.storage.sync.set({ globalSettings }, function () {
+                            let count = legacyQuickLinks.length;
+                            legacyQuickLinks.forEach((item, index) => {
+                                let title = "Quick Link";
+                                try {
+                                    title = new URL(item.url).hostname.replace("www.", "");
+                                } catch (e) {
+                                    title = item.url;
+                                }
+                                chrome.bookmarks.create({
+                                    parentId: newFolder.id,
+                                    url: item.url,
+                                    title: title + ":::::" + (item.icon || "favicon.png"),
+                                    index: index
+                                }, function () {
+                                    count--;
+                                    if (count === 0) {
+                                        chrome.storage.sync.remove("quickLinks", function () {
+                                            loadQuickLinks();
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    });
+                };
+
+                chrome.storage.local.get("pid", function (localRes) {
+                    let pid = localRes.pid;
+                    if (pid) {
+                        proceedWithPid(pid);
+                    } else {
+                        chrome.bookmarks.getTree(function (tree) {
+                            var otherBookmarksFolderId = tree[0].children[1].id;
+                            chrome.bookmarks.getChildren(otherBookmarksFolderId, function (children) {
+                                var putawayfolder = children.find(e => e.title === "PutAway");
+                                if (putawayfolder) {
+                                    chrome.storage.local.set({ pid: putawayfolder.id });
+                                    proceedWithPid(putawayfolder.id);
+                                } else {
+                                    chrome.bookmarks.create({
+                                        parentId: otherBookmarksFolderId,
+                                        title: "PutAway"
+                                    }, function (newFolder) {
+                                        chrome.storage.local.set({ pid: newFolder.id });
+                                        proceedWithPid(newFolder.id);
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    const updateListener = () => loadQuickLinks();
+
+    onMount(() => {
+        loadQuickLinks();
+        checkAndMigrateLegacyQuickLinks();
+
+        chrome.bookmarks.onCreated.addListener(updateListener);
+        chrome.bookmarks.onMoved.addListener(updateListener);
+        chrome.bookmarks.onRemoved.addListener(updateListener);
+        chrome.bookmarks.onChanged.addListener(updateListener);
+    });
+
+    onDestroy(() => {
+        chrome.bookmarks.onCreated.removeListener(updateListener);
+        chrome.bookmarks.onMoved.removeListener(updateListener);
+        chrome.bookmarks.onRemoved.removeListener(updateListener);
+        chrome.bookmarks.onChanged.removeListener(updateListener);
     });
 
     async function onClickEditQuickLink() {
-        var c = await open(EditQuickLinksModal, { quickLinks });
+        var c = await open(SelectQuickLinksCollectionModal);
         if (c != null) {
-            quickLinks = c;
-            chrome.storage.sync.set({ quickLinks: quickLinks });
+            loadQuickLinks();
         }
     }
 
@@ -52,10 +164,30 @@
         padding: 4px;
         transition: transform 0.2s, background-color 0.2s;
         box-sizing: border-box;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.15));
     }
     .quick-link-img:hover {
         transform: translateY(-2px) scale(1.1);
         background-color: var(--outline-btn-hover);
+    }
+    .fallback-icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        background: var(--outline-btn-hover);
+        border: 1px solid var(--outline-btn-border);
+        color: var(--icon-color);
+        transition: transform 0.2s, background-color 0.2s;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .fallback-icon-btn:hover {
+        transform: translateY(-2px) scale(1.1);
+        background-color: var(--outline-btn-hover);
+        color: var(--txt);
     }
     .edit-btn {
         display: flex;
@@ -79,28 +211,44 @@
         font-weight: 500;
         color: var(--icon-color);
         padding: 0 4px;
+        user-select: none;
     }
 </style>
 
 <div class="dashbox-div" in:fade>
-    {#if quickLinks.length > 0}
-        {#each quickLinks as ql}
-            <Tooltip title={ql.url}>
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <img
-                    alt={ql.url}
-                    class="pointer quick-link-img"
-                    src={ql.icon}
-                    height="26px"
-                    width="26px"
-                    in:fade
-                    onclick={(e) => onClickLink(ql)}/>
-            </Tooltip>
-        {/each}
+    {#if quickLinksFolderId}
+        {#if quickLinks.length > 0}
+            {#each quickLinks as ql (ql.id)}
+                <Tooltip title={ql.title || ql.url}>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    {#if ql.imageFailed}
+                        <button class="fallback-icon-btn pointer" onclick={(e) => onClickLink(ql)}>
+                            <Fa icon={faGlobe} size="sm" color="var(--icon-color)" />
+                        </button>
+                    {:else}
+                        <img
+                            alt=""
+                            class="pointer quick-link-img"
+                            src={ql.icon}
+                            height="26px"
+                            width="26px"
+                            in:fade
+                            onerror={() => {
+                                ql.imageFailed = true;
+                                quickLinks = quickLinks;
+                            }}
+                            onclick={(e) => onClickLink(ql)}/>
+                    {/if}
+                </Tooltip>
+            {/each}
+        {:else}
+            <div class="placeholder-text">Quick Links empty</div>
+        {/if}
     {:else}
-        <div class="placeholder-text">Quick Links</div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="placeholder-text pointer" onclick={onClickEditQuickLink}>Designate Quick Links</div>
     {/if}
-    <Tooltip title="Edit Links">
+    <Tooltip title="Designate Quick Links">
         <button class="edit-btn pointer" onclick={onClickEditQuickLink}>
             <Fa
                 icon={faPenAlt}

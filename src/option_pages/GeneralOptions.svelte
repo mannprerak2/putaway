@@ -1,12 +1,24 @@
 <script>
     import { getItemTileWidth, getOpenTabsBarWidth,
         getReloadBookmarkSectionOnChange, getReloadOpenTabsSectionOnChange } from "../services/hooks.js";
+    import { onMount } from "svelte";
 
     export let darkTheme;
     export let changeTheme;
 
     export let globalSettings;
     export let setGlobalSettings;
+
+    let collections = [];
+    onMount(() => {
+        chrome.storage.local.get("pid", function (localRes) {
+            if (localRes.pid) {
+                chrome.bookmarks.getChildren(localRes.pid, function (children) {
+                    collections = children.filter((e) => e.url == null);
+                });
+            }
+        });
+    });
 
     var setUseTabGroupInOpenAllTabs = (val) => {
         globalSettings.useTabGroupInOpenAllTabs = val;
@@ -239,6 +251,29 @@
             </div>
             <div class="preview-box" style="width: {temporaryItemTileWidth}em;">
                 Tile Width Preview
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--collection-separator); margin: 8px 0;" />
+
+            <div class="settings-row">
+                <div class="settings-info">
+                    <h3 class="settings-title">Quick Links Collection</h3>
+                    <p class="settings-subtitle">Pick the collection folder to display in your Quick Links bar.</p>
+                </div>
+                <select 
+                    class="text-input" 
+                    style="width: auto; text-align: left; padding: 6px 12px; border-radius: 8px;"
+                    value={globalSettings.quickLinksFolderId || ""}
+                    onchange={(e) => {
+                        globalSettings.quickLinksFolderId = e.target.value;
+                        setGlobalSettings(globalSettings);
+                    }}
+                >
+                    <option value="">-- None Selected --</option>
+                    {#each collections as collection}
+                        <option value={collection.id}>{collection.title}</option>
+                    {/each}
+                </select>
             </div>
         </div>
     </div>

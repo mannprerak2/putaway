@@ -17,6 +17,8 @@
   // array of BookmarkTreeNode
   let allCollections = $state([]);
   let map = $state({});
+  let globalSettings = $state({});
+  let quickLinkBmId = $state(undefined);
 
   let tab = $state(undefined);
   let savedId = $state(undefined);
@@ -24,11 +26,27 @@
   let sessionSaved = $state(false);
   let quickLinkSaved = $state(false);
 
+  function checkIfQuickLinkSaved() {
+    if (globalSettings.quickLinksFolderId && tab && tab.url) {
+      chrome.bookmarks.getChildren(globalSettings.quickLinksFolderId, function (children) {
+        if (chrome.runtime.lastError) return;
+        let match = children.find(e => e.url === tab.url);
+        if (match) {
+          quickLinkSaved = true;
+          quickLinkBmId = match.id;
+        } else {
+          quickLinkSaved = false;
+          quickLinkBmId = undefined;
+        }
+      });
+    }
+  }
+
   onMount(() => {
     getDarkTheme(function (v) {
       darkTheme = v;
     });
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
       tab = tabs[0];
       if (tab.url != "chrome://newtab/") {
         chrome.bookmarks.search({ url: tab.url }, function (bms) {
@@ -42,11 +60,12 @@
             allCollections = children.filter((e) => e.url == null);
           });
         });
+        globalSettings = await loadGlobalSettings();
+        checkIfQuickLinkSaved();
       } else {
         isNewTab = true;
       }
     });
-    loadGlobalSettings()
   });
 
   const saveSession = () => {
@@ -112,25 +131,45 @@
     }
   };
 
-  const saveQuickLink = () => {
-    chrome.storage.sync.get("quickLinks", async (v) => {
-      let quickLinks = [];
-      if (v.quickLinks) {
-        quickLinks = v.quickLinks;
-      }
+  function saveToFolder(folderId) {
+    chrome.bookmarks.create({
+      parentId: folderId,
+      url: tab.url,
+      title: tab.title + ":::::" + tab.favIconUrl
+    }, function (node) {
+      quickLinkSaved = true;
+      quickLinkBmId = node.id;
+    });
+  }
 
-      if (quickLinkSaved) {
-        quickLinks.pop();
-      } else {
-        quickLinks.push({
-          icon: tab.favIconUrl,
-          url: tab.url,
+  const saveQuickLink = () => {
+    if (quickLinkSaved) {
+      if (quickLinkBmId) {
+        chrome.bookmarks.remove(quickLinkBmId, () => {
+          quickLinkSaved = false;
+          quickLinkBmId = undefined;
         });
       }
-
-      chrome.storage.sync.set({ quickLinks: quickLinks });
-      quickLinkSaved = !quickLinkSaved;
-    });
+    } else {
+      if (globalSettings.quickLinksFolderId) {
+        saveToFolder(globalSettings.quickLinksFolderId);
+      } else {
+        chrome.storage.local.get("pid", function (localRes) {
+          if (localRes.pid) {
+            chrome.bookmarks.create({
+              parentId: localRes.pid,
+              title: "Quick Links",
+              index: 0
+            }, function (newFolder) {
+              globalSettings.quickLinksFolderId = newFolder.id;
+              chrome.storage.sync.set({ globalSettings }, () => {
+                saveToFolder(newFolder.id);
+              });
+            });
+          }
+        });
+      }
+    }
   };
 
   const openPutAway = () => {
