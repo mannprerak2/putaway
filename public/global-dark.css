@@ -1,11 +1,22 @@
-:root{
-	--bg: #25242e;
-	--txt: rgb(243, 243, 243);
-	--outline-btn-border: white;
-	--outline-btn-hover: #3c3b4b;
-	--collection-separator: rgb(66, 66, 66);
-	--drop-indicator: white;
-	--box-shadow: rgba(255, 255, 255, 0.3);
-	--icon-color: grey;
-	--icon-opacity:1;
+:root {
+  --bg: #0b0f19;
+  --txt: #f8fafc;
+  --outline-btn-border: rgba(255, 255, 255, 0.12);
+  --outline-btn-hover: rgba(255, 255, 255, 0.08);
+  --collection-separator: rgba(255, 255, 255, 0.08);
+  --drop-indicator: #f8fafc;
+  --box-shadow: rgba(0, 0, 0, 0.5);
+  --icon-color: #94a3b8;
+  --icon-opacity: 0.85;
+  --glass-bg: rgba(17, 24, 39, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent: #f8fafc;
+  --accent-hover: #cbd5e1;
+  --accent-glow: rgba(248, 250, 252, 0.12);
+  --accent-txt: #0b0f19;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --tile-bg: rgba(30, 41, 59, 0.4);
+  --sidebar-bg: rgba(17, 24, 39, 0.95);
+  --card-hover-bg: rgba(255, 255, 255, 0.04);
 }

@@ -18,18 +18,38 @@
 </script>
 
 <style>
+    .empty-item-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 100%;
+    }
+    .drop-indicator {
+        width: 3px;
+        height: 80%;
+        border-radius: 2px;
+        margin-right: 6px;
+        transition: all 0.2s ease;
+        background-color: transparent;
+    }
+    .drop-indicator.active {
+        background-color: var(--drop-indicator);
+        box-shadow: 0 0 8px var(--drop-indicator);
+    }
+    .empty-dropzone {
+        width: 120px;
+        height: 90%;
+        display: inline-block;
+        box-sizing: border-box;
+    }
 </style>
 
-<div class="flex-row-container" style="height: 100%;">
-    {#if dropLine}
-        <div class="vl" style="border-color: var(--drop-indicator);" />
-    {:else}
-        <div class="vl" style="border-color: var(--bg);" />
-    {/if}
+<div class="empty-item-container">
+    <div class="drop-indicator" class:active={dropLine}></div>
     <div
+        class="empty-dropzone"
         ondragover={(e) => e.preventDefault()}
         ondragenter={onDragEnter}
         ondragleave={onDragLeave}
-        ondrop={handleDrop}
-        style="width: 200px; height: 100%; display: inline-block" />
+        ondrop={handleDrop}></div>
 </div>

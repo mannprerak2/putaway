@@ -6,40 +6,54 @@
     const { close } = getContext("simple-modal");
 </script>
 
-<main>
-    <div style="padding: 10px; font-size: 2em;">
-        Are you sure you want to
-        {#if toArchive}
-            Archive
-        {:else}
-            Unarchive
-        {/if}
-        {collection.title}
-        ?
-    </div>
-    <div class="modal-bottom-bar">
-        <button class="pointer" onclick={close}>Yes</button>
-    </div>
-</main>
-
 <style>
+    .modal-title {
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 1.4;
+        margin-bottom: 24px;
+        color: var(--txt);
+        padding: 4px;
+    }
+
     .modal-bottom-bar {
-        margin-top: 20px;
         display: flex;
-        flex-direction: row;
-        float: right;
-        align-items: center;
+        justify-content: flex-end;
     }
 
     button {
-        background-color: gray;
-        border-radius: 10px;
+        background-color: var(--accent);
+        border-radius: 8px;
         color: white;
-        padding: 8px;
+        padding: 8px 24px;
+        font-size: 0.9rem;
+        font-weight: 600;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
+        transition: all 0.2s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover {
+        background-color: var(--accent-hover);
+        box-shadow: 0 4px 10px var(--accent-glow);
+        transform: translateY(-1px);
+    }
+    button:active {
+        transform: translateY(0);
     }
 </style>
+
+<main>
+    <div class="modal-title">
+        Are you sure you want to 
+        {#if toArchive}
+            archive
+        {:else}
+            unarchive
+        {/if} 
+        <strong>{collection.title}</strong>?
+    </div>
+    <div class="modal-bottom-bar">
+        <button class="pointer" onclick={close}>Confirm</button>
+    </div>
+</main>
