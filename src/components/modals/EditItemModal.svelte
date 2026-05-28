@@ -50,63 +50,116 @@
 </script>
 
 <style>
-    input {
+    h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--txt);
+        letter-spacing: -0.01em;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--icon-color);
+    }
+
+    input, select {
         width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--outline-btn-border);
+        background: var(--tile-bg);
+        color: var(--txt);
+        font-size: 0.95rem;
+        font-family: inherit;
         outline: none;
-        padding: 10px;
         box-sizing: border-box;
+        transition: all 0.2s ease;
+    }
+    input:focus, select:focus {
+        border-color: var(--accent);
+        background: var(--bg);
+        box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
     .modal-bottom-bar {
-        margin-top: 20px;
+        margin-top: 24px;
         display: flex;
-        flex-direction: row;
-        float: right;
         align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
     }
 
     button {
-        background-color: gray;
-        border-radius: 10px;
-        color: white;
-        padding: 8px;
+        background-color: var(--accent);
+        border-radius: 8px;
+        color: var(--accent-txt, white);
+        padding: 8px 18px;
+        font-size: 0.9rem;
+        font-weight: 600;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
+        transition: all 0.2s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover {
+        background-color: var(--accent-hover);
+        box-shadow: 0 4px 10px var(--accent-glow);
+        transform: translateY(-1px);
+    }
+    button:active {
+        transform: translateY(0);
     }
 </style>
 
 <svelte:window on:keyup={handleKeyUp} />
 
-<main style="background-color: {itemColor}">
-    <h1>Edit Item -</h1>
+<main style="transition: background 0.3s ease; padding: 4px; border-radius: 8px; background-color: {itemColor || 'transparent'}">
+    <h1>Edit Item</h1>
 
-    <strong>Name</strong>
-    <input
-        bind:value={itemName}
-        type="text"
-        onchange={inputFormatter(itemName)} />
-    <br><br>
-    <strong>Icon Url</strong>
-    <input
-        bind:value={itemFavIconLink}
-        type="text"/>
-    <br><br>
+    <div class="form-group">
+        <label for="item-name">Name</label>
+        <input
+            id="item-name"
+            bind:value={itemName}
+            type="text"
+            onchange={inputFormatter(itemName)} />
+    </div>
+
+    <div class="form-group">
+        <label for="item-icon">Icon URL</label>
+        <input
+            id="item-icon"
+            bind:value={itemFavIconLink}
+            type="text" />
+    </div>
+
+    <div class="form-group">
+        <label for="item-color">Card Color Accent</label>
+        <select id="item-color" bind:value={itemColor} name="colors">
+            <option value="">None</option>
+            <option value="#ff000022">Red</option>
+            <option value="#00ff0022">Green</option>
+            <option value="#0000ff22">Blue</option>
+            <option value="#ffff0022">Yellow</option>
+            <option value="#ff00ff22">Purple</option>
+            <option value="#00ffff22">Cyan</option>
+        </select>
+    </div>
+
     <div class="modal-bottom-bar">
-        <div style="padding: 10px; color: red;">{errorString}</div>
+        {#if errorString}
+            <div style="font-size: 0.85rem; color: var(--danger); font-weight: 500;">{errorString}</div>
+        {/if}
         <button class="pointer" onclick={onClickCreate}>Update</button>
     </div>
-    <strong>Color</strong>
-    &nbsp
-    <select bind:value={itemColor} name="colors">
-        <option value="">None</option>
-        <option value="#ff000022">Red</option>
-        <option value="#00ff0022">Green</option>
-        <option value="#0000ff22">Blue</option>
-        <option value="#ffff0022">Yellow</option>
-        <option value="#ff00ff22">Purple</option>
-        <option value="#00ffff22">Cyan</option>
-      </select>
 </main>

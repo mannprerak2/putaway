@@ -109,24 +109,58 @@
 </script>
 
 <style>
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--collection-separator);
+    }
+    .title-area {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--txt);
+    }
+    .badge {
+        background-color: var(--outline-btn-hover);
+        color: var(--txt);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 12px;
+        border: 1px solid var(--outline-btn-border);
+    }
+    .scroll-container {
+        height: calc(100vh - 96px);
+        overflow-y: auto;
+        padding-right: 4px;
+    }
 </style>
 
 <div>
-    <div class="flex-row-container">
-        <div style="font-size: 1.8em;">Open Tabs - {allTabs.length}</div>
-        <div style="flex-grow:1;" />
+    <div class="sidebar-header">
+        <div class="title-area">
+            <h2 class="title">Open Tabs</h2>
+            <span class="badge">{allTabs.length}</span>
+        </div>
+        <div style="flex-grow: 1;" />
         {#if allTabs.length > 0}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
+            <button
                 class="rounded-button pointer"
-                style="font-size: 1em;"
+                style="padding: 4px 12px; font-size: 0.8rem;"
                 onclick={saveSession}>
                 Save Session
-            </div>
+            </button>
         {/if}
     </div>
 
-    <div class="scroll">
+    <div class="scroll scroll-container">
         {#each allTabs as tab, i (tab.id)}
             <TabTile
                 {tab}

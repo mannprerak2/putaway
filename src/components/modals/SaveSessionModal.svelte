@@ -60,11 +60,32 @@
 </script>
 
 <style>
+    h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 16px;
+        color: var(--txt);
+        letter-spacing: -0.01em;
+    }
+
     input {
         width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--outline-btn-border);
+        background: var(--tile-bg);
+        color: var(--txt);
+        font-size: 0.95rem;
+        font-family: inherit;
         outline: none;
-        padding: 10px;
         box-sizing: border-box;
+        transition: all 0.2s ease;
+    }
+    input:focus {
+        border-color: var(--accent);
+        background: var(--bg);
+        box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
     .modal-bottom-bar {
@@ -73,32 +94,43 @@
         flex-direction: row;
         float: right;
         align-items: center;
+        gap: 12px;
     }
 
     button {
-        background-color: gray;
-        border-radius: 10px;
-        color: white;
-        padding: 8px;
+        background-color: var(--accent);
+        border-radius: 8px;
+        color: var(--accent-txt, white);
+        padding: 8px 18px;
+        font-size: 0.9rem;
+        font-weight: 600;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
+        transition: all 0.2s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover {
+        background-color: var(--accent-hover);
+        box-shadow: 0 4px 10px var(--accent-glow);
+        transform: translateY(-1px);
+    }
+    button:active {
+        transform: translateY(0);
     }
 </style>
 
 <svelte:window on:keyup={handleKeyUp} />
 
 <main>
-    <h1>Collection Name -</h1>
+    <h1>Collection Name</h1>
 
     <!-- svelte-ignore a11y-autofocus -->
     <input bind:value={collectionName} type="text" onchange={inputFormatter(collectionName)} autofocus>
 
     <div class="modal-bottom-bar">
-        <div style="padding: 10px; color: red;">{errorString}</div>
-        <button class="pointer" onclick={onClickCreate}>Save Session to
-            Collection</button>
+        {#if errorString}
+            <div style="font-size: 0.85rem; color: var(--danger); font-weight: 500;">{errorString}</div>
+        {/if}
+        <button class="pointer" onclick={onClickCreate}>Save Session to Collection</button>
     </div>
 </main>

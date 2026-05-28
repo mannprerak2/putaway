@@ -137,21 +137,21 @@
   {#if !isNewTab}
     <div id="main">
       <div id="top">
-        <!-- svelte-ignore a11y_autofocus -->
-        <input
-          autofocus
-          type="text"
-          placeholder="Search"
-          bind:value={searchText}
-        />
-        <div id="search-logo">
-          <Fa icon={faSearch} size="2x" />
+        <div class="search-container">
+          <div class="search-icon-wrapper">
+            <Fa icon={faSearch} size="sm" />
+          </div>
+          <!-- svelte-ignore a11y_autofocus -->
+          <input
+            autofocus
+            type="text"
+            placeholder="Search collections..."
+            bind:value={searchText}
+          />
         </div>
-        <div id="open-putaway" class="pointer" onclick={openPutAway}>
-          Open
-          <br />
-          PutAway
-        </div>
+        <button id="open-putaway" class="pointer" onclick={openPutAway}>
+          Open App
+        </button>
       </div>
       <div id="list">
         {#each allCollections as collection, i (collection.id)}
@@ -165,51 +165,51 @@
             />
           {/if}
         {/each}
-        <div style="height: 60px;" />
       </div>
     </div>
-    <div
-      id="save-session"
-      class="pointer big-popup-button"
-      onclick={saveSession}
-    >
-      {#if sessionSaved}
-        ✓Saved (click to undo)
-      {:else}
-        <Fa
-          icon={faSave}
-          size="sm"
-          style="position:relative; top:3px; opacity: 0.7;"
-        />
-        Save Session
-      {/if}
-    </div>
-    <div
-      id="save-quicklink"
-      class="pointer big-popup-button"
-      onclick={saveQuickLink}
-    >
-      {#if quickLinkSaved}
-        ✓Saved (click to undo)
-      {:else}
-        <Fa
-          icon={faImage}
-          size="sm"
-          style="position:relative; top:3px; opacity: 0.7;"
-        />
-        Save Quick Link
-      {/if}
+    
+    <div class="action-footer">
+      <button
+        id="save-session"
+        class="pointer big-popup-button"
+        onclick={saveSession}
+      >
+        {#if sessionSaved}
+          ✓ Saved (click to undo)
+        {:else}
+          <Fa
+            icon={faSave}
+            size="sm"
+          />
+          Save Session
+        {/if}
+      </button>
+      <button
+        id="save-quicklink"
+        class="pointer big-popup-button"
+        onclick={saveQuickLink}
+      >
+        {#if quickLinkSaved}
+          ✓ Saved (click to undo)
+        {:else}
+          <Fa
+            icon={faImage}
+            size="sm"
+          />
+          Save Quick Link
+        {/if}
+      </button>
     </div>
   {:else}
     <div id="newtab-popup">
       <img alt="logo" src="images/logo128.png" />
-      <div id="newtab-open-putaway" class="pointer" onclick={openPutAway}>
+      <button id="newtab-open-putaway" class="pointer" onclick={openPutAway}>
         Open PutAway
-      </div>
-      <div>
-        This is an Empty Tab.
+      </button>
+      <div style="font-size: 0.85rem; line-height: 1.4; color: var(--icon-color);">
+        This is an empty tab.
         <br />
-        You cannot add this to a collection.
+        You cannot add this page to a collection.
       </div>
     </div>
   {/if}
@@ -219,71 +219,138 @@
   #popup {
     width: 300px;
     height: 400px;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   #main {
-    height: 350px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: calc(100% - 96px); /* space for action-footer */
   }
 
   #top {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding-bottom: 2px;
-    border-bottom: 1px solid rgb(201, 201, 201);
-    height: 50px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--collection-separator);
+    gap: 8px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  .search-container {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon-wrapper {
+    position: absolute;
+    left: 10px;
+    color: var(--icon-color);
+    display: flex;
+    align-items: center;
+    opacity: 0.65;
+  }
+
+  input {
+    border: 1px solid var(--outline-btn-border);
+    padding: 8px 12px 8px 30px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    outline: none;
+    background: var(--tile-bg);
+    color: var(--txt);
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  input:focus {
+    border-color: var(--accent);
+    background: var(--bg);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  #open-putaway {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 20px;
+    border: 1px solid var(--outline-btn-border);
+    padding: 8px 12px;
+    color: var(--txt);
+    background: var(--outline-btn-hover);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  #open-putaway:hover {
+    border-color: var(--icon-color);
+    background-color: var(--outline-btn-hover);
+    transform: translateY(-1px);
+  }
+
+  #list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    box-sizing: border-box;
+  }
+
+  #list::-webkit-scrollbar {
+    width: 4px;
+  }
+  #list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #list::-webkit-scrollbar-thumb {
+    background-color: var(--outline-btn-border);
+    border-radius: 2px;
+  }
+
+  .action-footer {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--collection-separator);
+    background: var(--sidebar-bg);
+    flex-shrink: 0;
   }
 
   .big-popup-button {
     width: 100%;
-    height: 50px;
-    border-top: 1px solid rgb(201, 201, 201);
+    height: 48px;
     text-align: center;
-    color: rgb(83, 81, 81);
-    font-size: 2em;
-    line-height: 50px;
+    color: var(--txt);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
   }
 
   .big-popup-button:hover {
-    background-color: #e6e6e6;
+    background-color: var(--outline-btn-hover);
   }
-
-  input {
-    border: 1px dashed gray;
-    padding: 6px;
-    padding-left: 30px;
-    border-radius: 0 20px 20px 0;
-    font-size: 1.8em;
-    outline: none;
-    color: gray;
-    width: 70%;
-    margin: 5px;
-  }
-
-  #open-putaway {
-    flex-grow: 1;
-    text-align: center;
-    border-radius: 20px 0 0 20px;
-    border: 1px dashed gray;
-    margin: 5px;
-    padding: 2px;
-    color: gray;
-    font-size: 1.2em;
-  }
-
-  #open-putaway:hover {
-    background-color: #e6e6e6;
-  }
-
-  #list {
-    height: 300px;
-    overflow-y: scroll;
-    scrollbar-width: none;
-  }
-
-  #list::-webkit-scrollbar {
-    display: none;
+  
+  .big-popup-button:not(:last-child) {
+    border-bottom: 1px solid var(--collection-separator);
   }
 
   #newtab-popup {
@@ -294,25 +361,32 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: rgb(190, 190, 190);
-    font-size: 2em;
+    color: var(--icon-color);
+    font-size: 0.9rem;
+    padding: 24px;
+    box-sizing: border-box;
+    gap: 16px;
+  }
+
+  #newtab-popup img {
+    width: 64px;
+    height: 64px;
   }
 
   #newtab-open-putaway {
-    color: gray;
-    font-size: 1.2em;
-    border: 1px dashed gray;
-    border-radius: 50px;
-    padding: 10px;
-    margin: 10px;
+    color: var(--accent-txt, white);
+    font-weight: 600;
+    background: var(--accent);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    box-shadow: 0 4px 10px var(--accent-glow);
+    transition: all 0.2s;
+    font-size: 0.85rem;
   }
 
   #newtab-open-putaway:hover {
-    background-color: #e6e6e6;
-  }
-  #search-logo {
-    position: absolute;
-    right: 16.8rem;
-    opacity: 0.5;
+    background: var(--accent-hover);
+    transform: translateY(-1px);
   }
 </style>

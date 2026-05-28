@@ -18,18 +18,31 @@
 </script>
 
 <style>
+    .drop-indicator-line {
+        height: 3px;
+        background: transparent;
+        width: calc(100% - 8px);
+        margin: 0 auto;
+        border-radius: 2px;
+        transition: all 0.2s ease;
+    }
+    .drop-indicator-line.active {
+        background: var(--drop-indicator);
+        box-shadow: 0 0 8px var(--drop-indicator);
+    }
+    .empty-dropzone {
+        height: 120px;
+        width: 100%;
+        box-sizing: border-box;
+    }
 </style>
 
 <div>
-    {#if dropLine}
-        <hr style="border: 1px solid var(--drop-indicator);" />
-    {:else}
-        <hr style="border: 1px solid var(--bg);" />
-    {/if}
+    <div class="drop-indicator-line" class:active={dropLine}></div>
     <div
+        class="empty-dropzone"
         ondragover={(e) => e.preventDefault()}
         ondragenter={onDragEnter}
         ondragleave={onDragLeave}
-        ondrop={handleDrop}
-        style="height: 200px;" />
+        ondrop={handleDrop}></div>
 </div>

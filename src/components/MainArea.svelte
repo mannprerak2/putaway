@@ -13,6 +13,7 @@
 
     import Fa from "sveltejs-fontawesome";
     import { faArchive } from "@fortawesome/free-solid-svg-icons/faArchive";
+    import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 
     // Gets ID of folder inside Other Bookmarks and creates one if it doesn't
     // exist.
@@ -195,23 +196,21 @@
     };
 </script>
 
-<main style="position: relative;">
+<main style="position: relative; height: 100%; width: 100%; box-sizing: border-box;">
     {#if allCollections.length == 0}
         <div class="no-collections-indicator">
             {#if !$archiveOnly}
-                <h3 style="color: var(--txt);">No Collections, Click '</h3>
-                <button class="plus-icon-dummy" />
-                <h3 style="color: var(--txt);">' To create one</h3>
-            {:else}
-                <h3 style="color: var(--txt);">No Archives, Click '</h3>
-                <div
-                    class="pointer"
-                    style="font-size: 2em; opacity:var(--icon-opacity);"
-                    alt="Archive"
-                >
-                    <Fa icon={faArchive} size="sm" color="var(--icon-color)" />
+                <div class="empty-state-info flex-collumn-container">
+                    <span class="empty-state-icon">📂</span>
+                    <h3>No collections created yet</h3>
+                    <p>Click the <span class="plus-text-indicator"><Fa icon={faPlus} size="xs" color="var(--accent-txt, white)" /></span> button at the bottom-right to create your first collection.</p>
                 </div>
-                <h3 style="color: var(--txt);">' To archive a collections.</h3>
+            {:else}
+                <div class="empty-state-info flex-collumn-container">
+                    <span class="empty-state-icon">📦</span>
+                    <h3>No archived collections</h3>
+                    <p>Collections you archive will show up in this section.</p>
+                </div>
             {/if}
         </div>
     {/if}
@@ -220,7 +219,10 @@
         <button
             class="plus-icon pointer"
             onclick={clickAddCollection}
-        />
+            aria-label="Add Collection"
+        >
+            <Fa icon={faPlus} size="lg" color="var(--accent-txt, white)" />
+        </button>
     {/if}
     <div class="scroll">
         {#each allCollections as collection, i (collection.id)}
@@ -238,63 +240,71 @@
 </main>
 
 <style>
-    .plus-icon-dummy {
-        width: 20px;
-        height: 20px;
-        border-width: 3px;
-        border-radius: 100%;
-        background: -webkit-linear-gradient(
-                0deg,
-                transparent 0%,
-                transparent 46%,
-                white 46%,
-                white 56%,
-                transparent 56%,
-                transparent 100%
-            ),
-            -webkit-linear-gradient(90deg, transparent 0%, transparent 46%, white
-                        46%, white 56%, transparent 56%, transparent 100%);
-        border-color: gray;
-        background-color: gray;
-    }
-
     .plus-icon {
         position: absolute;
-        margin-right: 20px;
-        margin-bottom: 8vh;
-        bottom: 0;
-        right: 0;
-        width: 40px;
-        height: 40px;
-        border-width: 8px;
-        border-radius: 100%;
-        background: -webkit-linear-gradient(
-                0deg,
-                transparent 0%,
-                transparent 46%,
-                white 46%,
-                white 56%,
-                transparent 56%,
-                transparent 100%
-            ),
-            -webkit-linear-gradient(90deg, transparent 0%, transparent 46%, white
-                        46%, white 56%, transparent 56%, transparent 100%);
-        border-color: gray;
-        background-color: gray;
-        z-index: 2;
+        bottom: 24px;
+        right: 24px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--accent-txt, white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px var(--accent-glow), 0 8px 16px rgba(0,0,0,0.15);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        z-index: 10;
+    }
+    .plus-icon:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px var(--accent-glow), 0 12px 24px rgba(0,0,0,0.2);
+    }
+    .plus-icon:active {
+        transform: translateY(0) scale(0.95);
     }
 
     .no-collections-indicator {
         position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin-bottom: 100px;
-        left: 0;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
-        align-content: center;
         justify-content: center;
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+    .empty-state-info h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 16px 0 8px 0;
+        color: var(--txt);
+    }
+    .empty-state-info p {
+        font-size: 0.9rem;
+        color: var(--icon-color);
+        margin: 0;
+        line-height: 1.5;
+    }
+    .empty-state-icon {
+        font-size: 3rem;
+        opacity: 0.8;
+    }
+    .plus-text-indicator {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent);
+        color: white;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin: 0 2px;
     }
 </style>

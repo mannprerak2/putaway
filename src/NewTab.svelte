@@ -53,42 +53,50 @@
 
 <style>
   .container-table {
-    display: table;
-    width: 100%;
-    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
   }
 
   #right-fixed-bar {
-    width: 20vw;
-    display: table-cell;
     overflow: hidden;
-    height: 100%;
-    border-left: 1px solid gray;
-    padding: 10px;
+    height: 100vh;
+    border-left: 1px solid var(--collection-separator);
+    padding: 12px 10px;
+    background: var(--sidebar-bg);
+    box-sizing: border-box;
+    transition: width 0.2s ease;
   }
 
   #left-free-area {
-    display: table-cell;
-    width: auto;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   #top-bar {
     width: 100%;
-    height: 2cm;
-    border-bottom: 1px solid gray;
+    height: 52px;
+    border-bottom: 1px solid var(--collection-separator);
+    flex-shrink: 0;
   }
 
   #top-bar-container {
     width: 100%;
     height: 100%;
-    padding: 10px;
+    padding: 8px 20px;
     box-sizing: border-box;
   }
 
   #main-free-area {
     width: 100%;
-    height: 100%;
+    flex-grow: 1;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 </style>
 

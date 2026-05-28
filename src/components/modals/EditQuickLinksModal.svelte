@@ -31,59 +31,171 @@
 <svelte:window on:keyup={handleKeyUp} />
 
 <main>
-    <h1>Edit Quick links -</h1>
+    <h1>Edit Quick Links</h1>
 
-    {#each quickLinks as ql, index}
-        <div class="flex-row-container">
-            <img alt=" " src={ql.icon} height="26px" style="padding: 5px" />
-            <strong>URL: </strong>
-            <input bind:value={ql.url} type="text" />
-            <strong style="margin-left: 5px">ICON: </strong>
-            <input bind:value={ql.icon} type="text" />
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class="pointer" onclick={(e) => deleteLink(index)}>
-                <Fa icon={faTimesCircle} size="2x" style="margin-left: 5px" />
+    <div class="links-list">
+        {#each quickLinks as ql, index}
+            <div class="link-row">
+                <img alt="" src={ql.icon || "favicon.png"} height="24px" width="24px" />
+                
+                <div class="input-group" style="flex: 2;">
+                    <label for="url-{index}">URL</label>
+                    <input id="url-{index}" bind:value={ql.url} type="text" placeholder="https://example.com" />
+                </div>
+                
+                <div class="input-group" style="flex: 1.5;">
+                    <label for="icon-{index}">Icon URL</label>
+                    <input id="icon-{index}" bind:value={ql.icon} type="text" placeholder="https://example.com/favicon.png" />
+                </div>
+                
+                <button class="delete-btn" onclick={(e) => deleteLink(index)} aria-label="Delete link">
+                    <Fa icon={faTimesCircle} size="lg" />
+                </button>
             </div>
-        </div>
-    {/each}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div id="add-quick-link" class="pointer flex-row-container" onclick={addQuickLink} style="font-size: 2em; margin-right:30%; margin-left: 30%; margin-top: 5px; border: 1px dashed gray; border-radius: 30px; justify-content: space-evenly;">
-        Add new link
+        {/each}
     </div>
-    <div class="modal-bottom-bar" style="margin: auto">
-        <button class="pointer" onclick={onClickSave}>Save</button>
+
+    <button id="add-quick-link" onclick={addQuickLink}>
+        + Add New Link
+    </button>
+    
+    <div class="modal-bottom-bar">
+        <button class="save-btn pointer" onclick={onClickSave}>Save Links</button>
     </div>
 </main>
 
 <style>
+    h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--txt);
+        letter-spacing: -0.01em;
+    }
+
+    .links-list {
+        max-height: 280px;
+        overflow-y: auto;
+        padding-right: 4px;
+        margin-bottom: 16px;
+    }
+
+    .link-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+        background: var(--tile-bg);
+        border: 1px solid var(--outline-btn-border);
+        border-radius: 10px;
+        padding: 8px 12px;
+        box-sizing: border-box;
+    }
+
+    .link-row img {
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px;
+        flex-shrink: 0;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .input-group label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--icon-color);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
     input {
         width: 100%;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--outline-btn-border);
+        background: var(--bg);
+        color: var(--txt);
+        font-size: 0.9rem;
+        font-family: inherit;
         outline: none;
-        padding: 4px;
         box-sizing: border-box;
+        transition: all 0.2s ease;
+    }
+    input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .delete-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: var(--icon-color);
+        background: transparent;
+        border: none;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+    .delete-btn:hover {
+        background-color: var(--danger);
+        color: white;
+    }
+
+    #add-quick-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        margin: 12px auto;
+        width: fit-content;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent);
+        border: 1px dashed var(--accent);
+        border-radius: 20px;
+        background: transparent;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    #add-quick-link:hover {
+        background-color: var(--outline-btn-hover);
+        transform: translateY(-1px);
     }
 
     .modal-bottom-bar {
         margin-top: 20px;
         display: flex;
-        flex-direction: row;
-        float: right;
-        align-items: center;
+        justify-content: flex-end;
     }
 
-    button {
-        background-color: gray;
-        border-radius: 10px;
-        color: white;
-        padding: 8px;
+    .save-btn {
+        background-color: var(--accent);
+        border-radius: 8px;
+        color: var(--accent-txt, white);
+        padding: 8px 24px;
+        font-size: 0.9rem;
+        font-weight: 600;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
+        transition: all 0.2s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
-    #add-quick-link:hover{
-        background-color: #e6e6e6;
+    .save-btn:hover {
+        background-color: var(--accent-hover);
+        box-shadow: 0 4px 10px var(--accent-glow);
+        transform: translateY(-1px);
+    }
+    .save-btn:active {
+        transform: translateY(0);
     }
 </style>

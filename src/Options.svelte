@@ -44,34 +44,63 @@
 
 <style>
   .container-table {
-    display: table;
+    display: flex;
+    flex-direction: row;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
+    background: var(--bg);
   }
 
   #left-side-bar {
-    width: 20vw;
-    display: table-cell;
-    overflow: hidden;
+    width: 280px;
     height: 100%;
-    border-right: 1px solid gray;
-    padding: 10px;
+    border-right: 1px solid var(--collection-separator);
+    padding: 32px 20px;
+    background: var(--sidebar-bg);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
   }
 
-  .left-side-tile{
-    font-size: 2em;
+  .left-side-tile {
+    font-size: 0.95rem;
+    font-weight: 500;
     width: 100%;
-    word-wrap: break-word;
-    padding: 10px;
-    margin-bottom: 5px;
+    padding: 12px 16px;
+    margin-bottom: 6px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    color: var(--icon-color);
+  }
+  .left-side-tile:hover {
+    background-color: var(--outline-btn-hover);
+    color: var(--txt);
+  }
+  .left-side-tile.active {
+    background-color: var(--accent-glow);
+    color: var(--accent);
+    font-weight: 600;
   }
 
   #right-panel {
-    display: table-cell;
-    width: auto;
+    flex-grow: 1;
     height: 100%;
-    padding: 10px;
+    padding: 40px 48px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+
+  .logo-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+    color: var(--txt);
   }
 </style>
 
@@ -86,40 +115,34 @@
   <Modal closeButton={false}>
     <div class="container-table">
       <div id="left-side-bar">
-        <div class="flex-collumn-container">
-          <!-- Header -->
-          <div class="flex-row-container" style="margin-bottom: 20px;">
-            <img alt="logo" src="images/logo32.png" />
-            &nbsp &nbsp
-            <h1>PutAway</h1>
-          </div>
-          <!-- Setting options -->
+        <div class="logo-header flex-row-container" style="margin-bottom: 32px; gap: 12px; padding-left: 8px;">
+          <img alt="logo" src="images/logo32.png" />
+          <h1>PutAway</h1>
+        </div>
+        <!-- Setting options -->
+        <div class="flex-collumn-container" style="align-items: stretch; width: 100%;">
           {#each settingPages as page,index (page.name)}
-          {#if index==currentSettingPage}
-            <div class="left-side-tile" style="background-color: #00ff0022">
+            <button
+              class="left-side-tile pointer"
+              class:active={index==currentSettingPage}
+              onclick={(e)=>changePage(index)}>
               {page.name}
-            </div>
-            {:else}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class="left-side-tile" onclick={(e)=>changePage(index)}>
-              {page.name}
-            </div>
-            {/if}
+            </button>
           {/each}
         </div>
       </div>
       <div id="right-panel">
-        <h1 style="font-size: 3em;"><u>{settingPages[currentSettingPage].fullName}</u></h1>
-        <div style="overflow-x: hidden; overflow-y: auto; scrollbar-width: 0; height: 95vh;">
-        {#if settingPages[currentSettingPage].name == "General"}
-          <GeneralOptions {darkTheme} {changeTheme} {globalSettings} {setGlobalSettings}/>
-        {:else if settingPages[currentSettingPage].name == "Save Hooks"}
-          <SaveHookOptions {globalSettings} {setGlobalSettings}/>
-        {/if}
-      </div>
+        <h1 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 24px; color: var(--txt);">{settingPages[currentSettingPage].fullName}</h1>
+        <div style="overflow-x: hidden; overflow-y: auto; scrollbar-width: 0; height: calc(100% - 60px);">
+          {#if settingPages[currentSettingPage].name == "General"}
+            <GeneralOptions {darkTheme} {changeTheme} {globalSettings} {setGlobalSettings}/>
+          {:else if settingPages[currentSettingPage].name == "Save Hooks"}
+            <SaveHookOptions {globalSettings} {setGlobalSettings}/>
+          {/if}
+        </div>
       </div>
     </div>
   </Modal>
 {:else}
-<div></div>
+  <div></div>
 {/if}

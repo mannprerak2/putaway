@@ -29,7 +29,6 @@
     export let clickShareCollection;
     export let clickArchiveCollection;
 
-    let itemAreaWidth = 97 - getOpenTabsBarWidth();
     let dropLine = false;
     var onDragEnter = (e) => {
         dropLine = true;
@@ -251,49 +250,123 @@
 
 <style>
     .collection {
-        border-bottom: 1px solid var(--collection-separator);
-        width: 100%;
-        padding: 10px;
-        padding-top: 0px;
+        background: var(--tile-bg);
+        border: 1px solid var(--outline-btn-border);
+        border-radius: 12px;
+        width: calc(100% - 40px);
+        margin: 8px auto;
+        padding: 6px 16px 8px 16px;
         box-sizing: border-box;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    .collection.dragover-collection {
+        border-color: var(--drop-indicator);
+        box-shadow: 0 0 14px var(--accent-glow);
+        transform: translateY(-2px);
+    }
+    .collection:hover:not(.dragover-collection) {
+        border-color: var(--icon-color);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
     }
 
     .tile-top-bar {
-        font-size: 2em;
+        font-size: 1.1rem;
+        font-weight: 600;
         display: flex;
         align-items: center;
         flex-direction: row;
+        margin-bottom: 4px;
+        color: var(--txt);
+        cursor: grab;
+        padding: 4px;
+        border-radius: 6px;
+    }
+    .tile-top-bar:active {
+        cursor: grabbing;
+    }
+
+    .collection-title {
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .collection-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        color: var(--icon-color);
+        background: transparent;
+        border: none;
+        transition: all 0.2s ease;
+    }
+    .action-btn:hover {
+        background-color: var(--outline-btn-hover);
+        color: var(--txt);
+        transform: scale(1.08);
     }
 
     .item-area {
-        /*Item Height Marker*/
-        height: 5em;
-        overflow-x: scroll;
+        width: calc(100% + 32px);
+        margin-left: -16px;
+        margin-right: -16px;
+        height: 4.8em;
+        overflow-x: auto;
         overflow-y: hidden;
-        scrollbar-width: 0;
+        scrollbar-width: none;
         box-sizing: border-box;
         position: relative;
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
+        gap: 12px;
+        padding: 4px 16px;
+        border-radius: 8px;
+        /* Blur/fade-out mask on edges */
+        mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
     }
 
     .item-area::-webkit-scrollbar {
         display: none;
+    }
+
+    .drop-line-indicator {
+        height: 0;
+        background: transparent;
+        width: 100%;
+        margin-bottom: 0;
+        border-radius: 2px;
+        transition: all 0.2s ease;
+    }
+    .drop-line-indicator.active {
+        height: 3px;
+        background: var(--drop-indicator);
+        box-shadow: 0 0 8px var(--drop-indicator);
+        margin-bottom: 8px;
     }
 </style>
 
 {#if $searchText.length==0 || hasSearchMatch}
 <div
     class="collection"
+    class:dragover-collection={dropLine}
     in:fade={{ duration: 500 }}
     out:fade
     ondragover={(e) => e.preventDefault()}>
-    {#if dropLine}
-        <hr style="border: 1px solid var(--drop-indicator);" />
-    {:else}
-        <hr style="border: 1px solid var(--bg);" />
-    {/if}
+    
+    <div class="drop-line-indicator" class:active={dropLine}></div>
+
     <div
         class="tile-top-bar"
         draggable="true"
@@ -303,74 +376,66 @@
         ondragleave={onDragLeave}
         ondragstart={handleDragStart}
         ondrop={handleDrop}>
-        <div>{collection.title}</div>
+        <div class="collection-title">{collection.title}</div>
         <div style="flex-grow:1;" />
-        {#if items.length > 0}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-                id="open-all-tabs"
-                class="rounded-button pointer"
-                onclick={(e)=>openAllOfCollection(collection.title)}>
-                Open
-                {items.length}
-                Tabs
-            </div>
-            &nbsp
-        {/if}
-        <Tooltip title="Share" ypos="-50" fontsize="0.5em">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-                class="pointer"
-                onclick={(e) => clickShareCollection(index, items)}
-                style="font-size: 0.8em; opacity:var(--icon-opacity);">
-                <Fa icon={faShareAlt} size="sm" color="var(--icon-color)" />
-            </div>
-        </Tooltip>
-        &nbsp
-        <Tooltip title="Delete" ypos="-50" fontsize="0.5em">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-                class="pointer"
-                onclick={(e) => clickDeleteCollection(index)}
-                style="font-size: 0.8em; opacity:var(--icon-opacity);">
-                <Fa icon={faTrashAlt} size="sm" color="var(--icon-color)" />
-            </div>
-        </Tooltip>
-        &nbsp
-        <Tooltip title="Edit" ypos="-50" fontsize="0.5em">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-                class="pointer"
-                onclick={openEditCollectionNameModal}
-                style= "font-size: 0.8em; opacity:var(--icon-opacity);"
-                alt= "Edit Name">
-                <Fa icon={faEdit} size="sm" color="var(--icon-color)" />
-            </div>
-        </Tooltip>
-        &nbsp
-        <Tooltip title="Archive" ypos="-50" fontsize="0.5em">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-                class="pointer"
-                onclick={(e) => clickArchiveCollection(index)}
-                style= "font-size: 0.8em; opacity:var(--icon-opacity);"
-                alt= "Archive">
-                <Fa icon={faArchive} size="sm" color="var(--icon-color)" />
-            </div>
-        </Tooltip>
-        <!-- <div style="font-size: 0.8em;">⋮</div> -->
-    </div>
-    <div class="item-area" style="width: {itemAreaWidth}vw">
-            {#if items.length==0}
-                <NoItemTileIndicator index={items.length} {onDrop}/>
-            {:else}
-                {#each items as item,index (item.id)}
-                    {#if (matchSearch(item, $searchText)) }
-                        <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop} {onClickItemEdit}/>
-                    {/if}
-                {/each}
-                <EmptyItemTile index={items.length} {onDrop}/>
+        
+        <div class="collection-actions">
+            {#if items.length > 0}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <button
+                    id="open-all-tabs"
+                    class="rounded-button pointer"
+                    style="padding: 4px 12px; font-size: 0.8rem;"
+                    onclick={(e)=>openAllOfCollection(collection.title)}>
+                    Open {items.length} Tabs
+                </button>
             {/if}
+
+            <Tooltip title="Share Collection" ypos="-32">
+                <button
+                    class="action-btn pointer"
+                    onclick={(e) => clickShareCollection(index, items)}>
+                    <Fa icon={faShareAlt} size="sm" color="var(--icon-color)" />
+                </button>
+            </Tooltip>
+            
+            <Tooltip title="Delete Collection" ypos="-32">
+                <button
+                    class="action-btn pointer"
+                    onclick={(e) => clickDeleteCollection(index)}>
+                    <Fa icon={faTrashAlt} size="sm" color="var(--icon-color)" />
+                </button>
+            </Tooltip>
+            
+            <Tooltip title="Edit Name" ypos="-32">
+                <button
+                    class="action-btn pointer"
+                    onclick={openEditCollectionNameModal}>
+                    <Fa icon={faEdit} size="sm" color="var(--icon-color)" />
+                </button>
+            </Tooltip>
+            
+            <Tooltip title="Archive" ypos="-32">
+                <button
+                    class="action-btn pointer"
+                    onclick={(e) => clickArchiveCollection(index)}>
+                    <Fa icon={faArchive} size="sm" color="var(--icon-color)" />
+                </button>
+            </Tooltip>
         </div>
+    </div>
+    
+    <div class="item-area">
+        {#if items.length==0}
+            <NoItemTileIndicator index={items.length} {onDrop}/>
+        {:else}
+            {#each items as item,index (item.id)}
+                {#if (matchSearch(item, $searchText)) }
+                    <ItemTile {index} {item} {onItemDelete} {onClickItem} {onDrop} {onClickItemEdit}/>
+                {/if}
+            {/each}
+            <EmptyItemTile index={items.length} {onDrop}/>
+        {/if}
+    </div>
 </div>
 {/if}

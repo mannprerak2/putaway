@@ -47,26 +47,38 @@
 
 <style>
     .popup-collection-tile {
-        height: 50px;
+        height: 42px;
         width: 100%;
-        /* border-bottom: 1px solid rgb(201, 201, 201); */
-        color: gray;
-        padding-left: 15px;
+        color: var(--txt);
+        padding: 0 12px;
         box-sizing: border-box;
-        font-size: 2em;
-        line-height: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         user-select: none;
-        font-weight: 600;
-        overflow: hidden;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        margin-bottom: 4px;
     }
 
     .popup-collection-tile:hover {
-        background-color: #e6e6e6;
+        background-color: var(--outline-btn-hover);
     }
 
-    .save {
-        display: inline;
-        color: green;
+    .collection-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+    }
+
+    .save-indicator {
+        color: var(--accent);
+        font-weight: bold;
+        font-size: 1rem;
+        margin-left: 8px;
     }
 </style>
 
@@ -75,10 +87,8 @@
     class="popup-collection-tile pointer"
     title={collection.title}
     onclick={click}>
+    <span class="collection-name">{collection.title}</span>
     {#if savedInThis}
-        <div class="save">✓</div>
+        <span class="save-indicator">✓</span>
     {/if}
-    {collection.title}
 </div>
-<hr
-    style="border: 1px solid rgb(240, 240, 240); margin: 0; margin-left: 5px; margin-right: 5px;" />
