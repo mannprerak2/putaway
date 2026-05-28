@@ -1,6 +1,7 @@
 <script>
     import { fade } from "svelte/transition";
     import { getItemTileWidth } from '../../services/hooks.js'
+    import { dragActive, dragType } from "../../stores/stores.js";
 
     // FontAwesome icons.
     import Fa from "sveltejs-fontawesome";
@@ -16,6 +17,8 @@
     export let onDrop;
     let tileWidth = getItemTileWidth();
     let dropLine = false;
+    let dragging = false;
+
     var onDragEnter = (e) => {
         dropLine = true;
     };
@@ -24,8 +27,17 @@
     };
 
     var handleDragStart = (e) => {
+        dragging = true;
+        dragActive.set(true);
+        dragType.set("item");
         e.dataTransfer.setData("text", "i" + index.toString());
         e.dataTransfer.setData("object", JSON.stringify(item));
+    };
+
+    var handleDragEnd = (e) => {
+        dragging = false;
+        dragActive.set(false);
+        dragType.set("");
     };
 
     var handleDrop = (e) => {
@@ -56,6 +68,12 @@
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         user-select: none;
         overflow: hidden;
+    }
+
+    .item.dragging {
+        opacity: 0.35;
+        border-style: dashed;
+        transform: scale(0.95);
     }
 
     .item:hover {
@@ -157,6 +175,7 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
         class="item"
+        class:dragging={dragging}
         style="background-color: {item.title.split(":::::")[2] || 'var(--tile-bg)'}; width: {tileWidth}em"
         draggable="true"
         out:fade
@@ -164,6 +183,7 @@
         ondragenter={onDragEnter}
         ondragleave={onDragLeave}
         ondragstart={handleDragStart}
+        ondragend={handleDragEnd}
         ondrop={handleDrop}
         onauxclick={(e) => {
             e.preventDefault();

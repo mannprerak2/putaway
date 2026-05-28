@@ -5,7 +5,7 @@
     import EmptyItemTile from "./EmptyItemTile.svelte";
     import NoItemTileIndicator from "./NoItemIndicatorTile.svelte";
     import { saveTabHook, useTabGroupInOpenAllTabs, getOpenTabsBarWidth } from "../../services/hooks.js"
-    import { deo } from "./../../stores/stores.js";
+    import { deo, dragActive, dragType } from "./../../stores/stores.js";
     import { searchText } from "../../stores/stores.js";
     import EditCollectionNameModal from "../modals/EditCollectionNameModal.svelte";
     import EditItemModal from "../modals/EditItemModal.svelte";
@@ -30,6 +30,8 @@
     export let clickArchiveCollection;
 
     let dropLine = false;
+    let dragging = false;
+
     var onDragEnter = (e) => {
         dropLine = true;
     };
@@ -38,7 +40,16 @@
     };
 
     var handleDragStart = (e) => {
+        dragging = true;
+        dragActive.set(true);
+        dragType.set("collection");
         e.dataTransfer.setData("text", "c" + index.toString());
+    };
+
+    var handleDragEnd = (e) => {
+        dragging = false;
+        dragActive.set(false);
+        dragType.set("");
     };
 
     var handleDrop = (e) => {
@@ -117,6 +128,16 @@
                 parseInt(obj.target.substring(1)),
                 !obj.ctrl
             );
+        } else if (
+            obj.source[0] == "i" &&
+            obj.target == "delete" &&
+            obj.sourceObj.parentId == collection.id
+        ) {
+            var dragIndex = parseInt(obj.source.substring(1));
+            setlastNewTabOperationTimeNow();
+            chrome.bookmarks.remove(obj.sourceObj.id);
+            items.splice(dragIndex, 1);
+            items = items;
         }
     });
     onDestroy(unsubsribe);
@@ -266,6 +287,11 @@
         box-shadow: 0 0 14px var(--accent-glow);
         transform: translateY(-2px);
     }
+    .collection.dragging {
+        opacity: 0.35;
+        border-style: dashed;
+        transform: scale(0.98);
+    }
     .collection:hover:not(.dragover-collection) {
         border-color: var(--icon-color);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
@@ -361,6 +387,7 @@
 <div
     class="collection"
     class:dragover-collection={dropLine}
+    class:dragging={dragging}
     in:fade={{ duration: 500 }}
     out:fade
     ondragover={(e) => e.preventDefault()}>
@@ -375,6 +402,7 @@
         ondragenter={onDragEnter}
         ondragleave={onDragLeave}
         ondragstart={handleDragStart}
+        ondragend={handleDragEnd}
         ondrop={handleDrop}>
         <div class="collection-title">{collection.title}</div>
         <div style="flex-grow:1;" />

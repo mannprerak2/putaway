@@ -50,6 +50,12 @@
                     allTabs.splice(dragIndex, 1);
                 }
                 allTabs = allTabs;
+            } else if (obj.target == "delete") {
+                var dragIndex = parseInt(obj.source.substring(1));
+                setlastNewTabOperationTimeNow();
+                chrome.tabs.remove(obj.sourceObj.id);
+                allTabs.splice(dragIndex, 1);
+                allTabs = allTabs;
             }
         }
     });

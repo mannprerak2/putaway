@@ -144,6 +144,12 @@
                 allCollections.splice(dragIndex, 1);
             }
             allCollections = allCollections;
+        } else if (obj.source[0] == "c" && obj.target == "delete") {
+            var dragIndex = parseInt(obj.source.substring(1));
+            setlastNewTabOperationTimeNow();
+            chrome.bookmarks.removeTree(allCollections[dragIndex].id);
+            allCollections.splice(dragIndex, 1);
+            allCollections = allCollections;
         }
     });
 

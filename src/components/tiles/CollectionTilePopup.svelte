@@ -50,7 +50,10 @@
         height: 42px;
         width: 100%;
         color: var(--txt);
-        padding: 0 12px;
+        background: var(--tile-bg);
+        border: 1px solid var(--outline-btn-border);
+        border-radius: 8px;
+        padding: 0 14px;
         box-sizing: border-box;
         font-size: 0.9rem;
         font-weight: 500;
@@ -58,13 +61,16 @@
         align-items: center;
         justify-content: space-between;
         user-select: none;
-        border-radius: 6px;
-        transition: all 0.2s ease;
-        margin-bottom: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 8px;
     }
 
     .popup-collection-tile:hover {
-        background-color: var(--outline-btn-hover);
+        background-color: var(--card-hover-bg);
+        border-color: var(--icon-color);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px var(--box-shadow);
     }
 
     .collection-name {

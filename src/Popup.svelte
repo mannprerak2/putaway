@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import CollectionTilePopup from "./components/tiles/CollectionTilePopup.svelte";
   import { loadGlobalSettings } from "./services/hooks.js"
+  import { getDarkTheme } from "./services/storage.js";
 
   //font awesome icons
   import Fa from "sveltejs-fontawesome";
@@ -11,6 +12,7 @@
   import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
   //font awesome icons
 
+  let darkTheme = $state(false);
   let searchText = $state("");
   // array of BookmarkTreeNode
   let allCollections = $state([]);
@@ -23,6 +25,9 @@
   let quickLinkSaved = $state(false);
 
   onMount(() => {
+    getDarkTheme(function (v) {
+      darkTheme = v;
+    });
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       tab = tabs[0];
       if (tab.url != "chrome://newtab/") {
@@ -133,13 +138,21 @@
   };
 </script>
 
+<svelte:head>
+  {#if darkTheme}
+    <link rel="stylesheet" href="global-dark.css" />
+  {:else}
+    <link rel="stylesheet" href="global-light.css" />
+  {/if}
+</svelte:head>
+
 <div id="popup">
   {#if !isNewTab}
     <div id="main">
       <div id="top">
         <div class="search-container">
           <div class="search-icon-wrapper">
-            <Fa icon={faSearch} size="sm" />
+            <Fa icon={faSearch} size="sm" color="var(--icon-color)" />
           </div>
           <!-- svelte-ignore a11y_autofocus -->
           <input
@@ -180,6 +193,7 @@
           <Fa
             icon={faSave}
             size="sm"
+            color="currentColor"
           />
           Save Session
         {/if}
@@ -195,6 +209,7 @@
           <Fa
             icon={faImage}
             size="sm"
+            color="currentColor"
           />
           Save Quick Link
         {/if}

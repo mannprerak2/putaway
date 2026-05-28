@@ -16,3 +16,6 @@ export const deo = writable({
     source: "null",
     target: "null"
 });
+
+export const dragActive = writable(false);
+export const dragType = writable(""); // "collection", "item", "tab"

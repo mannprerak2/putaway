@@ -1,5 +1,6 @@
 <script>
     import { fade, fly } from "svelte/transition";
+    import { dragActive, dragType } from "../../stores/stores.js";
     import Fa from "sveltejs-fontawesome";
     import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
 
@@ -9,6 +10,8 @@
     export let onTabTileClose;
     export let onDrop; // dont call directly, set dropline to false before calling
     let dropLine = false;
+    let dragging = false;
+
     var onDragEnter = (e) => {
         dropLine = true;
     };
@@ -17,8 +20,17 @@
     };
 
     var handleDragStart = (e) => {
+        dragging = true;
+        dragActive.set(true);
+        dragType.set("tab");
         e.dataTransfer.setData("text", "t" + index.toString());
         e.dataTransfer.setData("object", JSON.stringify(tab));
+    };
+
+    var handleDragEnd = (e) => {
+        dragging = false;
+        dragActive.set(false);
+        dragType.set("");
     };
 
     var handleDrop = (e) => {
@@ -46,6 +58,11 @@
     }
     .card:active {
         cursor: grabbing;
+    }
+    .card.dragging {
+        opacity: 0.35;
+        border-style: dashed;
+        transform: scale(0.95);
     }
     .card:hover {
         background-color: var(--card-hover-bg);
@@ -121,11 +138,13 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
         class="card"
+        class:dragging={dragging}
         draggable="true"
         ondragover={(e) => e.preventDefault()}
         ondragenter={onDragEnter}
         ondragleave={onDragLeave}
         ondragstart={handleDragStart}
+        ondragend={handleDragEnd}
         ondrop={handleDrop}
         onclick={(e) => {
             e.preventDefault();

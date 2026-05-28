@@ -9,11 +9,17 @@
     getReloadBookmarkSectionOnChange, getReloadOpenTabsSectionOnChange,
     getlastNewTabOperationTimeNowDiffMs} from './services/hooks.js'
 
+  import Fa from "sveltejs-fontawesome";
+  import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
+  import { dragActive, dragType, deo } from "./stores/stores.js";
+  import { fly } from "svelte/transition";
+
   let darkTheme = $state(false);
   let pageReady = $state(false);
   let openTabsBarWidth = $state(getOpenTabsBarWidth());
   let mainAreaReloadKey = $state(0);
   let openTabsBarReloadKey = $state(0);
+  let trashHover = $state(false);
 
   const toggleTheme = () => {
     darkTheme = !darkTheme;
@@ -29,6 +35,28 @@
     if (getlastNewTabOperationTimeNowDiffMs() < 2000) return;
     openTabsBarReloadKey+=1;
   }
+
+  const handleTrashDrop = (e) => {
+    e.preventDefault();
+    trashHover = false;
+    const rawData = e.dataTransfer.getData("text");
+    const objStr = e.dataTransfer.getData("object");
+    let obj = null;
+    if (objStr) {
+      try {
+        obj = JSON.parse(objStr);
+      } catch (err) {
+        console.error("Failed to parse dropped object", err);
+      }
+    }
+    deo.set({
+      source: rawData,
+      target: "delete",
+      sourceObj: obj,
+      targetObj: null,
+      ctrl: false
+    });
+  };
 
   onMount(async () => {
     getDarkTheme(function (v) {
@@ -98,6 +126,42 @@
     overflow: hidden;
     box-sizing: border-box;
   }
+
+  .trash-dropzone {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background: rgba(220, 53, 69, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px dashed rgba(220, 53, 69, 0.4);
+    border-radius: 40px;
+    color: var(--danger);
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 8px 32px rgba(220, 53, 69, 0.15), 0 2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+
+  .trash-dropzone.dragover {
+    background: var(--danger);
+    color: #ffffff;
+    border-color: var(--danger);
+    border-style: solid;
+    transform: translateX(-50%) scale(1.08);
+    box-shadow: 0 12px 40px rgba(220, 53, 69, 0.4), 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .trash-dropzone * {
+    pointer-events: none;
+  }
 </style>
 
 <svelte:head>
@@ -129,6 +193,19 @@
         {/key}
       </div>
     </div>
+    {#if $dragActive}
+      <div
+        class="trash-dropzone"
+        class:dragover={trashHover}
+        ondragover={(e) => { e.preventDefault(); trashHover = true; }}
+        ondragleave={() => trashHover = false}
+        ondrop={handleTrashDrop}
+        transition:fly={{ y: 60, duration: 250 }}
+      >
+        <Fa icon={faTrashAlt} size="lg" />
+        <span>Drop here to Delete / Close</span>
+      </div>
+    {/if}
   </Modal>
 {:else}
   <div></div>
