@@ -42,81 +42,10 @@
         });
     }
 
-    function checkAndMigrateLegacyQuickLinks() {
-        chrome.storage.sync.get(["globalSettings", "quickLinks"], function (res) {
-            let globalSettings = res.globalSettings || {};
-            if (globalSettings.quickLinksFolderId) return;
-
-            let legacyQuickLinks = res.quickLinks;
-            if (legacyQuickLinks && legacyQuickLinks.length > 0) {
-                const proceedWithPid = (pid) => {
-                    chrome.bookmarks.create({
-                        parentId: pid,
-                        title: "Quick Links",
-                        index: 0
-                    }, function (newFolder) {
-                        globalSettings.quickLinksFolderId = newFolder.id;
-                        chrome.storage.sync.set({ globalSettings }, function () {
-                            let count = legacyQuickLinks.length;
-                            legacyQuickLinks.forEach((item, index) => {
-                                let title = "Quick Link";
-                                try {
-                                    title = new URL(item.url).hostname.replace("www.", "");
-                                } catch (e) {
-                                    title = item.url;
-                                }
-                                chrome.bookmarks.create({
-                                    parentId: newFolder.id,
-                                    url: item.url,
-                                    title: title + ":::::" + (item.icon || "favicon.png"),
-                                    index: index
-                                }, function () {
-                                    count--;
-                                    if (count === 0) {
-                                        chrome.storage.sync.remove("quickLinks", function () {
-                                            loadQuickLinks();
-                                        });
-                                    }
-                                });
-                            });
-                        });
-                    });
-                };
-
-                chrome.storage.local.get("pid", function (localRes) {
-                    let pid = localRes.pid;
-                    if (pid) {
-                        proceedWithPid(pid);
-                    } else {
-                        chrome.bookmarks.getTree(function (tree) {
-                            var otherBookmarksFolderId = tree[0].children[1].id;
-                            chrome.bookmarks.getChildren(otherBookmarksFolderId, function (children) {
-                                var putawayfolder = children.find(e => e.title === "PutAway");
-                                if (putawayfolder) {
-                                    chrome.storage.local.set({ pid: putawayfolder.id });
-                                    proceedWithPid(putawayfolder.id);
-                                } else {
-                                    chrome.bookmarks.create({
-                                        parentId: otherBookmarksFolderId,
-                                        title: "PutAway"
-                                    }, function (newFolder) {
-                                        chrome.storage.local.set({ pid: newFolder.id });
-                                        proceedWithPid(newFolder.id);
-                                    });
-                                }
-                            });
-                        });
-                    }
-                });
-            }
-        });
-    }
-
     const updateListener = () => loadQuickLinks();
 
     onMount(() => {
         loadQuickLinks();
-        checkAndMigrateLegacyQuickLinks();
 
         chrome.bookmarks.onCreated.addListener(updateListener);
         chrome.bookmarks.onMoved.addListener(updateListener);
