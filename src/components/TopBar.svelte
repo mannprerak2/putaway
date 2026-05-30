@@ -1,10 +1,14 @@
 <script>
     import { searchText, archiveOnly } from "../stores/stores.js";
-    import { onDestroy } from "svelte";
+    import { onDestroy, getContext } from "svelte";
     import Quicklinks from "./QuickLinks.svelte";
     import Tooltip from "./common/tooltip/Tooltip.svelte"
+    import HelpModal from "./modals/HelpModal.svelte";
+
     export let darkTheme;
     export let toggleTheme;
+
+    const { open } = getContext("simple-modal");
 
     //font awesome icons
     import Fa from "sveltejs-fontawesome";
@@ -12,6 +16,7 @@
     import { faSun } from "@fortawesome/free-solid-svg-icons/faSun";
     import { faMoon } from "@fortawesome/free-solid-svg-icons/faMoon";
     import { faCog } from "@fortawesome/free-solid-svg-icons/faCog";
+    import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
     import { faTimesCircle } from "@fortawesome/free-solid-svg-icons/faTimesCircle";
     //font awesome icons
 
@@ -26,6 +31,9 @@
     };
     var openOptionsPage = () => {
         chrome.runtime.openOptionsPage();
+    }
+    var openHelpModal = () => {
+        open(HelpModal);
     }
 
     onDestroy(unsubscribe);
@@ -165,6 +173,12 @@
                     {:else}
                         <Fa icon={faMoon} size="sm" color="var(--icon-color)" />
                     {/if}
+                </button>
+            </Tooltip>
+
+            <Tooltip title="How it Works / Help">
+                <button onclick={openHelpModal} class="icon-btn pointer">
+                    <Fa icon={faQuestionCircle} size="sm" color="var(--icon-color)" />
                 </button>
             </Tooltip>
 
