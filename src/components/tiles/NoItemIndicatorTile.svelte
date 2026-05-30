@@ -1,19 +1,42 @@
 <script>
+    import { dragActive } from "../../stores/stores.js";
+    import { onDestroy } from "svelte";
+
     export let index;
     export let onDrop;
     let indicator = false;
+    let dragCounter = 0;
+
     var onDragEnter = (e) => {
-        indicator = true;
+        dragCounter++;
+        if (dragCounter === 1) {
+            indicator = true;
+        }
     };
     var onDragLeave = (e) => {
-        indicator = false;
+        dragCounter--;
+        if (dragCounter === 0) {
+            indicator = false;
+        }
     };
 
     var handleDrop = (e) => {
         e.preventDefault();
+        dragCounter = 0;
         indicator = false;
         onDrop(e, index);
     };
+
+    const unsubscribeDrag = dragActive.subscribe((active) => {
+        if (!active) {
+            dragCounter = 0;
+            indicator = false;
+        }
+    });
+
+    onDestroy(() => {
+        unsubscribeDrag();
+    });
 </script>
 
 <style>
