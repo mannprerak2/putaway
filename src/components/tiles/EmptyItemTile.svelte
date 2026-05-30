@@ -1,20 +1,43 @@
 <!-- used for adding drop functionality at the last of the array -->
 <script>
+    import { dragActive } from "../../stores/stores.js";
+    import { onDestroy } from "svelte";
+
     export let index;
     export let onDrop;
     let dropLine = false;
+    let dragCounter = 0;
+
     var onDragEnter = (e) => {
-        dropLine = true;
+        dragCounter++;
+        if (dragCounter === 1) {
+            dropLine = true;
+        }
     };
     var onDragLeave = (e) => {
-        dropLine = false;
+        dragCounter--;
+        if (dragCounter === 0) {
+            dropLine = false;
+        }
     };
 
     var handleDrop = (e) => {
         e.preventDefault();
+        dragCounter = 0;
         dropLine = false;
         onDrop(e, index);
     };
+
+    const unsubscribeDrag = dragActive.subscribe((active) => {
+        if (!active) {
+            dragCounter = 0;
+            dropLine = false;
+        }
+    });
+
+    onDestroy(() => {
+        unsubscribeDrag();
+    });
 </script>
 
 <style>
@@ -25,16 +48,19 @@
         height: 100%;
     }
     .drop-indicator {
-        width: 3px;
+        width: 4px;
         height: 80%;
         border-radius: 2px;
-        margin-right: 6px;
-        transition: all 0.2s ease;
+        margin-right: 4px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         background-color: transparent;
+        flex-shrink: 0;
     }
     .drop-indicator.active {
+        width: 6px;
+        margin-right: 2px;
         background-color: var(--drop-indicator);
-        box-shadow: 0 0 8px var(--drop-indicator);
+        box-shadow: 0 0 10px var(--drop-indicator);
     }
     .empty-dropzone {
         width: 120px;

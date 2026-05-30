@@ -4,7 +4,7 @@
   import OpenTabsBar from "./components/OpenTabsBar.svelte";
   import Modal from "./components/Modal.svelte";
   import { setDarkTheme, getDarkTheme } from "./services/storage.js";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { loadGlobalSettings, getOpenTabsBarWidth,
     getReloadBookmarkSectionOnChange, getReloadOpenTabsSectionOnChange,
     getlastNewTabOperationTimeNowDiffMs} from './services/hooks.js'
@@ -20,6 +20,7 @@
   let mainAreaReloadKey = $state(0);
   let openTabsBarReloadKey = $state(0);
   let trashHover = $state(false);
+  let trashDragCounter = 0;
 
   const toggleTheme = () => {
     darkTheme = !darkTheme;
@@ -36,8 +37,23 @@
     openTabsBarReloadKey+=1;
   }
 
+  const handleTrashDragEnter = (e) => {
+    trashDragCounter++;
+    if (trashDragCounter === 1) {
+      trashHover = true;
+    }
+  };
+
+  const handleTrashDragLeave = (e) => {
+    trashDragCounter--;
+    if (trashDragCounter === 0) {
+      trashHover = false;
+    }
+  };
+
   const handleTrashDrop = (e) => {
     e.preventDefault();
+    trashDragCounter = 0;
     trashHover = false;
     const rawData = e.dataTransfer.getData("text");
     const objStr = e.dataTransfer.getData("object");
@@ -57,6 +73,17 @@
       ctrl: false
     });
   };
+
+  const unsubscribeDrag = dragActive.subscribe((active) => {
+    if (!active) {
+      trashDragCounter = 0;
+      trashHover = false;
+    }
+  });
+
+  onDestroy(() => {
+    unsubscribeDrag();
+  });
 
   onMount(async () => {
     getDarkTheme(function (v) {
@@ -197,8 +224,9 @@
       <div
         class="trash-dropzone"
         class:dragover={trashHover}
-        ondragover={(e) => { e.preventDefault(); trashHover = true; }}
-        ondragleave={() => trashHover = false}
+        ondragover={(e) => e.preventDefault()}
+        ondragenter={handleTrashDragEnter}
+        ondragleave={handleTrashDragLeave}
         ondrop={handleTrashDrop}
         transition:fly={{ y: 60, duration: 250 }}
       >

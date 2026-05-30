@@ -1,5 +1,5 @@
 <script>
-    import { getContext } from "svelte";
+    import { getContext, onDestroy } from "svelte";
 
     export let item;
 
@@ -12,6 +12,31 @@
     let itemColor = title.length > 2 ? title[2] : "";
 
     const { close } = getContext("simple-modal");
+    let containerRef;
+
+    $: if (containerRef && typeof document !== "undefined") {
+        const modalWindow = containerRef.closest(".window");
+        if (modalWindow) {
+            modalWindow.style.transition = "background-color 0.3s ease, background-image 0.3s ease";
+            if (itemColor) {
+                modalWindow.style.backgroundColor = "var(--bg)";
+                modalWindow.style.backgroundImage = `linear-gradient(${itemColor}, ${itemColor})`;
+            } else {
+                modalWindow.style.backgroundColor = "";
+                modalWindow.style.backgroundImage = "";
+            }
+        }
+    }
+
+    onDestroy(() => {
+        if (containerRef && typeof document !== "undefined") {
+            const modalWindow = containerRef.closest(".window");
+            if (modalWindow) {
+                modalWindow.style.backgroundColor = "";
+                modalWindow.style.backgroundImage = "";
+            }
+        }
+    });
 
     function updateCollection() {
         let newTitle =
@@ -123,7 +148,7 @@
 
 <svelte:window on:keyup={handleKeyUp} />
 
-<main style="transition: background 0.3s ease; padding: 4px; border-radius: 8px; background-color: {itemColor || 'transparent'}">
+<main bind:this={containerRef} style="padding: 4px; border-radius: 8px;">
     <h1>Edit Item</h1>
 
     <div class="form-group">

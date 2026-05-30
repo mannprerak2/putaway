@@ -24,8 +24,8 @@
     button {
         background-color: var(--accent);
         border-radius: 8px;
-        color: white;
-        padding: 8px 24px;
+        color: var(--accent-txt, white);
+        padding: 8px 18px;
         font-size: 0.9rem;
         font-weight: 600;
         text-align: center;

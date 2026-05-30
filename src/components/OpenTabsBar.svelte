@@ -1,8 +1,9 @@
 <script>
     import { onMount, onDestroy, getContext } from "svelte";
+    import { fade } from "svelte/transition";
     import TabTile from "./tiles/TabTile.svelte";
     import EmptyTabTile from "./tiles/EmptyTabTile.svelte";
-    import { deo } from "./../stores/stores.js";
+    import { deo, dragActive, dragType } from "./../stores/stores.js";
     import {setlastNewTabOperationTimeNow} from '../services/hooks.js';
     const { open } = getContext("simple-modal");
     import SaveSessionModal from "./modals/SaveSessionModal.svelte";
@@ -25,8 +26,8 @@
     const unsubsribe = deo.subscribe((obj) => {
         if (obj.source[0] == "t") {
             if (obj.target[0] == "i") {
-                if (obj.ctrl != null && !obj.ctrl) {
-                    //  only delete tab if ctrl wasn't held by user
+                if (obj.ctrl) {
+                    //  only delete tab if ctrl/alt was held by user
                     setlastNewTabOperationTimeNow();
                     chrome.tabs.remove(obj.sourceObj.id);
                     allTabs.splice(parseInt(obj.source.substring(1)), 1);
@@ -142,14 +143,38 @@
         border-radius: 12px;
         border: 1px solid var(--outline-btn-border);
     }
+    .sidebar-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
     .scroll-container {
         height: calc(100vh - 96px);
         overflow-y: auto;
         padding-right: 4px;
     }
+    .drag-hint {
+        position: absolute;
+        bottom: 16px;
+        left: 8px;
+        right: 8px;
+        font-size: 0.8rem;
+        color: var(--txt);
+        background: var(--bg);
+        border: 1px dashed var(--outline-btn-border);
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-align: center;
+        line-height: 1.3;
+        box-shadow: 0 4px 12px var(--box-shadow);
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
 </style>
 
-<div>
+<div class="sidebar-container">
     <div class="sidebar-header">
         <div class="title-area">
             <h2 class="title">Open Tabs</h2>
@@ -177,4 +202,10 @@
         {/each}
         <EmptyTabTile index={allTabs.length} {onDrop} />
     </div>
+
+    {#if $dragActive && $dragType === "tab"}
+        <div class="drag-hint" transition:fade>
+            💡 Hold <strong>Ctrl</strong> or <strong>Alt</strong> while dropping to close the tab.
+        </div>
+    {/if}
 </div>
