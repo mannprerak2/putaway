@@ -10,6 +10,10 @@
     export let onClickTabCard;
     export let onTabTileClose;
     export let onDrop; // dont call directly, set dropline to false before calling
+    export let draggable = true;
+    export let groupTitle = "";
+    export let groupColor = "";
+    export let groupPos = null; // 'single' | 'start' | 'middle' | 'end' | null
     let dropLine = false;
     let dragging = false;
     let dragCounter = 0;
@@ -91,6 +95,25 @@
         border-color: var(--icon-color);
         transform: translateY(-1px);
         box-shadow: 0 4px 10px var(--box-shadow);
+        z-index: 2;
+    }
+    .card.grouped {
+        padding-left: 4px;
+    }
+    .card.group-start {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        margin-bottom: 0;
+    }
+    .card.group-middle {
+        border-radius: 0;
+        margin-top: -1px;
+        margin-bottom: 0;
+    }
+    .card.group-end {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: -1px;
     }
     .card-content {
         display: flex;
@@ -168,7 +191,13 @@
         class="card"
         class:dragging={dragging}
         class:drag-active={$dragActive && $dragType === "tab"}
-        draggable="true"
+        class:grouped={!!groupColor}
+        class:group-start={groupPos === 'start'}
+        class:group-middle={groupPos === 'middle'}
+        class:group-end={groupPos === 'end'}
+        style={groupColor ? `border-left: 5px solid ${groupColor};` : ''}
+        title={groupColor && groupTitle ? `Group: ${groupTitle}` : ''}
+        draggable={draggable}
         ondragover={(e) => e.preventDefault()}
         ondragenter={onDragEnter}
         ondragleave={onDragLeave}
