@@ -12,9 +12,11 @@
     const { open } = getContext("simple-modal");
     import SaveSessionModal from "./modals/SaveSessionModal.svelte";
 
-    let allTabs = [];
-    let windows = [];
-    let currentWindowId = null;
+    let allTabs = $state([]);
+    let windows = $state([]);
+    let tabGroups = $state([]);
+    let currentWindowId = $state(null);
+    let searchOpenTabsText = $state("");
 
     const loadWindowsAndTabs = () => {
         chrome.windows.getCurrent({ populate: false }, (currentWin) => {
@@ -36,8 +38,13 @@
                 const selectedWin = windows.find(w => w.id === persistedSelectedWindowId);
                 if (selectedWin) {
                     allTabs = selectedWin.tabs.filter(tab => tab.url !== "chrome://newtab/");
+                    // Fetch tab groups
+                    chrome.tabGroups.query({ windowId: persistedSelectedWindowId }, (groups) => {
+                        tabGroups = groups;
+                    });
                 } else {
                     allTabs = [];
+                    tabGroups = [];
                 }
             });
         });
@@ -55,7 +62,6 @@
                     setlastNewTabOperationTimeNow();
                     chrome.tabs.remove(obj.sourceObj.id);
                     allTabs.splice(parseInt(obj.source.substring(1)), 1);
-                    allTabs = allTabs;
                 }
             } else if (obj.target[0] == "t") {
                 var dragIndex = parseInt(obj.source.substring(1));
@@ -74,13 +80,11 @@
                     allTabs.splice(dropIndex, 0, obj.sourceObj);
                     allTabs.splice(dragIndex, 1);
                 }
-                allTabs = allTabs;
             } else if (obj.target == "delete") {
                 var dragIndex = parseInt(obj.source.substring(1));
                 setlastNewTabOperationTimeNow();
                 chrome.tabs.remove(obj.sourceObj.id);
                 allTabs.splice(dragIndex, 1);
-                allTabs = allTabs;
             }
         }
     });
@@ -95,12 +99,12 @@
 
     var onTabTileClose = (tab, i) => {
         allTabs.splice(i, 1);
-        allTabs = allTabs;
         setlastNewTabOperationTimeNow();
         chrome.tabs.remove(tab.id);
     };
 
     var onDrop = (e, dropIndex) => {
+        if (searchOpenTabsText.trim() !== "") return;
         e.preventDefault();
         var rawData = e.dataTransfer.getData("text");
         var obj = JSON.parse(e.dataTransfer.getData("object"));
@@ -162,13 +166,56 @@
         }
         return `Window ${index + 1}`;
     };
+
+    // Filter tabs based on open tab search input
+    const filteredTabs = $derived.by(() => {
+        const query = searchOpenTabsText.trim().toLowerCase();
+        if (!query) return allTabs;
+        return allTabs.filter(tab => {
+            return (tab.title && tab.title.toLowerCase().includes(query)) ||
+                   (tab.url && tab.url.toLowerCase().includes(query));
+        });
+    });
+
+    const getTabGroup = (tab) => {
+        if (tab.groupId === -1 || !tabGroups) return null;
+        return tabGroups.find(g => g.id === tab.groupId);
+    };
+
+    const GROUP_COLORS = {
+        grey: "#9aa0a6",
+        blue: "#8ab4f8",
+        red: "#f28b82",
+        yellow: "#fdd663",
+        green: "#81c995",
+        pink: "#ff8bcb",
+        purple: "#d7aefb",
+        cyan: "#78d9ec",
+        orange: "#fcad70"
+    };
+
+    const getGroupColor = (colorName) => {
+        return GROUP_COLORS[colorName] || "#9aa0a6";
+    };
+
+    // Dynamic scroll container height calculation based on visible sections
+    const scrollContainerHeight = $derived.by(() => {
+        let offset = 76; // base offset for header + padding
+        if (windows.length > 1) {
+            offset += 74; // space for window selection
+        }
+        // space for search input (approx 32px)
+        offset += 32;
+        return `height: calc(100vh - ${offset}px);`;
+    });
 </script>
 
 <style>
     .sidebar-header {
         display: flex;
         align-items: center;
-        padding-bottom: 8px;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
     }
     .title-area {
         display: flex;
@@ -222,9 +269,9 @@
 
     /* Window Selector Styling */
     .window-section {
-        margin-top: 4px;
-        margin-bottom: 16px;
-        padding-bottom: 16px;
+        margin-top: 2px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
         border-bottom: 1px solid var(--collection-separator);
     }
     .window-section-header {
@@ -349,6 +396,57 @@
         color: var(--accent-txt);
         border-color: var(--accent);
     }
+
+    /* Search section controls */
+    .search-section {
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+    }
+    .sidebar-search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: var(--tile-bg);
+        border: 1px solid var(--outline-btn-border);
+        border-radius: 8px;
+        padding: 6px 10px;
+        transition: all 0.2s ease;
+    }
+    .sidebar-search-container:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+    .search-icon {
+        color: var(--icon-color);
+        margin-right: 8px;
+        flex-shrink: 0;
+    }
+    .sidebar-search-input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 0.85rem;
+        color: var(--txt);
+        padding: 0;
+    }
+    .sidebar-search-input::placeholder {
+        color: var(--icon-color);
+        opacity: 0.6;
+    }
+    .search-clear-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--icon-color);
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+    .search-clear-btn:hover {
+        color: var(--txt);
+    }
 </style>
 
 <div class="sidebar-container">
@@ -418,7 +516,7 @@
     <div class="sidebar-header">
         <div class="title-area">
             <h2 class="title">Open Tabs</h2>
-            <span class="badge">{allTabs.length}</span>
+            <span class="badge">{filteredTabs.length}</span>
         </div>
         <div style="flex-grow: 1;" />
         {#if allTabs.length > 0}
@@ -431,16 +529,56 @@
         {/if}
     </div>
 
-    <div class="scroll scroll-container" style={windows.length > 1 ? 'height: calc(100vh - 180px);' : ''}>
-        {#each allTabs as tab, i (tab.id)}
+    <!-- Search Input -->
+    <div class="search-section">
+        <div class="sidebar-search-container">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+                type="text"
+                placeholder="Search open tabs..."
+                bind:value={searchOpenTabsText}
+                class="sidebar-search-input"
+            />
+            {#if searchOpenTabsText}
+                <button
+                    class="search-clear-btn pointer"
+                    onclick={() => searchOpenTabsText = ""}
+                    title="Clear search"
+                >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            {/if}
+        </div>
+    </div>
+
+    <div class="scroll scroll-container" style={scrollContainerHeight}>
+        {#each filteredTabs as tab, i (tab.id)}
+            {@const prevTab = i > 0 ? filteredTabs[i - 1] : null}
+            {@const nextTab = i < filteredTabs.length - 1 ? filteredTabs[i + 1] : null}
+            {@const isGrouped = tab.groupId !== -1}
+            {@const sameAsPrev = isGrouped && prevTab && prevTab.groupId === tab.groupId}
+            {@const sameAsNext = isGrouped && nextTab && nextTab.groupId === tab.groupId}
+            {@const groupPos = !isGrouped ? null : (!sameAsPrev && !sameAsNext ? 'single' : (!sameAsPrev && sameAsNext ? 'start' : (sameAsPrev && sameAsNext ? 'middle' : 'end')))}
             <TabTile
                 {tab}
                 index={i}
+                groupTitle={getTabGroup(tab) ? getTabGroup(tab).title : ""}
+                groupColor={getTabGroup(tab) ? getGroupColor(getTabGroup(tab).color) : ""}
+                {groupPos}
+                draggable={!searchOpenTabsText.trim()}
                 {onClickTabCard}
                 {onTabTileClose}
                 {onDrop} />
         {/each}
-        <EmptyTabTile index={allTabs.length} {onDrop} />
+        {#if !searchOpenTabsText.trim()}
+            <EmptyTabTile index={allTabs.length} {onDrop} />
+        {/if}
     </div>
 
     {#if $dragActive && $dragType === "tab"}
